@@ -86,12 +86,12 @@ Thus, given a mental property, a decision about how to represent it, $\mM$, and 
 One possible strategy is to propose a semiparametric model, $\mP=\{P_{\bth} : \bth \in \bTh \subseteq \Real^{l_n}\}$, whose dimensionality $l_n$ goes to infinity as $n$ goes to infinity.  Thus, given infinite data, these models are potentially bias free, and given finite data, the amount of bias is a function of the data available.  The goal then is to find a Minimally Sufficient Model (MSM; by analogy with minimally sufficient statistics), which is the brain-graph with the least parameters that is sufficient to explain the mental property under investigation.  $g_n$ then operates directly on $\hbth_n$, our data dependent estimate of the model parameters, $\bth$.  One particularly compelling model is the Random Dot Product Graph (RDPG), where the value of an edge between two vertices is a function of the dot product between the vertex attributes.  For binary adjacency matrices, for example, we have $P[E_{ij} | \bX_i, \bX_j]=f(\bX_i, \bX_j)$.  More generally, we have $\mathbb{E}[E_{ijk} | \bX_i, \bX_j, k]= f(\bX_i, \bX_j, k)$.  This RDPG should satisfy several criteria, as $n \conv \infty$:
 
 \begin{enumerate}
-	\item the parameters should be identifiable and asymptotically unbiased, that is $\hbA_i \conv \bX_i$
+	\item the parameters should be identifiable and asymptotically unbiased, that is $\hbX_i \conv \bX_i$
 	\item the dimensionality of the vertex attributes, $d$ should go to infinity
 	\item the number of distinct $\bX$'s should go to infinity, that is $|\mX_v| \conv \infty$
 \end{enumerate}
 
-To ensure the first criterium, $f(\cdot)$ must be carefully chosen.  For example, letting the number of edges between any pair of vertices correspond to an integer weight on the edge, we could let $P[e_{ij} | \bX_i,\bX_j]=$Poisson(e$^{\bX_i\T \bX_j}$).  Note that this model can implicitly include labels on vertices and edges, explicitly includes vertex attributes, and not does include edge attributes.  
+To ensure the first criterium, $f(\cdot)$ must be carefully chosen.  For example, letting the number of edges between any pair of vertices correspond to an integer weight on the edge, we could let $P[e_{ij} | \bX_i,\bX_j]=$Poisson(e$^{\bX_i\T \bX_j}$) \cite{}.   Note that this model can implicitly include labels on vertices and edges, explicitly includes vertex attributes, and not does include edge attributes.  
 
 
 \paragraph{Limitations/extensions}
