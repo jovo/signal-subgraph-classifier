@@ -91,7 +91,7 @@ One possible strategy is to propose a semiparametric model, $\mP=\{P_{\bth} : \b
 	\item the number of distinct $\bX$'s should go to infinity, that is $|\mX_v| \conv \infty$
 \end{enumerate}
 
-To ensure the first criterium, $f(\cdot)$ must be carefully chosen.  For example, letting the number of edges between any pair of vertices correspond to an integer weight on the edge, we could let $P[e_{ij} | \bA_i,\bA_j]=$Poisson(e$^{\bA_i\T \bA_j}$).  Note that this model can implicitly include labels on vertices and edges, explicitly includes vertex attributes, and not does include edge attributes.  
+To ensure the first criterium, $f(\cdot)$ must be carefully chosen.  For example, letting the number of edges between any pair of vertices correspond to an integer weight on the edge, we could let $P[e_{ij} | \bX_i,\bX_j]=$Poisson(e$^{\bX_i\T \bX_j}$).  Note that this model can implicitly include labels on vertices and edges, explicitly includes vertex attributes, and not does include edge attributes.  
 
 
 \paragraph{Limitations/extensions}
