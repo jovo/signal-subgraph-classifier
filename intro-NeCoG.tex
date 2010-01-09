@@ -18,7 +18,12 @@
 
 \maketitle
 
-\paragraph{Current Paradigm}
+\begin{abstract}
+	
+\end{abstract}
+
+\section{Paradigms of research}
+\subsection{Current Paradigm}
 
 The dominant paradigm of quantitative neuroscience in the 20$^{th}$ century has been the ``signal processing'' framework \cite{}.  Essentially, the brain is a box, that filters some stimulus, to produce some response (see Figure 1). This framework leads to the following goal:
 
@@ -34,7 +39,7 @@ The dominant paradigm of quantitative neuroscience in the 20$^{th}$ century has 
 
 This paradigm has been appropriate, given the kind of data available to people investigating the brain.  More specifically, the kind of data that has been most available has been time-series of signals related to neural activity \cite{}.  Given that electrical engineers were largely the individuals obtaining and analyzing the data, it was natural to take a signal-processing approach.  Often, the dynamic time-series data were used to estimate static parameters.  In the previous decades, these communities have been more and more sophisticated models and algorithms to estimate these parameters \cite{}.  Recently, issues such as parameter identifiability, consistency, bias, and model selection have been gaining traction as important desiderata for our models \cite{}.  
 
-\paragraph{Alternate Paradigm}
+\subsection{Alternate Paradigm}
 
 Here, we define a different goal, which suggests a complementary research paradigm to the current dogma: %which we believe has not been satisfied by any previously proposed research paradigm.  Further, we elaborate on a novel paradigm that we believe is sufficient to satisfy this goal.
 
@@ -42,7 +47,7 @@ Here, we define a different goal, which suggests a complementary research paradi
 	Construct a family of brain-models, $\mB$, that is sufficient to provide \emph{causal} explanations relating properties of minds with properties of brains.
 \end{goal}
 
-Note how the above goal is distinct in certain respects from the ``filtering'' goal.  First, neither stimulus nor response is explicitly incorporated into this goal.  While stimuli and response may be used as tools to obtain the parameters of $\mB$, that is their only merit in this paradigm.  Second, minds are explicitly incorporated into this goal.  While spike trains or fMRI signal may indicate mental processes, they are likely not what is meant by ``mind''; rather, they may be used as tools to infer mental states.  Third, the inclusion of a class of models $\mB$  suggests a statistical \emph{static} framework, rather than a dynamics perspective.  In addition to the above stated goal, we would like the family of models $\mP$ to satisfy a number of desiderata:
+Note how the above goal is distinct in certain respects from the ``filtering'' goal.  First, neither stimulus nor response is explicitly incorporated into this goal.  While stimuli and response may be used as tools to obtain the parameters of $\mB$, that is their only merit in this paradigm.  Second, minds are explicitly incorporated into this goal.  While spike trains or fMRI signal may indicate mental processes, they are likely not what is meant by ``mind''; rather, they may be used as tools to infer mental states.  Third, the inclusion of a class of models $\mB$  suggests a statistical \emph{static} framework, rather than a dynamics perspective.  In addition to the above stated goal, we would like the family of models $\mB$ to satisfy a number of desiderata:
 
 \begin{enumerate}
 	\item $\mB$ %$=\{\mathbb{P}_{\bth}; \bth \in \bTh\}$ 
@@ -53,48 +58,73 @@ Note how the above goal is distinct in certain respects from the ``filtering'' g
 	\item $\mB$ should also admit \emph{causal} studies, which entail modifying a particular $b \in \mB$, to modify the corresponding mental property, $m \in \mM$.
 \end{enumerate}
 
+\section{NeuroCognitive Graph Theory}
 
-\paragraph{NeuroCognitive Graph Theory}
+\subsection{Brain-graphs}
 
-Here, we propose a novel approach, called NeuroCognitive Graph (NeCoG) theory, which we believe achieves the above goal and its associated desiderata.  Specifically, we say that the brain may be well characterized as a labeled, attributed multigraph (which is a generalized notion of a or network\footnote{I think binary graphs should probably go here, with extensions later.}).  Formally, we define a brain-graph, $b\in \mB$ as a 4-tuple, $\mB=(\mV,\mE,\mX_V, \mX_E)$, where
+Here, we propose the notion of a \emph{brain-graph}.  Specifically, we say that the brain may be well characterized as a labeled, attributed multigraph (which is a generalized notion of a or network).  Formally, we define a brain-graph, $b\in \mB$ as a 4-tuple, $\mB=(\mV,\mE,\mX_V, \mX_E)$, defined by the following:
 
 \begin{itemize}
-	\item $V_i \in \mV \subseteq \mathbb{Z}$ for $i \in [V]$, is the set of vertices (nodes), where $[V]=\{1,2,\ldots,V\}$ 
-	\item $E_{ijk} \in \mE \subseteq [V] \times [V] \times \mathbb{Z}$ for $(i,j,k) \in [V] \times [V] \times \mathbb{Z}$ is the set of (directed) edges, where $\zz=\{0,1,\ldots\}$
-	\item $\bX_i \in \mX_V \subseteq \Real^{d_V}$ for $i \in [V]$ is the set of vertex attributes, and $d_V$ is the dimensionality of the vertex attributes (potentially including vertex labels)
-	\item $\bX_{ijk} \in \mX_E \subseteq \Real^{d_E}$ for $(i,j,k) \in [V] \times [V] \times [K]$ is the set of edge attributes, $d_E$ is the dimensionality of the edge attributes (potentially including edge labels), and $k$ indexes edge categories, and $K \leq \infty$.
+	\item The set of vertices (nodes), $V=\{V_i\}_{i\in[n_v]}$, where $V_i \in \mV \subseteq \mathbb{Z}$ for $i \in [n_v]=\{1,2,\ldots,n_v\}$. 
+	\item The set of edges, $E=\{E_{ij}\}_{i,j \in [n_v]}$, where $E_{ij} \in \mE \subseteq \mathbb{Z}$ for $(i,j) \in [n_v] \times [n_v]$.  If edges are undirected, then $E_{ij}=E_{ji}$.  If edges are binary, then $\mE=\{0,1\}$.  If we have multi-edges corresponding to categorically different edges (such as electrical and chemical synapses), each edge may also be indexed by $k \in \mathbb{Z}$. If multi-edges correspond to integer weighted edges, then $\mE$ is the set of allowable integers (which may be countably infinite).
+	\item If vertices have features (or labels/attributes), then let $X_i$ correspond to the feature vector for vertex $i$, where $X_i \in \mX_V \subseteq \Real^{d_V}$ for $i \in [n_v]$, and $d_V$ is the dimensionality of the feature vectors.  It may be the case that certain features are measurable/observable, and others are hidden.  If so, let $X_i = X^o_i \cup X^h_o$, and $X^o_i \cap X^h_i = \emptyset$.
+	\item If edges also have features, then let $X_{ij}$ correspond to the feature vector for edge $(i,j)$, where $X_{ij} \in \mX_E \subseteq \Real^{d_E}$ for $(i,j) \in [n_v] \times [n_v]$, and $d_E$ is the dimensionality of the edge features.  In the scenario where categorically different edges exist, let an additional index $k$ indicates edge features for each category $k$.
 \end{itemize}
 
+Assume, for the moment, that we take the fundamental computational unit of the brain to be a point neuron.  Then, each vertex is a neuron, and each edge is a synapse.  Categorically different edges may correspond to chemical and electrical synapses. Vertex attributes could include neurotransmitter released, proteins expressed, morphological properties, receptive fields, etc.  Edge attributes could include probability of release, post-synaptic potential shape, etc.  This level of description, however, is not necessary.  For instance, $\mV$ might instead correspond to neuroanatomical regions, which admit very different notions for edges and attributes.  This multi-scale aspect of $\mB$ is an important advantage over other frameworks.  
 
-Assume, for the moment, that we take the fundamental computational unit of the brain to be a point neuron.  Then, each vertex is a neuron, and each edge is a synapse.   Multi-edges potentially correspond to different edge magnitudes and/or categorically different edges (like chemical and electrical synapses). Vertex attributes could include neurotransmitter released, proteins expressed, morphological properties, receptive fields, etc.  Edge attributes could include probability of release, post-synaptic potential shape, etc.  This level of description, however, is not necessary.  For instance, $\mV$ might instead correspond to neuroanatomical regions, which admit very different notions for edges and attributes.  This multi-scale aspect of $\mB$ is an important advantage over other frameworks.  
+\subsection{What to do with these brain-graphs}
 
-Given $\mB$, what can we do with it?  As stated above, our goal is to relate these models to properties of cognition. More specifically, let $\mM$ characterize the space of the cognitive (mental) property, and $g \in \mG$ be some function to learn.  
+Given $\mB$, what can we do with it?  As stated above, our goal is to relate these models to properties of cognition. More specifically, let $\mM$ characterize the space of the mental (cognitive) property, and $g \in \mG$ be some function to learn.  
 
 \begin{itemize}
 	\item If $\mM=\{0,1\}$, then $g$ is a two-way classifier: $g: \mB \conv \{0,1\}$.
-	\item If $\mM=\{0,1,\ldots, C\}$, then $g$ is an $C-$way classifier: $g: \mB \conv \{0,1,\ldots,C\}$.
+	\item If $\mM=\{0,1,\ldots, n_m\}$, then $g$ is an $n_m-$way classifier: $g: \mB \conv \{0,1,\ldots,n_m\}$.
 	\item If $\mM=\Real^a$, then $g$ is a (multivariate-) regressor: $g: \mB \conv \Real^a$.  
 \end{itemize}
 
-In general, solving the above problems---which means finding $g$---will depend on $F=F_{BM}$, the joint distribution of brains and minds.  In practice, however, $F$ is unknown, and therefore $g$ must be estimated from the data. Assume we have a corpus of training data, $\mD_n=\{(B_1,M_1), \ldots, (B_n, M_n)\}$, where $n$ is the number of training samples.  Our goal then is to compute $g_n: \mB \times (\mB, \mM)^n \conv \mM$, which takes as input an observed brain-graph $b$ and $n$ training paris $\{(b_1,m_1), \ldots, (b_n,m_n)\}$ and produces a prediction $\hm=g_n(b; \mD_n)$.  The goal is to find a $g_n$ that minimizes some loss function, $L_F(g_n)$.  For instance, when $|\mM|=2$, a potentially reasonable loss function is $L_F(g_n)=\mathbb{E}[P_F[g_n(B;\mD_n) \neq M | \mD_n]]$.
+In general, solving the above problems---which means finding $g$---will depend on the joint distribution of brains and minds, $F=F_{BM}$.  In practice, however, $F$ is typically unknown, and therefore $g$ must be estimated from the data. Assume we have a corpus of training data, $\mD_n=\{(B_1,M_1), \ldots, (B_n, M_n)\}$, where $n$ is the number of training samples.  Our goal then is to compute $g_n: \mB \times (\mB, \mM)^n \conv \mM$, which takes as input an observed brain-graph $b$ and $n$ training paris $\{(b_1,m_1), \ldots, (b_n,m_n)\}$ and produces a prediction $\hm=g_n(b; \mD_n)$.  The particular $g_n$ should be the one that minimizes some loss function, $L_F(g_n)$, over the space of all possible $g_n$'s, $\mG$.  For instance, when $|\mM|=2$, $\mG$ is all possible two-way classifiers, and a potentially reasonable loss function is $L_F(g_n)=\mathbb{E}[P_F[g_n(B;\mD_n) \neq M | \mD_n]]$.
 
-\paragraph{Finding a good $g_n$}
+Importantly, in addition to finding a $g_n$ that minimizes some loss-function, $g_n$ should admit a way to \emph{morph} any brain's mental property $m$, by modifying $b$.  This will be discussed at greater length in the sequel.  
 
-Thus, given a mental property, a decision about how to represent it, $\mM$, and a loss function, $L$, our task is to find a good $g_n$.  Vogelstein et al. (2010) showed that a $k_n$ nearest neighbor (knn) classifier is a universally consistent classifier (meaning, achieves the Bayes optimal performance), for $F_{BM}$, under a Frobenius norm distance metric.  While this is a desirable property, our belief is that other $g_n$'s may outperform the knn classifier on finite data sets.  More specifically, while knn induces no bias whatever into $g_n$, the variance is large.  Thus, by incorporating neuroscientific knowledge about these brain-graphs into $g_n$, it may be possible to only marginally increase the bias, but drastically reduce the variance, yielding improved performance.  
 
-One possible strategy is to propose a class of models, $\mP=\{P_{\bth} : \bth \in \bTh \subseteq \Real^d\}$, whose dimensionality $d$ could depend on the data.  %goes to infinity as $n$ goes to infinity.   The advantage of using a semiparametric model is the amount of bias introduced by the model is a function of the amount of data available, that is, given infinite data, they can be bias free. 
-The goal then is to find a Minimally Sufficient Model (MSM; by analogy with minimally sufficient statistics), which is the brain-graph with the least parameters that is sufficient to explain the mental property under investigation.  %$g_n$ then operates directly on $\hbth$, the data dependent estimate of the model parameters, $\bth$. 
-Classification/regression with $g_n$ is then performed on $\hbth$, which lives in some space smaller than $\mB$, thereby reducing the variance, without increasing bias too much (hopefully).
+\subsection{Finding a good $g_n$}
 
+Thus, given a mental property, a decision about how to represent it, $\mM$, and a loss function, $L$, our task is to find a good algorithm, $g_n$.  Two complementary strategies are possible: model-free and model-based.  Model-free algorithms have the advantage that no model need be specified.  Thus, in theory, model-free algorithms have the advantage of having little or no bias.  Unfortunately, this freedom comes with the cost of relatively high variance.  On the other hand, model-based algorithms can significantly reduce variance, but (almost) necessarily increase bias.  Importantly, many standard algorithms, including linear, quadratic, and support vector based classifiers/regressors \emph{implicitly} define a model, and are therefore not strictly ``model-free''.
+
+\subsubsection{Model-free algorithms}
+
+Model-free algorithms often operate on interpoint distance space, as opposed to the explicit data space \cite{MaaBartoszynski96}.  More formally, given any two brain-graphs, $b_1$ and $b_2$, first define an interpoint (pseudo-) distance metric: $\rho: \mB \times \mB \mapsto [0,\infty)$.  This reduces the problem from operating in $\mB$ to operating in $\Real$.  Because the data collected is often corrupted by noise, it is typical to also introduce a smoothing function: $s: \mB \mapsto \mB$.  For the brain-graph scenario, this may correspond to inferring unobserved edges.  Thus, the smoothing-derived (pseudo-) distance metric, $\rho'$ is defined as: $\rho' = \rho(s(b_1),s(b_2))$.  
+
+Perhaps the prototypical model-free algorithm is the $k_n$ nearest neighbor (kNN) algorithm.  Vogelstein et al. (2010) showed that a kNN classifier is a universally consistent classifier (meaning, achieves the Bayes optimal performance), for any $F_{BM}$, under a Frobenius norm distance metric. In other words, they let defined $\rho(\cdot)=\norm{\cdot}_F$, and $s$ was simply the identity (that is, no smoothing).  Simulations showed that for only a few hundred simulated sample data points, this kNN achieved misclassification error rate below 10\%.  In practice, it is often the case that other model-free algorithms outperform (in accuracy) any particular kNN, including class cover catch digraphs, decision trees, and various ensemble approaches such as random forests \cite{}.  Unfortunately, scant theoretical works is available to provide proofs of universal consistency for these alternate model-free algorithms.
+
+%While this is a desirable property, our belief is that other $g_n$'s may outperform the kNN classifier on finite data sets.  More specifically, while kNN induces no bias whatever into $g_n$, the variance is large.  Thus, by incorporating neuroscientific knowledge about these brain-graphs into $g_n$, it may be possible to only marginally increase the bias, but drastically reduce the variance, yielding improved performance.  
+
+
+\subsubsection{Model-based algorithm}
+
+The other possible strategy is to propose a class of models, $\mP=\{P_{\bth} : \bth \in \bTh \subseteq \Real^d\}$, that describe the data (note that the choice of how to determine the dimensionality $d$ of the model specifies whether the model is parametric, semiparametric, or nonparametric).  Ideally, the class of models is sufficiently large to include models very close to the ``truth'', and be able to find a Minimally Sufficient Model (MSM; by analogy with minimally sufficient statistics) within the class, that sufficiently explains the data, with the ``smallest'' $\bTh$ (a potentially useful measure of size is the set cardinality).  
+%goes to infinity as $n$ goes to infinity.   The advantage of using a semiparametric model is the amount of bias introduced by the model is a function of the amount of data available, that is, given infinite data, they can be bias free. The goal then is to find a Minimally Sufficient Model (MSM; by analogy with minimally sufficient statistics), which is the brain-graph with the least parameters that explains the mental property under investigation sufficiently.  %$g_n$ then operates directly on $\hbth$, the data dependent estimate of the model parameters, $\bth$. 
+Classification/regression with $g_n$ is then performed on the estimate of $\bth$, which lives in some $\bTh$ space smaller than $\mB$, thereby reducing the variance, without increasing bias too much (hopefully).  The model-based approach also (potentially) offers the advantage of \emph{interpretability}, if the parameters, $\bth$, correspond to interpretable features of the brain.  
+
+Let $b_i$ correspond to brain-graph $i$.  The model-based approach then typically assumes that each $b_i$ is sampled identically and independently from some parametric distribution, $b_i \overset{iid}{\sim} P(b_i | \bth) \, \forall i \in [n]$. Because $\bth$ is typically unknown, an estimate, $\hbth$, must be found.  Given such an estimate, $g_n$ operates directly on the estimated parameters, as opposed to the brain-graphs \footnote{Is it interesting to note that neither paradigm actually operates directly on the data?  The model-free approach operates}
+
+The maximum likelihood approach then specifies to find The task is then to find an estimate $\hbth$, such that
+
+\begin{align}
+	\hbth = \argmax_{\bth} \prod_{i\in [n]} P(b_i | \bth)
+\end{align}
+
+If a prior over the parameters is specified
 
 \paragraph{Generative Model}
 
 Consider the following generative model for attributed multigraphs:
 
 \begin{itemize}
-	\item Let $c$ be a \emph{class identity}, where $c \in \mC=\{0,1,\ldots, C\}$
+	\item Let $c$ be a \emph{class identity}, where $c \in \mC=\{0,1,\ldots, C\}$.  The distribution of class identity, which is a random variable, is given by $f_c=MN(\bpi)$, where $MN$ indicates a multinomial, and $\bpi=(\pi_1, \ldots, \pi_)$
 	\item Let $\bth_c$ be the \emph{parameters} for class $c$, where $\bth_c \in \bTh \subseteq \Real^{d}$, for some $d=d_{V}+d_{E} \in \mathbb{Z}$, where the dimensionality of the parameters is implicitly a function of the data, $\mD_n$.
-	\item Let $G$ be a \emph{graph}, where $G(\bth_c) \in (\mV, \mE, \mX_V, \mX_E)$, where for clarity, we restrict edges to be integer weights (i.e., only include a single category of edge attributes, but this may straightforwardly generalized)%,  Note that, for simplicity, we have dropped $\mX_E$.
+	\item Let $b$ be a \emph{brain-graph}, where $b(\bth_c) \in \mB=(\mV, \mE, \mX_V, \mX_E)$, where for clarity, we restrict edges to be integer weights (i.e., only include a single category of edge attributes, but this may straightforwardly generalized)%,  Note that, for simplicity, we have dropped $\mX_E$.
 \end{itemize}
 
 To sample graphs from this generative model, assuming that $C$ and $V$ are given (the number of classes and vertices per graph, respectively), one can use the following procedure (generalizing to the unknown $V$ case is straightforward and therefore omitted):
@@ -102,11 +132,11 @@ To sample graphs from this generative model, assuming that $C$ and $V$ are given
 \begin{itemize}
 	\item sample $c \sim f_c$
 	\item sample $\bth_c \sim f_{\bth}(\cdot | c)$
-	\item for $i \in [V]$, sample $\bX_i \sim f_{X_V}(\cdot | \bth_c^V)$
-	\item for $(i,j) \in [V] \times [V]$
+	\item for $i \in [n_v]$, sample $X_i \sim f_{X_V}(\cdot | \bth_c^V)$
+	\item for $(i,j) \in [n_v] \times [n_v]$
 	\begin{itemize}
-		\item sample $\bX_{ij} \sim f_{X_E}(\cdot | \bth_c^E)$
-		\item  sample $E_{ij} \sim f_E(\cdot | \bX_i, \bX_j, \bX_{ij})$
+		\item sample $X_{ij} \sim f_{X_E}(\cdot | \bth_c^E)$
+		\item  sample $E_{ij} \sim f_E(\cdot | X_i, X_j, X_{ij})$
 	\end{itemize}
 \end{itemize}
 
@@ -115,16 +145,16 @@ To sample graphs from this generative model, assuming that $C$ and $V$ are given
 % \begin{algorithmic}[1]
 % \STATE sample $c \sim P(c)$
 % \STATE sample $\bth_c \sim f_{\bth}(\cdot | c)$
-% \FOR{$i \in [V]$}
-% \STATE sample $\bX_i \sim f_{X_V}(\cdot | \bth_c)$
+% \FOR{$i \in [n_v]$}
+% \STATE sample $X_i \sim f_{X_V}(\cdot | \bth_c)$
 % \ENDFOR
 % 
-% \FOR{$(i,j) \in [V] \times [V]$}
-% \STATE sample $\bX_{ij} \sim f_{X_E}(\cdot | \bth_c)$
+% \FOR{$(i,j) \in [n_v] \times [n_v]$}
+% \STATE sample $X_{ij} \sim f_{X_E}(\cdot | \bth_c)$
 % \ENDFOR
 % 
-% \FOR{$(i,j) \in [V] \times [V]$}
-% \STATE sample $E_{ij} \sim f_E(\cdot | \bX_i, \bX_j, \bX_{ij})$
+% \FOR{$(i,j) \in [n_v] \times [n_v]$}
+% \STATE sample $E_{ij} \sim f_E(\cdot | X_i, X_j, X_{ij})$
 % \ENDFOR
 % \end{algorithmic} 
 % \end{algorithm}
@@ -132,51 +162,54 @@ To sample graphs from this generative model, assuming that $C$ and $V$ are given
 Note that we have partitioned $\bth_c$ into $\bth_c^V$ and $\bth_c^E$.  The probability of obtaining any graph, when using this procedure, is therefore given by:
 
 \begin{align} \label{eq:G}
-	P(G | C,V) = \left(\prod_{i,j \in [V]} f_E(E_{ij} | \bX_i, \bX_j, \bX_{ij}) f_{X_E}(\bX_{ij} | \bth_c^E) \right) \left(\prod_{i \in [V]} f_{X_V}(\bX_i | \bth_c^V) \right) f_{\bth}(\bth_c | c)  f_c(c)
+	P(G | C,V) = \left(\prod_{i,j \in [n_v]} f_E(E_{ij} | X_i, X_j, X_{ij}) f_{X_E}(X_{ij} | \bth_c^E) \right) \left(\prod_{i \in [n_v]} f_{X_V}(X_i | \bth_c^V) \right) f_{\bth}(\bth_c | c)  f_c(c)
 \end{align}
 
-Evaluating Eq. \ref{eq:G} requires defining $f=\{f_c, f_{\bth}, f_{X_v}, f_{X_E}, f_E\}$ (note that $f_{\bth}$ implicitly depends on defining $\bTh \subseteq \Real^d$, which, in turn, requires a rule for deciding $d$ based on the data).  The most natural choice for $f_c$ is a multinomial, that is, $f_c = MN(\vpi)$, where $\bpi = \{\pi_1, \ldots, \pi_C\}$, $\pi_c>0$, and $\sum_c \pi_c = 1$.   Our task is then to choose the rest of $f$ that yields: (i) models that display the properties of the data, and (ii) are statistically tractable, meaning that $\bth$ may be estimated consistently from the data \footnote{The above generative framework generalizes and unifies previously proposed stochastic graph models, including Random Dot Product Graphs, stochastic block models, etc.}.  To proceed, we first write the posterior of interest.  Importantly, it is often the case that some attributes and edges are hidden.  Define $\bE=\{E_{ij}\}_{i,j \in [V]}$, and let $\bE = \bE^h \cup \bE^o$, where $\bE^h$ corresponds to hidden edges, and $\bE^o$ corresponds to observed edges.  Similarly,  let $\bX = \bX_V \cup \bX_E$, and then $\bX= \bX^h \cup \bX^o$. Finally, define $\bth=\{\bth_c\}_{c \in [C]}$. Thus, we are interested in estimating/maximizing:
+Evaluating Eq. \ref{eq:G} requires defining $f=\{f_c, f_{\bth}, f_{X_v}, f_{X_E}, f_E\}$ (note that $f_{\bth}$ implicitly depends on defining $\bTh \subseteq \Real^d$, which, in turn, requires a rule for deciding $d$ based on the data).  The most natural choice for $f_c$ is a multinomial, that is, $f_c = MN(\vpi)$, where $\bpi = \{\pi_1, \ldots, \pi_C\}$, $\pi_c>0$, and $\sum_c \pi_c = 1$.   Our task is then to choose the rest of $f$ that yields: (i) models that display the properties of the data, and (ii) are statistically tractable, meaning that $\bth$ may be estimated consistently from the data \footnote{The above generative framework generalizes and unifies previously proposed stochastic graph models, including Random Dot Product Graphs, stochastic block models, etc.}.  To proceed, we first write the posterior of interest.  Importantly, it is often the case that some attributes and edges are hidden.  Define $\bE=\{E_{ij}\}_{i,j \in [n_v]}$, and let $\bE = \bE^h \cup \bE^o$, where $\bE^h$ corresponds to hidden edges, and $\bE^o$ corresponds to observed edges.  Similarly,  let $X = X_V \cup X_E$, and then $X= X^h \cup X^o$. Finally, define $\bth=\{\bth_c\}_{c \in [C]}$. Thus, we are interested in estimating/maximizing:
 
 
 \begin{align} \label{eq:post}
-	P(\bth, \bX^h, \bE^h | C, V, \bX^o, \bE^o) \propto ...
+	P(\bth, X^h, \bE^h | C, V, X^o, \bE^o) \propto ...
 \end{align}
 
 
-Several strategies for maximizing Eq. \ref{eq:post} are possible.  First, one could use a Gibbs sampling strategy, iteratively sampling $\bth$, $\bX^h$, and $\bE^h$.  Second, one could use an expectation maximization algorithm, recursively finding the expected values for $\bX^h$ and $\bE^h$, and then use them to estimate $\bth$.  The precise definition of $f$ might necessitate approximating both these strategies.  Alternately, greedy or variational approaches might be more efficient.
+Several strategies for maximizing Eq. \ref{eq:post} are possible.  First, one could use a Gibbs sampling strategy, iteratively sampling $\bth$, $X^h$, and $\bE^h$.  Second, one could use an expectation maximization algorithm, recursively finding the expected values for $X^h$ and $\bE^h$, and then use them to estimate $\bth$.  The precise definition of $f$ might necessitate approximating both these strategies.  Alternately, greedy or variational approaches might be more efficient.
 
 
-\paragraph{kidney and egg problem}
+\paragraph{Classification problem}
 
 
-Imagine we are in the classification setting.  It is quite possible that the difference between $P(B | M=0)$ and $P(B | M=1)$ could be purely a function of a fraction of edges having a different probability distribution.  If so, one can define a set $S$ containing all those edges: $S=\{(i,j) | (i,j) \in S\}$.  The null hypothesis would be, $H_0: \exists \, S$ such that $P(\{E_{ij}\}_{(i,j) \in S} | C=0) \neq P(\{E_{ij}\}_{(i,j) \in S} | C=1)$.  Given the above class of models, we may write:
+Imagine we are in the classification setting.  What does it mean that $P(B | M=0) \neq P(B | M=1)$?  It must mean that, for some subset of edges,  the distribution is different for brain-graphs in the two different classes.  More formally, let $S=\{(i,j) | (i,j) \in S\}$.  If class conditional posteriors are different, then it must be the case that $P(\{E_{ij}\}_{(i,j) \in S} | C=0) \neq P(\{E_{ij}\}_{(i,j) \in S} | C=1)$.  Given the above class of models, we may write:
 
 \begin{align}
-	P(\{E_{ij}\}_{(i,j) \in S} | c) &= f(\cdot | \bX, \bth_c) \nonumber \\
-	&= f_E(\cdot | \bX) f_X(\cdot | \bth_c) f_{\bth}(\cdot | c) \nonumber \\
-	&= f_E(\cdot | \bX) f_{X^h}(\cdot | \bX^o, \bth_c) f_{\bth}(\cdot | c)
+	P(\{E_{ij}\}_{(i,j) \in S} | c) &= f(\cdot | X, \bth_c) \nonumber \\
+	&= f_E(\cdot | X) f_X(\cdot | \bth_c) f_{\bth}(\cdot | c) \nonumber \\
+	&= f_E(\cdot | X) f_{X^h}(\cdot | X^o, \bth_c) f_{\bth}(\cdot | c)
 \end{align}
 
+Thus, given a specification for $f$, the task is to find $S$, estimate the parameters $\bth$, compute the likelihood under the two models, and compare.  Finding $S$, however, is, in general, non-trivial.
+
+
 % \begin{description}
-% 	\item[Random Dot Product Graphs]  Let $\bTh = \Real^d$, and $f_{X_V}$ be the identity function, $f_{X_E}$ is a constant, and $f_E=f(\langle \bX_i, \bX_j \rangle)$, where $\langle \cdot , \cdot \rangle$  indicates a dot product
+% 	\item[Random Dot Product Graphs]  Let $\bTh = \Real^d$, and $f_{X_V}$ be the identity function, $f_{X_E}$ is a constant, and $f_E=f(\langle X_i, X_j \rangle)$, where $\langle \cdot , \cdot \rangle$  indicates a dot product
 % \end{description}
 
 
 
 
-% To make this a fully \emph{generative mode}, we must propose a distribution from which the $\bX_i$'s are sampled.  Assuming $\bX \in \Real^d$, then we could let each $\bX_i$ be sampled from a multivariate normal, that is, let $\bX_i \sim \mN(\mu_i,\Sig_i)$.  To be more general, we could concatenate all $\bX_i$'s, $\vbX=[\bX_1, \ldots, \bX_V]$, and proposed that $\vbX \sim \mN(\vmu, \vSig)$.  Imposing constraints on $\Sigma$ (such as block-diagonal) reduces this more general model to the previous one.  If we are in the classification setting, with $z$ classes, the goal then is to estimate $\vmu_z$ and $\vSig_z$, for all $z=1,\ldots, Z$.  The class of $b$ is then the $m_z$ with the highest posterior.  Thus, a natural advantage of a fully generative model is that it admits a principled loss function.  
+% To make this a fully \emph{generative mode}, we must propose a distribution from which the $X_i$'s are sampled.  Assuming $X \in \Real^d$, then we could let each $X_i$ be sampled from a multivariate normal, that is, let $X_i \sim \mN(\mu_i,\Sig_i)$.  To be more general, we could concatenate all $X_i$'s, $\vbX=[X_1, \ldots, X_V]$, and proposed that $\vbX \sim \mN(\vmu, \vSig)$.  Imposing constraints on $\Sigma$ (such as block-diagonal) reduces this more general model to the previous one.  If we are in the classification setting, with $z$ classes, the goal then is to estimate $\vmu_z$ and $\vSig_z$, for all $z=1,\ldots, Z$.  The class of $b$ is then the $m_z$ with the highest posterior.  Thus, a natural advantage of a fully generative model is that it admits a principled loss function.  
 % 
 % \paragraph{Random Dot Product Graphs}
 % 
-%  One particularly compelling model is the Random Dot Product Graph (RDPG), where the value of an edge between two vertices is a function of the dot product between the vertex attributes.  For binary adjacency matrices, for example, we have $P[E_{ij} | \bX_i, \bX_j]=f(\bX_i, \bX_j)$.  More generally, we have $\mathbb{E}[E_{ijk} | \bX_i, \bX_j, k]= f(\bX_i, \bX_j, k)$.  This RDPG should satisfy several criteria, as $n \conv \infty$:
+%  One particularly compelling model is the Random Dot Product Graph (RDPG), where the value of an edge between two vertices is a function of the dot product between the vertex attributes.  For binary adjacency matrices, for example, we have $P[E_{ij} | X_i, X_j]=f(X_i, X_j)$.  More generally, we have $\mathbb{E}[E_{ijk} | X_i, X_j, k]= f(X_i, X_j, k)$.  This RDPG should satisfy several criteria, as $n \conv \infty$:
 % 
 % \begin{enumerate}
-% 	\item the parameters should be identifiable (up to an arbitrary scale constant) and asymptotically unbiased, that is $\hbX_i \conv \bX_i$
+% 	\item the parameters should be identifiable (up to an arbitrary scale constant) and asymptotically unbiased, that is $\hbX_i \conv X_i$
 % 	\item the dimensionality of the vertex attributes, $d$ should go to infinity
-% 	\item the number of distinct $\bX$'s should go to infinity, that is $|\mX_v| \conv \infty$
+% 	\item the number of distinct $X$'s should go to infinity, that is $|\mX_v| \conv \infty$
 % \end{enumerate}
 % 
-% To ensure the first criterium, $f(\cdot)$ must be carefully chosen.  For example, letting the number of edges between any pair of vertices correspond to an integer weight on the edge, we could let $P[E_{ij} | \bX_i,\bX_j]=$Poisson(e$^{\bX_i\T \bX_j}$) \cite{}.   Note that this model can implicitly include labels on vertices and edges, explicitly includes vertex attributes, and not does include edge attributes.  
+% To ensure the first criterium, $f(\cdot)$ must be carefully chosen.  For example, letting the number of edges between any pair of vertices correspond to an integer weight on the edge, we could let $P[E_{ij} | X_i,X_j]=$Poisson(e$^{X_i\T X_j}$) \cite{}.   Note that this model can implicitly include labels on vertices and edges, explicitly includes vertex attributes, and not does include edge attributes.  
 
 
 
@@ -184,9 +217,9 @@ Imagine we are in the classification setting.  It is quite possible that the dif
 
 attributed vertices, hyperedges
 
-\paragraph{Simulated applications}
+\section{Simulated applications}
 
-\paragraph{Concluding thoughts}
+\section{Concluding thoughts}
 
 
 
