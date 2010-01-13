@@ -234,88 +234,132 @@ Unfortunately, while tractable and simple, this model does not satisfy all of ou
 \label{ssub:edge_cond}
 
 
-In Section \ref{ssub:edge_indep}, we defined a very simple model, completely neglecting all features, and assuming the each edge is independent.  For many data sets, making either of these assumptions (and all the more so for both of these assumptions) will not yield satisfactory descriptions of the data \cite{?}.  Here, we relax the last two assumptions.  Rather, the probability of each edge is only a function of the feature vectors for the two vertices that define the edge, and the feature vector of the edge.  In this model, edges are not independent, but they are \emph{conditionally independent} given the features.   Formally, let $x$
-
-we say:
+In Section \ref{ssub:edge_indep}, we defined a very simple model, completely neglecting all features, and assuming the each edge is independent.  For many data sets, making either of these assumptions (and all the more so for both of these assumptions) will not yield satisfactory descriptions of the data \cite{?}.  Here, we relax the last two assumptions.  Rather, the probability of each edge is only a function of the feature vectors for the two vertices that define the edge, and the feature vector of the edge.  In this model, edges are not independent, but they are \emph{conditionally independent} given the features.   Formally, denote vertex features by $x_v=(x_1, \ldots, x_{n_v})$ and denote edge features by $x_e=(x_{1,1}, \ldots, x_{1,n_v}, x_{2,1}, \ldots x_{n_v,n_v})$, so the total feature vector for a brain-graph is $x=(x_v, x_e)$.  Then, the brain-graph is characterized entirely by $b=(e,x)$, and for any brain-graph, one can write:
 \begin{align}
 	P(b^l | \theta) &= P(e^l, x^l | \theta) = P_E(e^l | x^l) P_X(x^l | \theta) 
-	% \\ &=\prod_{(i,j) \in e^l} P_{E}[e_{ij}^l | x^l) P_X(x^l | \theta)\\
-	% &= \prod_{(i,j) \in e^l} P_{E}[e_{ij}^l | x^l) P_{X_E} [x^l_{ij} | \theta ) \prod_{i\in[n_v]} P_{X_V}(x^l_i | \theta) 
 \end{align}
-% Importantly, the feature distribution, $P_X(x^l | \theta)$ factorizes into vertex and edge features, and both further factorize:
-% \begin{align}
-% 	P_X(x^l | \theta) = P_{X_V}(x^l_V | \theta) P_{X_E}(x^l_E | \theta) = \prod_{i\in[n_v]} P_{X_V}(x^l_i | \theta) \prod_{(i,j)\in e^l}P_{X_E}(x^l_{ij} | \theta) 
-% \end{align}
 Assuming that all edges and features are observed, and we have classes $\{0,1,\ldots,C\}$, yielding conditional parameters, $\{\theta_0$, $\theta_1$, $\ldots$, $\theta_C\}$, then we can estimate the parameters for this model, for any particular class $c$:
 \begin{align}
-	\widehat{\theta}_c 	&= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} P(\theta_c | e^l, x^l) %\nonumber \\ &
-			= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} P(e^l, x^l | \theta_c) P_{\theta}(\theta_c) \nonumber \\
-			&= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} P_E(e^l | x^l) P_X(x^l | \theta_c) P_{\theta}(\theta_c) %\nonumber \\ &
-			= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c}  P_X(x^l | \theta_c) P_{\theta}(\theta_c). 
-			% \nonumber \\
-			% 			&=\argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} \bigg(\prod_{i\in[n_v]} P_{X_V}[x^l_i | \theta_{c_i}]\bigg) \prod_{(i,j)\in e^l} P_{X_E} [e^l_{ij} | \theta_{c_{ij}}], 
+\widehat{\theta}_c 	&= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} P(\theta_c | e^l, x^l) %\nonumber \\ &
+		= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} P(e^l, x^l | \theta_c) P_{\theta}(\theta_c) \nonumber \\
+		&= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c} P_E(e^l | x^l) P_X(x^l | \theta_c) P_{\theta}(\theta_c) 					 					
+		= \argmax_{\theta_c \in \Theta} \prod_{l | m^l=c}  P_X(x^l | \theta_c) P_{\theta}(\theta_c).  \label{eq:cond}
 \end{align}
-% where $\theta_c$ has been partitioned into $\{\theta_{0_i}\}_{i\in [n_v]}$ and $\{\theta_{0_{ij}}\}_{(i,j)\in e^l}$. 
-Remembering that $x$ corresponds to feature vectors, denote vertex features by $x_v=(x_1, \ldots, x_{n_v})$ and denote edge features by $x_e=(x_{1,1}, \ldots, x_{1,n_v}, x_{2,1}, \ldots x_{n_v,n_v})$, so the total feature vector is $x=(x_v, x_e)$. %, where $x\in \Real^{d_v + d_e}$.  Further, let $d_v=j n_v$ and $d_E = k n_v^2$, where $j$ and $k$ correspond to the dimensionality of vertex and edge features, respectively.   
-If each $x$ is Gaussian distributed, then $P_X(\cdot | \theta)=\mN(\cdot; \mu,\Sigma)$, ignoring the prior $P_{\theta}$, we can use standard tools to compute the maximum likelihood estimate (MLE) of $\theta_c$: %.  More specifically, let $x^l = \{x^l_i\}_{i\in[n_v]} \cup \{x^l_{ij}\}_{(i,j)\in e^l}$, and $\mu_0$ and $\Sigma_0$ indicate the mean and variance of $x$ when $m=0$, we have:
+To solve Eq.~\ref{eq:cond}, we must only specify both $P_X$ and $P_{\theta}$, but not $P_E$.  However, the nature of $P_E$ will impact the other decisions, so we therefore specify it as well.  Because the data under consideration are integer weighted edges, a natural choice for $P_E$ is a Poisson distribution, with some rate, $\lam \geq 0$:
+\begin{align} \label{eq:E}
+	P_E(e_{ij} | x_i,x_j) = \text{Poisson}(e_{ij}; f(\langle x_i, x_j \rangle))
+\end{align}
+where $\langle \cdot, \cdot \rangle$ indicates a dot product, and $f$ is some ``link'' function.  Note that the dependence on edge features, $x_{ij}$, has been dropped.  The link function here plays the role of mapping the dot product into the support of Poisson rates, which is non-negative (similar to the link function in a generalized linear model \cite{McCullaghNelder89}).  We consider two possibilities for $x$.
+
+\paragraph{$x \in \Real^d_+$}
+
+If $x$ lives in some space such that $\langle x_i, x_j \rangle \geq 0$ for all $x_i, x_j \in \mX_V$, then $f$ can be a simple identity function.  One example of such a space is the unit hypercube \cite{?}. The parameters governing this distribution, $\vmu$, $\sig$, and $\alpha$ control the frequency, variability and correlation of $x$, respectively. 
+
+sampling $x$
+
+estimating parameters
+
+conjugate prior
+
+(waiting to get the pre-print on hypercube distributions).  
+
+\paragraph{$x \in \Real^d$}
+
+However, if $x$'s live in some more general space, such as $\Real$, then $f$ can be an exponential function.  In such a scenario, $x$ can be sampled from a multivariate Gaussian distribution, that is $P_X( \cdot | \theta)=\mN(\cdot; \mu,\Sigma)$.  Ignoring the prior $P_{\theta}$, we can use standard tools to compute the maximum likelihood estimate (MLE) of $\theta_c$:
 \begin{align}
 	\hmu_c &= \argmax_{\mu_c} \prod_{l | m^l= c} \mN(x^l; \mu_c, \Sigma_c) = \frac{1}{n_c} \sum_{l | m^l = c} x_l \\
 	\hSig_c &= \argmax_{\Sig_c} \prod_{l | m^l= c} \mN(x^l; \mu_c, \Sigma_c) =\frac{1}{n_c} \sum_{l | m^l=c} (x^l - \hmu_c) (x^l -\hmu_c)\T.
-	% \argmax_{\mu} \sum_x \log \mN(x; \mu, \Sigma) \nonumber \\ &= \argmax_{\mu} \sum_x \log \frac{1}{(2\pi)^{d/2} |\Sigma|^{1/2}} \exp\left\{-\frac{1}{2}(x-\mu)\T \Sigma^{-1}(x-\mu) \right\} \nonumber \\ 
-	% 		&= \argmax_{\mu} - \sum_x \norm{x-\mu}_2^2
 \end{align}
-Alternately, the Normal-Inverse-Wishart distribution is the conjugate prior of the Gaussian distribution, so we could incorporate prior information. In practice, incorporating prior information will typically be required, as $\theta_c \in \Real^d$ is far too high-dimensional to estimate from typical data sets, since $d \geq n_v^2+n_v$.  Thus, we can incorporate strong prior knowledge in a number of ways.  First, we assume that vertex and edge features are independent, meaning $\Sig_c$ is block-diagonal.  We can make $\Sig_c$ more ``blocky'' by assuming vertex features are independent of one another, and similarly for edge features.  This yields an independent covariance matrix for each feature vector.  Then, we can assume that each feature vector has a diagonal covariance matrix. More strongly, we can assume each covariance matrix is a scalar times the identity matrix.  If we are feeling really saucy, we could even assume that the covariance matrices are known.  Even given all these constraints to ensure robust estimates of the parameters, this model can satisfy all the above criteria for $\mP$, assuming that $d$ is allowed to increase to infinity.  Both semiparameter and nonparameter approaches could be used to choose $\hd$.  Cross-validation, AIC, BIC, or many other methods may be used to determine the optimal $\hd$ from the data. Letting $\theta=\{\theta_0,\ldots,\theta_C\}$, once $\hth_c \in \Real^{\hd}$ is estimated for each $c\in[C]$, we classify a new brain $b=(e,x)$ according to:
+Alternately, the Normal-Inverse-Wishart distribution is the conjugate prior of the Gaussian distribution, so we could incorporate prior information. In practice, incorporating prior information will typically be required, as $\theta_c \in \Real^d$ is far too high-dimensional to estimate from typical data sets, since $d \geq n_v^2+n_v$.  Thus, we can incorporate strong prior knowledge in a number of ways.  First, we assume that vertex and edge features are independent, meaning $\Sig_c$ is block-diagonal.  We can make $\Sig_c$ more ``blocky'' by assuming vertex features are independent of one another, and similarly for edge features.  This yields an independent covariance matrix for each feature vector.  Then, we can assume that each feature vector has a diagonal covariance matrix. More strongly, we can assume each covariance matrix is a scalar times the identity matrix.  If we are feeling really saucy, we could even assume that the covariance matrices are known.  
+
+\paragraph{Choosing $\hd$}
+
+For both the above choices, this model can satisfy all the above criteria for $\mP$, assuming that $d$ is allowed to increase to infinity.  Both semiparameter and nonparameter approaches could be used to choose $\hd$.  Cross-validation, AIC, BIC, or many other methods may be used to determine the optimal $\hd$ from the data. 
+
+
+\paragraph{Classifying}
+
+Letting $\theta=\{\theta_0,\ldots,\theta_C\}$, once $\hth_c \in \Real^{\hd}$ is estimated for each $c\in[C]$, we classify a new brain $b=(e,x)$ according to:
 \begin{align}
 	 \hm &= g_n(b; \mD_n, \theta) = \argmax_{c\in[C]} P(b | \theta_c) 
 	 	 = \argmax_{c\in[C]}  P_E(e | x)  P_X(x | \theta_c) P_{\theta}(\theta_c) \nonumber \\
 		&= \argmax_{c\in[C]}  \bigg(\prod_{i,j \in [n_v]} P_E(e_{ij} | x_i, x_j, x_{ij}) P_X(x_{ij} | \hth_{c_{ij}})\bigg) \bigg(\prod_{i \in [n_v]} P_X(x_i | \hth_{c_i})\bigg)  P_{\theta}(\hth_c)
 		,
 \end{align}
-which requires specifying $P_E$. As above, a natural choice is a Poisson distribution:
-\begin{align} \label{eq:link}
-	P_E(e_{ij} | x_i, x_j, x_{ij}) &= \text{Poisson}(e_{ij}; f(x_i,x_j,x_{ij}))),
+where we have assumed that $P_E(x_i | \theta_c)=P_E(x_i | \theta_{c_i})$ for all $i$.
+
+
+\paragraph{Unobserved features, but known parameters}
+
+In the above, we implicitly assumed that all the edges and features were observed.  In practice, however, this is often not the case.  Assume, for the moment, that $e$ \emph{and} $\theta$ are known, but $x$ is not known.  Then, we have:
+\begin{align} \label{eq:hx}
+	\hx &= \argmax_{x \in \mX} P(x|e;\theta) = \argmax_{x \in \mX} P(e|x;\theta) P_X(x|\theta) = \argmax_{x \in \mX} 
+	 P_E(e|x) P_X(x|\theta) \nonumber \\
+	&= \argmax_{x \in \mX} \prod_{i,j \in [n_v]} P_E(e_{ij}|x_i,x_j) P_X(x_i | \theta_i) P_X(x_j|\theta_j) \nonumber \\
+	&= \argmax_{x \in \mX} \sum_{i,j \in [n_v]} \ln P_E(e_{ij}|x_i,x_j) + \ln P_X(x_i | \theta_i) + \ln  P_X(x_j|\theta_j) 
+	% &= \argmax_{x \in \mX} \ln P_E(e|x) + \ln P_X(x | \theta)
 \end{align}
-where $f$ here may be thought of as the ``link function'' of a generalized linear model, that is, $f(x_i,x_j,x_{ij})=\exp\{x_i (x_{ij} x_j)\T\}$. The close relationship between Eq.~\ref{eq:link}  and the random dot product graph model suggests that we denote this the Random Quadratic Dot Product Graph (RQDPG) model.  
+where the first equality follows from applying Bayes rule twice and dropping terms that do not depend on $x$, and the second equality comes from our model assumptions.  Substituting Eq.~\eqref{eq:E} and letting $P_X$ be a Gaussian, Eq.~\eqref{eq:hx} simplifies:
+\begin{align} \label{eq:hx2}
+	\hx &= \argmax_{x \in \mX} \sum_{i,j \in [n_v]} e_{ij} - \exp\{x_i\T x_j\} - \ln (e_{ij}!) - \sum_{k=i,j} \ln \big((2\pi)^{d/2} |\Sigma_k|^{1/2}\big) - \frac{1}{2} (x_k-\mu_k)\T \Sigma_k^{-1} (x_k-\mu_k) \nonumber \\
+	&= \argmax_{x \in \mX} \sum_{i,j \in [n_v]} -\exp\{x_i\T x_j\} - \sum_{k=i,j}\frac{1}{2} (x_k-\mu_k)\T \Sigma_k^{-1} (x_k-\mu_k)
+\end{align}
+where the second equality comes from dropping terms independent of $x$.  Seems to me like everything is now concave in $x$, so we can use gradient ascent to obtain $\hx$.  I haven't checked yet though, and it seems a little too good to be true.
 
 
-\paragraph{Unobserved edges and features}
 
-In the above, we implicitly assumed that all the edges and features were observed.  In practice, however, this is often not the case.  Thus, our goal is to jointly infer $x^h$ and $\theta$.  Two strategies are ``natural'': (i) an expectation-maximization (EM) strategy, in which one alternates computing the expected value of $x^h$, and using that expected value to maximize the estimate of $\theta$, or (ii) a Gibbs sampling approach, in which we recursively sample from each to build up the joint distribution.
+
+\paragraph{Unobserved features, and unknown parameters}
+
+In practice, often neither the features $x$, nor the parameters, $\theta$, are known a priori.  Thus, our goal is to jointly infer $x$ and $\theta$.  Three strategies are ``natural'': (i) an expectation-maximization (EM) strategy, in which one alternates computing the expected value of $x^h$, and using that expected value to maximize the estimate of $\theta$, (ii) a Gibbs sampling approach, in which we recursively sample from each to build up the joint distribution, (iii) an approximate EM approach where instead of computing the full expectation, we only compute the MAP estimate.  Assuming we can obtain $\hx$, we can plug it in to update $\hth$, and recurse.
+
+\subparagraph{EM strategy}
 
 To use the EM strategy, assume for the moment that edges are all observed, but features are not.  Therefore, the EM approach proceeds in two steps:
-
 \begin{align*}
-\textbf{E step: } \text{Compute } & Q(\theta,\theto) = E_{P(x | e; \theto)} \ln P(e,x | \theta) = \int P(x | e; \theto) \ln P(e,x | \theta) dx\\
-\textbf{M step: } \text{Compute }& \theth = \argmax_{\thetn} Q(\thetn,\theto)
+\textbf{E step: } \text{Compute } & Q(\theta,\theta') = E_{P(x | e; \theta')} \ln P(e,x | \theta) = \int P(x | e; \theta') \ln P(e,x | \theta) dx\\
+\textbf{M step: } \text{Compute }& \hth = \argmax_{\theta} Q(\theta,\theta')
 \end{align*}
-
 Note that $P(e,x|\theta)$ factorizes:
-
 \begin{align}
 	P(e,x|\theta) &= P(e | x; \theta) P(x | \theta) = P(e|x) P(x|\theta) = \prod_{ij} P(e_{ij} | x_i,x_j) P(x_i, x_j | \theta) \nonumber \\ 
 	&=  \prod_{ij} P(e_{ij} | x_i,x_j) P(x_i| \theta_i) P(x_j | \theta_j)
 \end{align}
+Further, $P(x|e;\theta)$ also factorizes:
+\begin{align}
+	P(x|e;\theta) &= \prod_{ij} P(x_i, x_j | \vec{e}_{ij}, \theta_{ij} )
+\end{align}
+where $\vec{e}_{ij}=\{\ve{e}_{i\cdot}, e_{\cdot i}, e_{j\cdot}, e_{\cdot j}\}$, where we introduce notation $e_{i\cdot}=[e_{i,1}, \ldots, e_{i,n_v}]$, and $\theta_{ij}=[\theta_i,\theta_j]$.  Therefore, we can expand $Q$:
+\begin{align}
+	Q(\theta,\theta') = \iint \prod_{i,j \in [n_v]} P(x_i,x_j | \vec{e}_{ij}; \theta_{ij}) [\ln P(e_{ij}| x_i, x_j) + \ln P(x_i | \theta_i) + \ln P(x_j | \theta_j)] dx_i dx_j
+\end{align}
+If $P(x|\theta)$ is Gaussian, then we can approximate $P(x_i,x_j | \vec{e}_{ij}; \theta_{ij})$ as a Gaussian, and maybe the same for $P(e_{ij} | x_i,x_j)$, and then maybe something good happens?
+
+
 
 \paragraph{Kidney and egg like special case}
 
-one a small set of vertices change their features.  
+only a small set of vertices change their features.  fit the model assuming two classes.  compute  $D(P_X(x_i | \theta_0) || P_X(x_i | \theta_1))$ for all $i$.  rank them, and call them $x_{(1)}, \ldots, x_{(n_v)}$.  fit the model assuming that every vertex except $x_{(1)}$ comes from a one class model, but fit $x_{(1)}$ to a two-class model.  cross-validate to see how well that works.  re-rank vertices using the same metric, based on this new model.  repeat, adding another vertex to the two-class case, until we stop getting improvements.
+
+%$x_i \sim P_X(\cdot | \theta_i)$ for all $x_{(i)}$ where $i \in \{2,\ldots, n_v\}$, but $x_{(1)} \sim P_X(\cdot | \theta_)$
 
 
 \section{Results}  % (fold)
 \label{sec:results}
 
-To evaluate the various above described algorithms, we use each approach on simulated data.  In particular, 
+To evaluate the various above described algorithms, we use each approach on simulated data.  In particular, XXX here we place the simulation from our supervenience paper XXX:
 
-As an example of a feasible experiment, one may consider a species whose nervous system consists of the same (small) number of labeled neurons for each organism. {\it Caenorhabditis elegans} is believed to be such a species \cite{Durbin87}. The hermaphroditic C.~elegans' somatic nervous system consists of 279 interconnected neurons. While the graph with these neurons as vertices and edges defined by chemical synapses between neurons is not identical across individuals, it is reasonably consistent \cite{Durbin87}. Furthermore, these animals exhibit a rich behavioral repertoire that depends on circuit properties \cite{deBonoMaricq05}. Thus, one may design an experiment by describing the joint distribution $F_{BM}$ via class-conditional distributions $F_{B|M=m_j}$ for the C.~elegans brain-graph for two mental properties of interest, $m_0$ and $m_1$, along with the prior probability of class membership $P[M=m_1]$. Here the mental property corresponds to the C.~elegans exhibiting or not exhibiting a particular behavior (e.g., response to an odor).
-
-Simulations suggest that one may build a classifier, practically and with a manageable training sample size $n$, that demonstrates $\varepsilon$-supervenience with reasonable choices for $\varepsilon$ and $\alpha$ and a plausible joint distribution $F_{BM}$ (Figure \ref{fig1}). To generate the data, we let the class-conditional random variable $E_{ij} | M=m_0$ be distributed Poisson$(A_{ij}+\eta)$, where $A_{ij}$ is the number of chemical synapses between neuron $i$ and neuron $j$ according to \cite{VarshneyChklovskii09}, with noise parameter $0<\eta \ll 1$. The class-conditional random variable $E_{ij} | M=m_1$ is distributed Poisson$(A_{ij}+ k_{ij})$ for neurons $i,j \in \mD$, where $\mD$ is the set of edges deemed responsible for odor-evoked behavior according to \cite{ChalasaniBargmann07}, with signal parameter $k_{ij}$ uniformly sampled from $[-5,5]$. We consider $k_n$-nearest neighbor classification of labeled multigraphs (directed, with loops) on 279 vertices, under Frobenius norm. The $k_n$-nearest neighbor classifier used here satisfies $k_n \rightarrow \infty$ as $n \rightarrow \infty$ and $k_n/n \rightarrow 0$ as $n \rightarrow \infty$, ensuring universal consistency. (Better classifiers can be constructed for the joint distribution $F_{BM}$ used here; however, we demand universal consistency.)
-
-Importantly, conducting this experiment {\it in actu} is not beyond current technological limitations. 3D superresolution imaging \cite{VaziriShank08} combined with neurite tracing algorithms \cite{HelmstaedterDenk08,Mishchenko09,LuLichtman09} allow the collection of a brain-graph within a day. Genetic manipulations, laser ablations, and training paradigms can each be used to obtain a non-wild type population for use as $M=m_1$ \cite{deBonoMaricq05}, and the class of each organism ($m_0$ vs.~$m_1$) can also be determined automatically \cite{BuckinghamSattelle08}.
+% As an example of a feasible experiment, one may consider a species whose nervous system consists of the same (small) number of labeled neurons for each organism. {\it Caenorhabditis elegans} is believed to be such a species \cite{Durbin87}. The hermaphroditic C.~elegans' somatic nervous system consists of 279 interconnected neurons. While the graph with these neurons as vertices and edges defined by chemical synapses between neurons is not identical across individuals, it is reasonably consistent \cite{Durbin87}. Furthermore, these animals exhibit a rich behavioral repertoire that depends on circuit properties \cite{deBonoMaricq05}. Thus, one may design an experiment by describing the joint distribution $F_{BM}$ via class-conditional distributions $F_{B|M=m_j}$ for the C.~elegans brain-graph for two mental properties of interest, $m_0$ and $m_1$, along with the prior probability of class membership $P[M=m_1]$. Here the mental property corresponds to the C.~elegans exhibiting or not exhibiting a particular behavior (e.g., response to an odor).
+% 
+% Simulations suggest that one may build a classifier, practically and with a manageable training sample size $n$, that demonstrates $\varepsilon$-supervenience with reasonable choices for $\varepsilon$ and $\alpha$ and a plausible joint distribution $F_{BM}$ (Figure \ref{fig1}). To generate the data, we let the class-conditional random variable $E_{ij} | M=m_0$ be distributed Poisson$(A_{ij}+\eta)$, where $A_{ij}$ is the number of chemical synapses between neuron $i$ and neuron $j$ according to \cite{VarshneyChklovskii09}, with noise parameter $0<\eta \ll 1$. The class-conditional random variable $E_{ij} | M=m_1$ is distributed Poisson$(A_{ij}+ k_{ij})$ for neurons $i,j \in \mD$, where $\mD$ is the set of edges deemed responsible for odor-evoked behavior according to \cite{ChalasaniBargmann07}, with signal parameter $k_{ij}$ uniformly sampled from $[-5,5]$. We consider $k_n$-nearest neighbor classification of labeled multigraphs (directed, with loops) on 279 vertices, under Frobenius norm. The $k_n$-nearest neighbor classifier used here satisfies $k_n \rightarrow \infty$ as $n \rightarrow \infty$ and $k_n/n \rightarrow 0$ as $n \rightarrow \infty$, ensuring universal consistency. (Better classifiers can be constructed for the joint distribution $F_{BM}$ used here; however, we demand universal consistency.)
+% 
+% Importantly, conducting this experiment {\it in actu} is not beyond current technological limitations. 3D superresolution imaging \cite{VaziriShank08} combined with neurite tracing algorithms \cite{HelmstaedterDenk08,Mishchenko09,LuLichtman09} allow the collection of a brain-graph within a day. Genetic manipulations, laser ablations, and training paradigms can each be used to obtain a non-wild type population for use as $M=m_1$ \cite{deBonoMaricq05}, and the class of each organism ($m_0$ vs.~$m_1$) can also be determined automatically \cite{BuckinghamSattelle08}.
 
 \begin{figure}[h!]
 \centering 
 \includegraphics[width=.5\linewidth]{Lhatplot}
-\caption{C.~elegans graph classification simulation results. $\hL^{1000}_{F}(g_n)$ is plotted as a function of class-conditional training sample size $n_j$, suggesting that for $\varepsilon=0.1$ we can determine that $\MeB$ holds with $99\%$ confidence with just a few hundred training samples generated from $F_{BM}$. Each dot depicts an estimate for $L_{F}(g_n)$; standard errors are $(L_{F}(g_n)(1-L_{F}(g_n))/1000)^{1/2}$. E.g., $n_j = 180$ ; $k_n = 53$ ; $\hL^{1000}_{F}(g_n) = 0.057$; standard error less than 0.01. We reject $H_0: L_{F}(g^*) \geq 0.10$ at $\alpha=0.01$. $L_{F}(g^*) \approx 0$ for this simulation.}
+\caption{fig gets additional lines for additional algorithms now.  %C.~elegans graph classification simulation results. $\hL^{1000}_{F}(g_n)$ is plotted as a function of class-conditional training sample size $n_j$, suggesting that for $\varepsilon=0.1$ we can determine that $\MeB$ holds with $99\%$ confidence with just a few hundred training samples generated from $F_{BM}$. Each dot depicts an estimate for $L_{F}(g_n)$; standard errors are $(L_{F}(g_n)(1-L_{F}(g_n))/1000)^{1/2}$. E.g., $n_j = 180$ ; $k_n = 53$ ; $\hL^{1000}_{F}(g_n) = 0.057$; standard error less than 0.01. We reject $H_0: L_{F}(g^*) \geq 0.10$ at $\alpha=0.01$. $L_{F}(g^*) \approx 0$ for this simulation.
+˝}
 \label{fig1}
 \end{figure}
 

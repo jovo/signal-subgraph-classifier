@@ -1,6 +1,5 @@
-This is pdfeTeXk, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2009.4.16)  11 JAN 2010 22:45
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2009.4.16)  13 JAN 2010 02:17
 entering extended mode
- file:line:error style messages enabled.
 **intro-NeCoG.tex
 (./intro-NeCoG.tex
 LaTeX2e <2003/12/01>
@@ -292,42 +291,55 @@ m/n/10 = \OMS/cmsy/m/n/10 f\OML/cmm/m/it/10 ^^U[]; ^^U[]; [] ; ^^U[]\OMS/cmsy/m
 
 LaTeX Warning: Citation `?' on page 5 undefined on input line 237.
 
-[5] [6] <Lhatplot.pdf, id=83, 505.89pt x 505.89pt>
+
+LaTeX Warning: Citation `?' on page 5 undefined on input line 256.
+
+[5] [6]
+Overfull \hbox (0.17906pt too wide) in paragraph at lines 335--337
+\OT1/ptm/m/n/10 If $\OML/cmm/m/it/10 P\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x\OMS/c
+msy/m/n/10 j\OML/cmm/m/it/10 ^^R\OT1/cmr/m/n/10 )$ \OT1/ptm/m/n/10 is Gaus-sian
+, then we can ap-prox-i-mate $\OML/cmm/m/it/10 P\OT1/cmr/m/n/10 (\OML/cmm/m/it/
+10 x[]; x[]\OMS/cmsy/m/n/10 j[]\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 ^^R[]\OT1/cmr
+/m/n/10 )$ \OT1/ptm/m/n/10 as a Gaus-sian, and maybe the same for $\OML/cmm/m/i
+t/10 P\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 e[]\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 x
+[]; x[]\OT1/cmr/m/n/10 )$\OT1/ptm/m/n/10 ,
+ []
+
+<Lhatplot.pdf, id=77, 505.89pt x 505.89pt>
 File: Lhatplot.pdf Graphic file (type pdf)
- <use Lhatplot.pdf>
-(./intro-NeCoG.bbl [7 <./Lhatplot.pdf>]) [8] (./intro-NeCoG.aux)
+ <use Lhatplot.pdf> [7]
+(./intro-NeCoG.bbl) [8 <./Lhatplot.pdf>] (./intro-NeCoG.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 2820 strings out of 94500
- 28985 string characters out of 1155413
- 88959 words of memory out of 1000000
- 5922 multiletter control sequences out of 10000+50000
+ 2815 strings out of 94500
+ 28871 string characters out of 1155413
+ 87935 words of memory out of 1000000
+ 5917 multiletter control sequences out of 10000+50000
  37445 words of font info for 87 fonts, out of 500000 for 2000
  580 hyphenation exceptions out of 1000
- 29i,13n,43p,1536b,264s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 29i,13n,43p,1375b,264s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
- 107 PDF objects out of 300000
+ 104 PDF objects out of 300000
  0 named destinations out of 131072
  6 words of extra memory for PDF output out of 65536
 </opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmsy5.pfb></opt/local/sha
-re/texmf-dist/fonts/type1/bluesky/cmextra/cmmib7.pfb></opt/local/share/texmf-di
-st/fonts/type1/public/tt2001/fmex7.pfb></opt/local/share/texmf-dist/fonts/type1
-/bluesky/cm/cmss8.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cmextra/
-cmmib7.pfb></opt/local/share/texmf-dist/fonts/type1/public/tt2001/fmex8.pfb></o
-pt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmmi8.pfb></opt/local/share/te
-xmf-dist/fonts/type1/bluesky/cm/cmmib10.pfb></opt/local/share/texmf-dist/fonts/
-type1/bluesky/cm/cmr5.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/symb
-ols/msbm10.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmmi5.pfb></
-opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmex10.pfb></opt/local/share/
-texmf-dist/fonts/type1/bluesky/cm/cmr7.pfb></opt/local/share/texmf-dist/fonts/t
-ype1/bluesky/cm/cmsy7.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/c
-mmi7.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmr10.pfb></opt/lo
-cal/share/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></opt/local/share/texmf-
-dist/fonts/type1/bluesky/cm/cmmi10.pfb>{/opt/local/share/texmf-dist/fonts/enc/d
-vips/psnfss/8r.enc}</opt/local/share/texmf-dist/fonts/type1/urw/times/utmri8a.p
-fb></opt/local/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></opt/local/sh
-are/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on intro-NeCoG.pdf (8 pages, 175597 bytes).
+re/texmf-dist/fonts/type1/public/tt2001/fmex7.pfb></opt/local/share/texmf-dist/
+fonts/type1/bluesky/cm/cmss8.pfb></opt/local/share/texmf-dist/fonts/type1/blues
+ky/cmextra/cmmib7.pfb></opt/local/share/texmf-dist/fonts/type1/public/tt2001/fm
+ex8.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmmi8.pfb></opt/loc
+al/share/texmf-dist/fonts/type1/bluesky/cm/cmmib10.pfb></opt/local/share/texmf-
+dist/fonts/type1/bluesky/cm/cmr5.pfb></opt/local/share/texmf-dist/fonts/type1/b
+luesky/symbols/msbm10.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/c
+mmi5.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmex10.pfb></opt/l
+ocal/share/texmf-dist/fonts/type1/bluesky/cm/cmr7.pfb></opt/local/share/texmf-d
+ist/fonts/type1/bluesky/cm/cmsy7.pfb></opt/local/share/texmf-dist/fonts/type1/b
+luesky/cm/cmmi7.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmr10.p
+fb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></opt/local/s
+hare/texmf-dist/fonts/type1/bluesky/cm/cmmi10.pfb>{/opt/local/share/texmf-dist/
+fonts/enc/dvips/psnfss/8r.enc}</opt/local/share/texmf-dist/fonts/type1/urw/time
+s/utmri8a.pfb></opt/local/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></o
+pt/local/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
+Output written on intro-NeCoG.pdf (8 pages, 171048 bytes).
