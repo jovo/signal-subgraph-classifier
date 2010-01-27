@@ -5,12 +5,12 @@ weights=poissrnd(5,N-1,1);
 fs=18;
 
 subplot(131)
-incoherent=blank;
-edges=randperm(N^2);
-incoherent(edges(1:N-1))=weights;
-imagesc(incoherent)
-title('incoherent','FontSize',fs)
-set(gca,'FontSize',fs)
+coherent=blank;
+coherentedges=[1 5 9];
+coherent(coherentedges(1:3),coherentedges(1:3))=reshape(weights(1:9),3,3);
+imagesc(coherent)
+title('coherent','FontSize',fs)
+set(gca,'XTickLabel',[],'YTickLabel',[])
 
 subplot(132)
 semicoherent=blank;
@@ -25,12 +25,12 @@ title('semicoherent','FontSize',fs)
 set(gca,'XTickLabel',[],'YTickLabel',[])
 
 subplot(133)
-coherent=blank;
-coherentedges=[1 5 9];
-coherent(coherentedges(1:3),coherentedges(1:3))=reshape(weights(1:9),3,3);
-imagesc(coherent)
-title('coherent','FontSize',fs)
-set(gca,'XTickLabel',[],'YTickLabel',[])
+incoherent=blank;
+edges=randperm(N^2);
+incoherent(edges(1:N-1))=weights;
+imagesc(incoherent)
+title('incoherent','FontSize',fs)
+set(gca,'FontSize',fs)
 
 colormap(gray)
 
