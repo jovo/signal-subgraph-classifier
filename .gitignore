@@ -2,4 +2,6 @@
 *.log
 *.gz
 *.blg
+*.out
+*.m~
 .DS_Store
