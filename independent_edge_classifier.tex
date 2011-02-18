@@ -100,7 +100,7 @@ $^2$ Johns Hopkins University Applied Physics Laboratory, National Security Tech
 % \IEEEcompsoctitleabstractindextext{%
 \begin{abstract}
 %\boldmath
-The statistical analysis of data that are well represented by networks, or graphs, is a rapidly developing field.  In particular, many aspects of the world, including economics, telecommunications, social websites, and transportation grids, to name a few, are well characterized by graphs. While much work has been devoted to studying the statistics of individual graphs, less attention has been given to the analysis of populations of graphs.  Our interest here is to develop classifiers that operate directly on graphs, without requiring embedding the graphs into vector spaces, or extracting features.  Therefore, our approach is to develop a joint model, $\PP[G,Y]$, characterizing the distribution of random graphs, $G$ and targets, $Y$.  We study some simple special cases by assuming edges are conditionally independent, yielding stochastic block models. We develop a few classifiers, and prove that they are consistent.  Moreover, we prove that performance depends on the model, the size of the graph, and the number of samples.   In our motivating example, the graphs correspond to brain connectivity, i.e.\ connectomes, of individuals.  These results suggest several avenues for the development of classification algorithms for graphs.
+The statistical analysis of data that are well represented by networks, or graphs, is a rapidly developing field.  In particular, many aspects of the world, including economics, telecommunications, social websites, and transportation grids, to name a few, are well characterized by graphs. While much work has been devoted to studying the statistics of individual graphs, less attention has been given to the analysis of populations of graphs.  Our interest here is to develop classifiers that operate directly on graphs, without requiring embedding the graphs into vector spaces, or extracting features.  Therefore, our approach is to develop a joint model, $\PP[G,Y]$, characterizing the distribution of random graphs, $G$ and classes, $Y$.  We study some simple special cases by assuming edges are conditionally independent, yielding stochastic block models. We develop a few classifiers, and prove that they are consistent.  Moreover, we prove that performance depends on the model, the size of the graph, and the number of samples.   In our motivating example, the graphs correspond to brain connectivity, i.e.\ connectomes, of individuals.  These results suggest several avenues for the development of classification algorithms for graphs.
 
 \end{abstract}
 
@@ -119,57 +119,60 @@ The statistical analysis of data that are well represented by networks, or graph
 \section{Introduction} % (fold)
 \label{sec:introduction}
 
-Current technology facilitates acquiring large swaths of data in myriad diverse fields, ranging from telecommunications to neuroinformatics. As  data \emph{collection} technologies become increasingly sophisticated,  they beckon an analogous development of data \emph{analysis} technologies.  Statistical theory, and in particular, pattern recognition, has therefore received widespread attention and devotion in the recent decades, including an explosion in so-called ``machine learning'' techniques, including both supervised and unsupervised learning.  Supervised learning algorithms have largely focused on problems that loosely satisfy the following assumptions: data has been exchangeably from some model: $(x_s,y_s) \overset{exch.}{\sim} \PP[X,Y]$, where each $x_s \in \mc{X} \subseteq \Real^p$ is a ``feature vector,'' $y_s \in \mc{Y} \subseteq\Real^q$ is a (set of) target variable(s), and $\PP[X,Y]$ is some joint distribution \cite{DGL96}.  Given these assumptions, one then desires to build a function that utilizes training data to make a prediction of $y$ given a new $x$, $f: \mc{X} \times (\mc{X} \times \mc{Y})^S \mapsto \mc{Y}$, where $S$ is the number of training exemplars.  
+Current technology facilitates acquiring large swaths of data in myriad diverse fields, ranging from telecommunications to neuroinformatics. As  data \emph{collection} technologies become increasingly sophisticated,  they beckon an analogous development of data \emph{analysis} technologies.  Statistical theory, and in particular, pattern recognition, has therefore received widespread attention and devotion in the recent decades, including an explosion in so-called ``machine learning'' techniques, including both supervised and unsupervised learning.  Supervised learning algorithms have largely focused on problems that loosely satisfy the following assumptions: data has been exchangeably from some model: $(x_s,y_s) \overset{exch.}{\sim} \PP[X,Y]$, where each $x_s \in \mc{X} \subseteq \Real^p$ is a ``feature vector,'' $y_s \in \mc{Y} \subseteq\Real^q$ is a (set of) class variable(s), and $\PP[X,Y]$ is some joint distribution \cite{DGL96}.  Given these assumptions, one then desires to build a function that utilizes training data to make a prediction of $y$ given a new $x$, $f: \mc{X} \times (\mc{X} \times \mc{Y})^S \mapsto \mc{Y}$, where $S$ is the number of training exemplars.  
 
 Here we are interested in a slightly different setting.  In particular, rather than assuming that features collectively form a vector, we assume that the features form a graph, where a graph is characterized by an $n \times n$ element adjacency matrix indicating the connectivity between vertices.  The space of graphs, $\mc{G}$, is not in $\Real^p$, and therefore, most supervised learning algorithms can not be na\"{i}vely applied directly to problems of this form.  Importantly, many arising and existing data sets are more naturally represented as graphs than vectors, including telecommunications grids, social networks, the internet, and brains.  Thus, tools designed specifically to operate on graph spaces would potentially facilitate extracting more information from these data.
 
 To date, most work on these kinds of problems has utilized ``graph kernels'' \cite{Gartner03}.  More specifically, the investigator first defines a set of graph kernels, projects each graph into the graph kernel space, and then utilizes standard machine learning techniques \cite{HastieFriedman01}, typically some kind of boosting algorithm \cite{FreundSchapire95} (for example, \cite{KashimaInokuchi02, KashimaInokuchi03, KudoMatsumoto04}). \cite{BunkeRiesen08} and \cite{RiesenBunke09} defined various embeddings and then built classifiers based on distance between embedded graphs). \cite{FlachLachiche04} and \cite{TrentinIorio09} assume edges are independent, and then use standard tools to perform classification.  
 
-A somewhat different approach is considered here, based on the statistical theory of pattern recognition \cite{DGL96}.  Specifically, data is assumed to be sampled exchangeably from some joint distribution, $\PP[G,Y]$, where $G$ is a random-\emph{graph}, not a random-\emph{vector}.  Given this assumption, one can build a classifier that takes as input training data (in the form of graphs and their targets) and a new graph, $g$, and predicts the most likely target $y$.  Of primary interest here is the development of consistent classifiers, that is, classifiers guaranteed to converge to the Bayes optimal classifier with enough data.  Moreover, the preference is that these classifiers converge quickly, as data is often limited.  Therefore, one can describe a number of models, each with distinct assumptions.  For each model, a classifier is designed specifically to be consistent for that model, and to converge quickly to Bayes optimal performance.  Simulations confirm that the classifiers behave as they should.  These classifiers are then applied to ``connectome'' data, where each graph corresponds to the macroanatomical structure of a human brain.  These classifiers can differentiate gender with better accuracy then other previously proposed approaches, in less time, with more interpretability.
+A somewhat different approach is considered here, based on the statistical theory of pattern recognition \cite{DGL96}.  Specifically, data is assumed to be sampled exchangeably from some joint distribution, $\PP[G,Y]$, where $G$ is a random-\emph{graph}, not a random-\emph{vector}.  Given this assumption, one can build a classifier that takes as input training data (in the form of graphs and their classes) and a new graph, $g$, and predicts the most likely class $y$.  Of primary interest here is the development of consistent classifiers, that is, classifiers guaranteed to converge to the Bayes optimal classifier with enough data.  Moreover, the preference is that these classifiers converge quickly, as data is often limited.  Therefore, one can describe a number of models, each with distinct assumptions.  For each model, a classifier is designed specifically to be consistent for that model, and to converge quickly to Bayes optimal performance.  Simulations confirm that the classifiers behave as they should.  These classifiers are then applied to ``connectome'' data, where each graph corresponds to the macroanatomical structure of a human brain.  These classifiers can differentiate gender with better accuracy then other previously proposed approaches, in less time, with more interpretability.
 
 % section introduction (end)
 
-\section{Theory} % (fold)
-\label{sec:theory}
+\section{Methods} % (fold)
+\label{sec:methods}
 
-\subsection{Notation and terminology} % (fold)
-\label{sub:terminology_and_notation}
+\subsection{Background} % (fold)
+% \label{sub:terminology_and_notation}
 
+\subsubsection{Notation}
 Both vectors and matrices will be indicated by bold notation, $\mb{x}$.  The real number line will be $\Real$, the dimensionality of $\mb{x}$ will be indicated by $d$, e.g., $x \in \mc{X} \subseteq \Real^{d}$, where $\subseteq$ indicates a subset (possibly equal), where script upper case latin letters denote sets, with cardinality indicated by $|\mc{X}|$. 
 
 
-\subsubsection{Random variables} % (fold)
-\label{ssub:subsubsection_name}
+% \subsubsection{Random variables} % (fold)
+% \label{ssub:subsubsection_name}
 
 
-Throughout this text, we use the following notation and terminology.  Upper case latin letters are random objects, $X: \Omega \mapsto \mc{X}$ mapping from the universal sample space $\Omega$ to the sample space, $\mc{X}$.  A sample will be indicated by lower case latin letters, e.g., $x \in \mc{X}$.  The probability distribution of $X$ will be $\PP[X]$, and the probability mass function of $X$ taking value $x$ will be written $\PP[X=x]$, or just the notationally abusive shorthand, $\PP[x]$. 
+% Throughout this text, we use the following notation and terminology.  
+
+Upper case latin letters are random objects, $X: \Omega \mapsto \mc{X}$, mapping from the universal sample space $\Omega$ to the sample space, $\mc{X}$.  A sample will be indicated by lower case latin letters, e.g., $x \in \mc{X}$.  The probability distribution of $X$ will be $\PP[X]$, and the probability mass function of $X$ taking value $x$ will be written $\PP[X=x]$, or just the notationally abusive shorthand, $\PP[x]$. 
 % Similar shorthand abuses will be used for conditional probabilities, such as $\PP[Y|x]$, which will indicate the probability distribution of $Y$ conditioned on the sample $x$.  
 
 % subsubsection subsubsection_name (end)
 
 
-\subsubsection{Random graphs} % (fold)
-\label{sec:random_graphs}
+% \subsubsection{Random graphs} % (fold)
+% \label{sec:random_graphs}
 
 A random graph, $G$, takes values $g \in \mc{G}$, defined by a set of $n$ vertices $\mc{V}=\{V_i\}=\{V_1,\ldots,V_n\}$ and edges (or arcs) between them. The value of each edge, $a_{ij}$, is encoded in a $n \times n$ element array called an adjacency matrix, $\mb{a}=\{a_{ij}\}$.  When the set of vertices is fixed, the graph is called a \emph{labeled graph}.  When comparing multiple graphs, if they are all labeled graphs, then all of the information about the graph is within the adjacency matrix, so one can simply refer to the random adjacency matrix $\mb{A}$.   Below, we assume all edges are binary, thus $a_{ij} \in \{0,1\}$. A hollow graph forbids self-loops, so $a_{ii}=0\quad \forall i \in [n]$. Undirected graphs require that $a_{ij}=a_{ji}\quad \forall i,j \in [n]$ (note that $a_{ij}=1$ indicates the presence of an edge from $V_j$ to $V_i$). Directed graphs impose no such requirements.  The number of possible labeled graphs for a set of vertices is $|\mc{G}|=2^d$, where $d$ is the dimensionality of the graphs (and this is also the number of distinct adjacency matrices).  A \emph{simple graph} has a hollow, symmetric, and binary adjacency matrix, so $d={n \choose 2}$.  Directed graphs with self-loops have $d=n^2$.  We denote the probability distribution of a random graph, $\PP[G]$.  Below, we elaborate on various probability distributions on graphs.   
 
 
 % subsubsection random_graphs (end)
 
-\subsubsection{Random targets} % (fold)
-\label{ssub:random_targets}
+% \subsubsection{Random classes} % (fold)
+% \label{ssub:random_classes}
 
-Let $Y$ be a random target, taking values $y \in \mc{Y}$.  We are particularly interested in scenarios in which $\mc{Y}=\{0,1\}$, in which case $y$ is called a class.
+Let $Y$ be a random class, taking values $y \in \mc{Y}$.  We are particularly interested in scenarios in which $\mc{Y}=\{0,1\}$, in which case $y$ is called a class.
 
-% subsubsection random_targets (end)
-
-
-
-\subsubsection{Model} % (fold)
-\label{ssub:model}
+% subsubsection random_classes (end)
 
 
-Given these definitions, a joint distribution, $\PP[G,Y]$, specifies the probability of observing any graph $g \in \mc{G}$ (to be defined below) and any target $y \in \mc{Y}$.  The model is the collection of all possible joint distributions under consideration, $\mc{P}=\{\PP[G,Y]\}$.
+
+% \subsubsection{Model} % (fold)
+% \label{ssub:model}
+
+
+Given these definitions, a joint distribution, $\PP[G,Y]$, specifies the probability of observing any graph $g \in \mc{G}$ (to be defined below) and any class $y \in \mc{Y}$.  The model is the collection of all possible joint distributions under consideration, $\mc{P}=\{\PP[G,Y]\}$.
 
 
 Let $\PP[g|y]$ indicate the \emph{likelihood} of observing $g$ given $y$, $\PP[y]$ denote the \emph{prior} probability of observing $y$, and $\PP[y|g]$ be the \emph{posterior} probability of observing $y$ given $g$.  T
@@ -177,8 +180,8 @@ Let $\PP[g|y]$ indicate the \emph{likelihood} of observing $g$ given $y$, $\PP[y
 
 % subsubsection model (end)
 
-\subsubsection{Parametric models} % (fold)
-\label{ssub:parameters}
+% \subsubsection{Parametric models} % (fold)
+% \label{ssub:parameters}
 
 A model is said to be parametric if the distribution can be characterized entirely by a finite set of parameters, $\bth \in \bTh \subseteq \Real^p$, where $p<\infty$ is the dimensionality of the parameter. Strictly speaking, the parameter of the model must be \emph{identifiable}.  Formally, $\bth: \bTh \mapsto \mc{P}$ is the inverse map from $\bTh$ to $\mc{P}$ if and only if the latter map is one-to-one, that is $\PP_{\bth_1}=\PP_{\bth_2} \Rightarrow \bth_1=\bth_2$ (and $\PP_{\bth_i}$ indicates a distribution characterized by $\bth_i$).
 
@@ -186,19 +189,19 @@ A model is said to be parametric if the distribution can be characterized entire
 % subsubsection parameters (end)
 
 
-\subsubsection{Data} % (fold)
-\label{ssub:data}
+% \subsubsection{Data} % (fold)
+% \label{ssub:data}
 
 
-Throughout, data is assumed to be sampled exchangeably from some true (but typically unknown) distribution, $x \overset{exch.}{\sim} \PP_{\bth}[X]$.  A collection of $S$ data samples is denoted by $\mc{D}_S=\{x_s\}$.
+Throughout, data is assumed to be sampled exchangeably from some true (but typically unknown) distribution, $x \overset{exch.}{\sim} \PP_{\bth}[G,Y]$.  A collection of $S$ data samples is denoted by $\mc{D}_S=\{(G_s,Y_s)\}$.
 
 % subsubsection data (end)
 
 % subsection terminology_and_notation (end)
 
 
-\subsection{Parameter estimates} % (fold)
-\label{sub:estimators}
+% \subsection{Parameter estimates} % (fold)
+% \label{sub:estimators}
 
 A parameter estimate uses some data to obtain an estimate of the true (but typically known) parameter $\bth^*$, $\hth_S: \mc{X}^S \mapsto \bTh$.  An unbiased estimator is one for which its expectation equals the true parameter value: $\EE[\hth_S] = \bth^*$.  An asymptotically unbiased estimator is one for which $\EE[\hth_S] \conv \bth^*$ as $S \conv \infty$. Technically, this is a \emph{sequence} of estimators, as each estimator is a function of $S$ data points, so they have different domain spaces, and are therefore different functions.   A consistent estimator (sometimes called an asymptotically consistent estimator) is a sequence of estimators that converges in probability to $\bth^*$. Formally, an estimator is consistent if and only if $\lim_{S\conv \infty} \PP[\hth_S=\bth^*]=1$.
 
@@ -207,7 +210,7 @@ A parameter estimate uses some data to obtain an estimate of the true (but typic
 
 % subsection estimators (end)
 
-\subsection{Basic classification theory} % (fold)
+\subsubsection{Basic classification theory} % (fold)
 \label{sub:basic_classification_theory}
 
 % subsection basic_classification_theory (end)
@@ -223,8 +226,9 @@ We would like to find a graph classifier, $f^*$, with minimum misclassification 
 % \end{align}
 It can be shown that selecting the class that maximizes the class-conditional posterior is Bayes optimal \cite{DGL96}:
 \begin{align} \label{eq:bayes}
-	\mh{y} &= f^*(g) =\argmin_{f \in \mc{F}} L_f(g) = \argmax_{y \in \{0,1\}} \PP[y | g] \nonumber
-	\\ &= \argmax_{y \in \{0,1\}} \PP[g | y] \PP[y]  
+	\mh{y} &= f^*(g) =\argmin_{f \in \mc{F}} L_f(g) = \argmax_{y \in \{0,1\}} \PP[y | g] 
+	% \nonumber \\ &
+	= \argmax_{y \in \{0,1\}} \PP[g | y] \PP[y]  
 \end{align}
 where $\mc{F}$ is the space of all possible classifiers. The misclassification rate, or simply error, of the Bayes optimal graph classifier is called the \emph{Bayes error} (or \emph{Bayes risk}).  Because $f^*$ is typical unknown, one can approximate $f^*$by utilizing training data. In particular, we will assume a corpus of $S$ data points have been sampled exchangeably from the joint distribution, $(g,y), \{(g_s,y_s)\} \overset{exch.}{\sim} \PP[G,Y]$, for $s \in [S]$, where $[S]=\{1,2,\ldots, S\}$ and
   $\mc{D}_S =\{(g_s,y_s)\}$ denotes the set of $S$ samples.  Then, we can construct an classifier estimate: $\mh{f}(\cdot; \mc{D}_S): \mc{G} \times (\mc{G} \times \mc{Y})^S \mapsto \mc{Y}$.  
@@ -239,6 +243,64 @@ Assessing the quality of an estimated classifier is a sticky wicket, as the inte
 \end{align}
 noting that \eqref{eq:L2} generalizes the ideas of ``leave-one-out'' and related approaches by allowing any sampling strategy, any size subsets, and any number of subsamples.  %Below we describe several different types of classifiers with different properties.
 
+\subsubsection{Consistency}
+
+
+
+\paragraph{Consistent Estimators} % (fold)
+\label{sub:consistent_estimators}
+
+% subsection consistent_estimators (end)
+Each of the above models is characterized by a set of parameters, either $p$, $\{p,q,\mc{M}_{inc}\}$, or $\{p,q,\mc{M}_*\}$.  The maximum likelihood estimator (MLE) is consistent for a Bernoulli random variable:
+\begin{align} \label{eq:bern}
+	\mh{p}_S = \frac{1}{S} \sum_{s=1}^S a_s
+\end{align}
+Each edge in each model is Bernoulli, so each edge can be estimated independently using Eq. \eqref{eq:bern}.  Therefore, the plugin estimator for any independent edge random graph model could be:
+\begin{align}
+	\mh{\PP}[A=a]= \prod_{i,j\in [n]} a_{ij}^{\mh{p}_{ij}}(1-a_{ij})^{1-\mh{p}_{ij}}
+\end{align}
+where we have dropped the subscript $S$ for brevity.  Note however, that if any $\mh{p}_{ij}=0$, then $\PP[A=a]=0$.  Therefore, we smooth the MLE by using a robust estimator, specifically, an M-estimator.  An M-estimator is any estimator that maximizes a certain contrast function:
+\begin{align}
+	\bth_M = \argmin_{\bth \in \bTh} \sum_{s=1}^S \rho(a_s, \bth)
+\end{align}
+ where $\rho(a_s,\bth)$ is called a contrast function. For instance, the MLE uses $\rho=-\log \PP_{\bth}[a_s]$.  Here, we propose a slightly modified contrast function:
+\begin{align} \label{eq:rho}
+	\mh{p}_M = \frac{\sum_{s=1}^S a_s + 1/(2S)}{S+1/(2S)} 
+\end{align}
+so that the parameter estimate is never actually zero.   Eq. \eqref{eq:rho} implicitly defines the following contrast function
+\begin{align}
+\rho(a_s,\bth)=-\frac{a_s+1/(2S)}{S+1/(2S)}.	
+\end{align}
+Note that not only does this M-estimator provide some smoothing properties, akin to regularization, it is also a robust estimator, that is, an estimator robust to various model misspecifications (for instance, edge independence is likely to be inaccurate often). Other estimators with both these properties, smoothing and robustness, include the \emph{maximum a posteriori} estimators, which we do not consider here, other than to acknowledge their existence and potential great utility.  
+
+Note that for these simple models, better parameter estimates are readily available.  For instance, averaging over $\mh{p}_{ij}$ in the ER model would give an improved estimate for $p$ (bias is not introduced, and variance is reduced, so the estimate is better from a bias-variance trade-off perspective).  However, we abstain for such averaging so that the theory and simulations generalize to more heterogeneous models (where each $a_{ij}$ might be distributed according to its own $p_{ij}$).
+
+
+% subsection model_estimates (end)
+
+
+\paragraph{Consistent classifiers} % (fold)
+\label{sub:model_based_consistent_classifiers}
+
+
+For each of the above three models, we desire to have estimators that are consistent.  Under certain conditions, consistent estimators can be plugged into \eqref{eq:bayes} to obtain consistent classifiers.\footnote{which conditions?}  
+
+The Na\"{i}ve Bayes graph classifier, which assumes all edges are independent, is given by:
+\begin{align} \label{eq:nb}
+	f(g) &= \argmax_y \PP[g,y] = \argmax_y \PP[g|y] \PP[y] 
+	\nonumber \\&= \argmax_y \prod_{i,j\in[n]} \PP[a_{ij} | p_{ij}^y] \PP[y]
+	\nonumber \\&= \argmax_y \PP[y] \prod_{i,j\in[n]} \text{Bern}(a_{ij}; p_{ij}^y) 
+	\nonumber \\&= \argmax_y \pi^y \prod_{i,j\in[n]} a_{ij}^{p_{ij}^y} (1-a_{ij})^{1-p_{ij}^y}, 
+\end{align}
+where $\pi^Y=\PP[Y]$, and  $p_{ij}^Y$ is the probability of edge $(i,j)$ existing in class $Y$.  
+
+Upon presuming that a signal subgraph exists, one can outperform the na\"{i}ve Bayes classifier.  In particular, if one assumes that edges are independent in both classes, but that only a small subset of edges differ between the two classes, $\mc{M}=\{E_{ij} | p_{ij}^0 \neq p_{ij}^1\}$, then one can use this information to obtain a better classifier, by only looking at the signal subgraph:
+\begin{align} \label{eq:subgraph}
+	f(g) &= \argmax_y \pi^y \prod_{(i,j) \in \mc{M}} a_{ij}^{p_{ij}^y} (1-a_{ij})^{1-p_{ij}^y}.
+\end{align}
+This approach does not depend on homogeneity of edges, each edge $a_{ij}$ could be sampled according to its own potentially unique distribution $p_{ij}$.  
+
+Because the parameters will be unknown, one must first estimate them.  Given the estimates, they can be plugged in to either \eqref{eq:nb} or \eqref{eq:subgraph}.  Estimating $p$ and $q$ is quite trivial given $\mc{M}$, which could potentially be the complete graph (in the ER case).  Specifically, $\mh{p}$ is the mean of $\mh{p}_{ij}$ for $(i,j) \notin \mc{M}$, and $\mh{q}$ is the mean of $\mh{q}_{ij} \in \mc{M}$.  The more difficult task is estimating $\mc{M}$, the signal subgraph.  Below, we suggest several possible approaches to finding the signal subgraph.
 
 \section{Models} % (fold)
 \label{sub:models}
@@ -287,64 +349,7 @@ In the above model, the edges with probability $q$ could be uniformly scattered 
 % subsection models (end)
 
 
-\section{Consistency} % (fold)
-\label{sub:model_estimates}
 
-
-\subsection{Consistent Estimators} % (fold)
-\label{sub:consistent_estimators}
-
-% subsection consistent_estimators (end)
-Each of the above models is characterized by a set of parameters, either $p$, $\{p,q,\mc{M}_{inc}\}$, or $\{p,q,\mc{M}_*\}$.  The maximum likelihood estimator (MLE) is consistent for a Bernoulli random variable:
-\begin{align} \label{eq:bern}
-	\mh{p}_S = \frac{1}{S} \sum_{s=1}^S a_s
-\end{align}
-Each edge in each model is Bernoulli, so each edge can be estimated independently using Eq. \eqref{eq:bern}.  Therefore, the plugin estimator for any independent edge random graph model could be:
-\begin{align}
-	\mh{\PP}[A=a]= \prod_{i,j\in [n]} a_{ij}^{\mh{p}_{ij}}(1-a_{ij})^{1-\mh{p}_{ij}}
-\end{align}
-where we have dropped the subscript $S$ for brevity.  Note however, that if any $\mh{p}_{ij}=0$, then $\PP[A=a]=0$.  Therefore, we smooth the MLE by using a robust estimator, specifically, an M-estimator.  An M-estimator is any estimator that maximizes a certain contrast function:
-\begin{align}
-	\bth_M = \argmin_{\bth \in \bTh} \sum_{s=1}^S \rho(a_s, \bth)
-\end{align}
- where $\rho(a_s,\bth)$ is called a contrast function. For instance, the MLE uses $\rho=-\log \PP_{\bth}[a_s]$.  Here, we propose a slightly modified contrast function:
-\begin{align} \label{eq:rho}
-	\mh{p}_M = \frac{\sum_{s=1}^S a_s + 1/(2S)}{S+1/(2S)} 
-\end{align}
-so that the parameter estimate is never actually zero.   Eq. \eqref{eq:rho} implicitly defines the following contrast function
-\begin{align}
-\rho(a_s,\bth)=-\frac{a_s+1/(2S)}{S+1/(2S)}.	
-\end{align}
-Note that not only does this M-estimator provide some smoothing properties, akin to regularization, it is also a robust estimator, that is, an estimator robust to various model misspecifications (for instance, edge independence is likely to be inaccurate often). Other estimators with both these properties, smoothing and robustness, include the \emph{maximum a posteriori} estimators, which we do not consider here, other than to acknowledge their existence and potential great utility.  
-
-Note that for these simple models, better parameter estimates are readily available.  For instance, averaging over $\mh{p}_{ij}$ in the ER model would give an improved estimate for $p$ (bias is not introduced, and variance is reduced, so the estimate is better from a bias-variance trade-off perspective).  However, we abstain for such averaging so that the theory and simulations generalize to more heterogeneous models (where each $a_{ij}$ might be distributed according to its own $p_{ij}$).
-
-
-% subsection model_estimates (end)
-
-
-\subsection{Consistent classifiers} % (fold)
-\label{sub:model_based_consistent_classifiers}
-
-
-For each of the above three models, we desire to have estimators that are consistent.  Under certain conditions, consistent estimators can be plugged into \eqref{eq:bayes} to obtain consistent classifiers.\footnote{which conditions?}  
-
-The Na\"{i}ve Bayes graph classifier, which assumes all edges are independent, is given by:
-\begin{align} \label{eq:nb}
-	f(g) &= \argmax_y \PP[g,y] = \argmax_y \PP[g|y] \PP[y] 
-	\nonumber \\&= \argmax_y \prod_{i,j\in[n]} \PP[a_{ij} | p_{ij}^y] \PP[y]
-	\nonumber \\&= \argmax_y \PP[y] \prod_{i,j\in[n]} \text{Bern}(a_{ij}; p_{ij}^y) 
-	\nonumber \\&= \argmax_y \pi^y \prod_{i,j\in[n]} a_{ij}^{p_{ij}^y} (1-a_{ij})^{1-p_{ij}^y}, 
-\end{align}
-where $\pi^Y=\PP[Y]$, and  $p_{ij}^Y$ is the probability of edge $(i,j)$ existing in class $Y$.  
-
-Upon presuming that a signal subgraph exists, one can outperform the na\"{i}ve Bayes classifier.  In particular, if one assumes that edges are independent in both classes, but that only a small subset of edges differ between the two classes, $\mc{M}=\{E_{ij} | p_{ij}^0 \neq p_{ij}^1\}$, then one can use this information to obtain a better classifier, by only looking at the signal subgraph:
-\begin{align} \label{eq:subgraph}
-	f(g) &= \argmax_y \pi^y \prod_{(i,j) \in \mc{M}} a_{ij}^{p_{ij}^y} (1-a_{ij})^{1-p_{ij}^y}.
-\end{align}
-This approach does not depend on homogeneity of edges, each edge $a_{ij}$ could be sampled according to its own potentially unique distribution $p_{ij}$.  
-
-Because the parameters will be unknown, one must first estimate them.  Given the estimates, they can be plugged in to either \eqref{eq:nb} or \eqref{eq:subgraph}.  Estimating $p$ and $q$ is quite trivial given $\mc{M}$, which could potentially be the complete graph (in the ER case).  Specifically, $\mh{p}$ is the mean of $\mh{p}_{ij}$ for $(i,j) \notin \mc{M}$, and $\mh{q}$ is the mean of $\mh{q}_{ij} \in \mc{M}$.  The more difficult task is estimating $\mc{M}$, the signal subgraph.  Below, we suggest several possible approaches to finding the signal subgraph.
 
 % (fold) 
 % Nonetheless, when $m$ is known in either the incoherent $q$ model or the cross $q$ model, estimating $q$ and $\mc{M}_{inc}$ or $\mc{M}_*$ is straightforward.  First, obtain estimates $\{\mh{p}_{ij}\}$.  Second, rank them, $\mh{p}_{(1)}, \ldots, \mh{p}_{(d)}$.  Since we know that $p<q$, average the first $d-m$ order parameters to obtain $\mh{p}$, and the last $m$ order parameters to obtain $\mh{q}$.  Finally, let $\mc{M}_{inc}$ or $\mc{M}_*$ be the set of vertices with the largest $m$ order parameters. 
@@ -453,7 +458,7 @@ When the size of the signal subgraph is known, then the optimal selection of $m$
 
 
 \begin{figure}[h!]
-\centering \includegraphics[width=.5\linewidth]{/Users/jovo/Research/figs/graph_sims/subgraph_types}
+\centering \includegraphics[width=.5\linewidth]{/Users/jovo/Research/figs/sims/subgraph_types}
 \caption{Various kinds of class-conditional differences suggesting different algorithms to estimate the signal subgraph.  The left panel shows a dense signal, meaning that no signal subgraph will contain much information.  The middle panel shows a sparse signal subgraph, suggesting using the incoherent signal subgraph search method.  The right panel shows a structured sparse signal subgraph, suggesting using the coherent signal subgraph search method.}
 \label{fig:subgraph_types}
 \end{figure}
