@@ -1,0 +1,709 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[hmargin=1in,vmargin=1in]{geometry}
+
+\title{}
+\author{Henry Pao}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+
+\section{Introduction}
+We consider the classification of (labeled) graphs. A random graph $G=(V, E)$, with $V=[n]=\{1,2,\ldots n\}$. These graphs are simple direct graphs with loops. Thus the adjacency matrix has $n^2$ entries of interest. 
+
+Consider $\{(G_i, Y_i)\}^s_{i=1}\mathop{\sim}\limits^{iid}F_{GY}$, with class labels $Y:\Omega\rightarrow\{0,1\}$ and graphs $G:\Omega \rightarrow\mathcal{G}_n$, where $\mathcal{G}$ denotes the collection of simple directed graphs with loops. For simplicity, we assume that the prior probability of class membership $\pi = P[Y=1]$ is known to be 1/2. and the sample sies $S_y = \sum_{i=1}^s I\{Y=y\}$ are fixed. Thus $s_0 = s_1 = s/1$. We consider the independent edge model (IE), so that for $y\in\{0, 1\}$ the class-conditional distribution $F_{G|Y=y}$ is parameterized by an $n\times n$ matrix with entries $p_{y;u,v}\in[0,1]$.
+
+\subsection{IE1-star graph}
+In order to study the importance of coherence, we designed a special graph whose coherence is easy to take advantag of. Except for $m$ edges this graph has the same distribution as an Erdos-Renyi graph. To chose these $m$ edges first a vertex $v^*$ is uniformly chosen out of the $n$ verticies. Now $m$ edges out of $2n-1$ edges containing this vertex are chosen to have an edge probability of $q$.
+
+\subsection{classifier}
+The Bayes optimal classifier for obseved graph $G$ is 
+\[
+g^*(G) = \textrm{arg}\max_y \prod_{(u,v)\in V\times V} f(a_u,v;p_{y;u,v}),
+\]
+where the Bernoulli probability $f(a;p) = pI\{a=1\} +(i-1)I\{a=0\}$.
+
+The independent edge homogeneous vs inhomogeneous model (IE1), parameterized by $n$, $p$, $q$, and $\mathcal{E}\subset V \times V$ , is given by $p_{0;u,v} = p$ for all $(u, v) \in V \times V$ and $p_{1;u,v} = q$ for all $(u, v) \in \mathcal{E}, p_{1;u,v} = p$ for all $(u, v) \in (V \times V ) \backslash \mathcal{E}$; $\mathcal{E}$ is the collection of signal edges and $\mathcal{E}^c = (V \times V ) \backslash \mathcal{E}$ is the collection of noise edges. (Notice that $F_{G|Y} =0$ is Erdos-Renyi ER$(n, p)$.) In this model, all signal edges are created equally, and all noise edges are created equally; we will see that this property simplifies our analysis.
+
+In IE1, only $\mathcal{E}$ is relevant and $g^∗$ can be written as
+\[
+g^*(G) = \textrm{arg}\max_y \prod_{(u,v)\in \mathcal{E} } f(a_{u,v}; p_{y;u,v}).
+\]
+If we estimate py;u,v from the training data, we may consider classifiers
+\[
+g_{NB}(G) = \textrm{arg}\max_y \prod_{(u,v)\in V\times V} f(a_{u,v} ; p_{y;u,v} )
+\]
+and
+\[
+g_\mathcal{E} (G) = \textrm{arg} \max_y \prod_{(u,v)\in \mathcal{E}} f(a_{u,v} ; p_{y;u,v} ).
+\]
+The latter is the best we can hope for – it considers the signal edges and only
+the signal edges; the former can be swamped by noise from non-signal edges.
+
+Our interest is canonical subspace identification for this graph classification
+application; that is, estimate the collection of signal edges $\mathcal{E}$ via $\hat{\mathcal{E}}$ and consider
+the classifier
+\[
+g_{\hat{\mathcal{E}}} (G) = \textrm{arg} \max_y \prod_{(u,v)\in \hat{\mathcal{E}}} f(a_{u,v} ; p_{y;u,v} ).
+\]
+We consider two different methods to estimate $\hat{\mathcal{E}}$ for IE1-star graphs.
+
+
+if $q>p$, let $\delta_{u,v} = p_{1;u,v} - p_{0;u,v}$. thus $\hat{\delta}_{u,v} = \hat{p}_{1;u,v} - \hat{p}_{0;u,v}$
+
+\subsubsection{incoherent method: agnostic}
+The incoherent method does not utilize the stucture of the graph. Let the number of signal edges we will attempt to extract be $k=|\hat{\mathcal{E}}|$. Then our incoherent model is the $k$ largest $\hat{\delta}_{u,v}$ edges.
+
+\subsubsection{coherrent method: max degree}
+This method takes advanage of the fact the IE1-star graphs has a vertex $v^*$ which all edges with probability $q$ are adjacent to. For convience let $v\in(u_1,u_2)\in V\times V$ mean $(u_1,u_2)\in V\times V$, and $u_1=v$ or $u_2=v$ (or $u_1=u_2=v$). First the coherent method estimates this vertex 
+\[
+\hat{v}^* = \textrm{arg}\max_v \sum_{v\in(u_1,u_2)\in V\times V} \hat{\delta}_{u_1, u_2}
+\]
+$\hat{\mathcal{E}}$ is the $k$ largest $\hat{\delta}_{u,v}$ edges adjecent to $v^*$.
+
+
+\section{Theoretical results}
+\subsection{Monotonisity of error given $T$}
+In IE1, using $k$ canonical dimensions recovered from the training data ($|\hat{\mathcal{E}}|=k$), the probability of misclassification is monotonically decreasing as a function of $T=|\mathcal{E}\cap\hat{\mathcal{E}}|$; that is
+\[
+t_1>t_2 \Rightarrow E[L(g_{ \hat{\mathcal{E}} })| T=t_1] < E[L(g_{ \hat{\mathcal{E}} })| T=t_2].
+\]
+
+Proof of monotonicity of $E[L|T=t]$
+\begin{eqnarray}
+E[L|T=t]
+&=& P[Error|T=t]
+%\\
+%&=& \left. P\left[\prod_{u,v\in \mathcal{\hat{E}} } f(a_{u,v}; \hat{p}_{0;u,v}) 
+%                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{1;u,v})
+%                         \right| T=t, Y=1\right] P[Y=1]\\
+%&&+ \left. P\left[\prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{1;u,v}) 
+%                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{0;u,v})
+%                           \right| T=t, Y=0\right] P[Y=0]
+\\&=& \left. P\left[\prod_{u,v\in \mathcal{\hat{E}} } f(a_{u,v}; \hat{p}_{1;u,v}) 
+                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{0;u,v})
+                         \right| T=t, Y=0\right] P[Y=0]
+\label{eqn:1st_half}
+\\&& +\left. P\left[\prod_{u,v\in \mathcal{\hat{E}} } f(a_{u,v}; \hat{p}_{0;u,v}) 
+                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{1;u,v})
+                         \right| T=t, Y=1\right] P[Y=1]
+\label{eqn:2nd_half}
+\end{eqnarray}
+For monotonicity we are only concerned with the difference $E[L|T=t_1]-E[L|T=t_2]$. In fact we are can limit ourselves to the case where $t_2=t_1+1$. Thus one edge that was non-signal, is becoming a signal edge. Let this ``special'' edge be denoted $\tilde u, \tilde v$.
+%First let us work with the first half with $Y$=0, by definition of $f(a;p)$
+%\[
+%\left. P\left[\prod_{u,v\in \mathcal{\hat{E}} } f(a_{u,v}; \hat{p}_{0;u,v}) 
+%                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{1;u,v})
+%                         \right| T=t, Y=1\right]
+%\]
+
+First let us work with the first half with $Y$=0, by definition of $f(a;p)$
+\begin{eqnarray}
+&&
+\left. P\left[\prod_{u,v\in \mathcal{\hat{E}} } f(a_{u,v}; \hat{p}_{1;u,v}) 
+                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{0;u,v})
+                         \right| T=t, Y=0\right] P[Y=0]
+\\&=& P\Bigg[ \prod_{u,v\in \mathcal{\hat{E}} } \hat{p}_{1;u,v}  I\{a_{u,v}=1\}
+                                        +(1-\hat{p}_{1;u,v}) I\{a_{u,v}=1\} \\
+               &&    \left.> \prod_{u,v\in \mathcal{\hat{E}}} \hat{p}_{0;u,v}  I\{a_{u,v}=0\}+(1-\hat{p}_{0;u,v}) I\{a_{u,v}=0\}
+                         \right| T=t, Y=0\Bigg] P[Y=0]
+\end{eqnarray}
+
+Let $A$ denote all edges $u,v\in \mathcal{\hat{E}}\backslash (\tilde u, \tilde v)$ such that $a_{u,v}=1$ and $\bar{A}$ denote all edges $u,v\in \mathcal{\hat{E}}\backslash (\tilde u, \tilde v)$ such that $a_{u,v}=0$.
+\begin{eqnarray}
+&&
+=\left. P\left[f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{0;\tilde{u},\tilde{v}}) \prod_{u,v\in A } \hat{p}_{1;u,v}  \prod_{u,v\in \hat{A}}(1-\hat{p}_{1;u,v}) 
+                   > f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{1;\tilde{u},\tilde{v}})\prod_{u,v\in A} \hat{p}_{0;u,v}  \prod_{u,v\in \hat{A} } (1-\hat{p}_{0;u,v})
+                         \right| T=t, Y=0\right]P[Y=0]
+\end{eqnarray}
+In this expression, between $E[L|T=t_1]$ and $E[L|T=t_2]$ only the distribution of $f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{1;\tilde{u},\tilde{v}})$ changes. Specifically $\hat{p}_{1;\tilde{u},\tilde{v}}$ changes from Binomial($p, s/2$) to Binomial($q, s/2$).
+
+
+
+
+
+% NEED MORE WORK/WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
+Now let us work with the second half with $Y$=1, and repeating the 2 steps as in the first half
+\begin{eqnarray}
+&&
+\left. P\left[\prod_{u,v\in \mathcal{\hat{E}} } f(a_{u,v}; \hat{p}_{0;u,v}) 
+                   > \prod_{u,v\in \mathcal{\hat{E}}} f(a_{u,v}; \hat{p}_{1;u,v})
+                         \right| T=t, Y=1\right] P[Y=1]
+\\
+%&=& P\Bigg[ \prod_{u,v\in \mathcal{\hat{E}} } \hat{p}_{0;u,v}  I\{a_{u,v}=1\}
+%                                        +(1-\hat{p}_{0;u,v}) I\{a_{u,v}=0\} \\
+%               &&    \left.> \prod_{u,v\in \mathcal{\hat{E}}} \hat{p}_{1;u,v}  I\{a_{u,v}=1\}+(1-\hat{p}_{1;u,v}) %I\{a_{u,v}=0\}
+%                         \right| T=t, Y=1\Bigg] P[Y=1]
+%\end{eqnarray}
+%Let $A$ denote all edges $u,v\in \mathcal{\hat{E}}\backslash (\tilde u, \tilde v)$ such that $a_{u,v}=1$ and $\bar{A}$ denote all edges $u,v\in \mathcal{\hat{E}}\backslash (\tilde u, \tilde v)$ such that $a_{u,v}=0$.
+%\begin{eqnarray}
+&&
+=\left. P\left[f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{0;\tilde{u},\tilde{v}}) \prod_{u,v\in A } \hat{p}_{0;u,v}  \prod_{u,v\in \hat{A}}(1-\hat{p}_{0;u,v}) 
+                   > f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{1;\tilde{u},\tilde{v}})\prod_{u,v\in A} \hat{p}_{1;u,v}  \prod_{u,v\in \hat{A} } (1-\hat{p}_{1;u,v})
+                         \right| T=t, Y=1\right]P[Y=1]
+\end{eqnarray}
+Let LHS denote the left hand side expession and RHS denote the right hand side expression. Notice for all cases when the LHS is zero then the inequality is true. So we safely divide by terms on the left hand side and ``ignore'' cases of division by 0.
+%When the RHS is 0, all casees except when the LHS is zero, the inequality is true (call these cases $RHS$).
+\begin{eqnarray}
+&=&
+\left. P\left[f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{0;\tilde{u},\tilde{v}}) 
+                   > f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{1;\tilde{u},\tilde{v}}) \prod_{u,v\in A} \frac{\hat{p}_{1;u,v}}{\hat{p}_{0;u,v}}  \prod_{u,v\in \hat{A} } \frac{1-\hat{p}_{1;u,v}}{1-\hat{p}_{0;u,v} }
+                         \right| T=t, Y=1\right]P[Y=1]
+\end{eqnarray}
+Conditioning on $a_{\tilde{u},\tilde{v}}$ yields
+\begin{eqnarray}
+&=&
+\left. P\left[f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{0;\tilde{u},\tilde{v}}) 
+                    >
+                    f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{1;\tilde{u},\tilde{v}})
+ \prod_{u,v\in A} \frac{\hat{p}_{1;u,v}}{\hat{p}_{0;u,v}}  \prod_{u,v\in \hat{A} } \frac{1-\hat{p}_{1;u,v}}{1-\hat{p}_{0;u,v} }
+                         \right| T=t, Y=1, a_{\tilde{u},\tilde{v}}=0 \right] P[a_{\tilde{u},\tilde{v}}=0|T=t] P[Y=1]
+\\&& +
+\left. P\left[f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{0;\tilde{u},\tilde{v}}) 
+                    >
+                    f(a_{\tilde{u}, \tilde{v}}, \hat{p}_{1;\tilde{u},\tilde{v}})
+ \prod_{u,v\in A} \frac{\hat{p}_{1;u,v}}{\hat{p}_{0;u,v}}  \prod_{u,v\in \hat{A} } \frac{1-\hat{p}_{1;u,v}}{1-\hat{p}_{0;u,v} }
+                         \right| T=t, Y=1, a_{\tilde{u},\tilde{v}}=1 \right] P[Y=1] P[a_{\tilde{u},\tilde{v}}=1|T=t]
+\end{eqnarray}
+\begin{eqnarray}
+&=&
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}}  )
+ \prod_{u,v\in A} \frac{\hat{p}_{1;u,v}}{\hat{p}_{0;u,v}}  \prod_{u,v\in \hat{A} } \frac{1-\hat{p}_{1;u,v}}{1-\hat{p}_{0;u,v} }
+                         \right| T=t, Y=1, a_{\tilde{u},\tilde{v}}=0 \right] P[Y=1] P[a_{\tilde{u},\tilde{v}}=0|T=t]
+\\&& +
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v} }
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}  
+ \prod_{u,v\in A} \frac{\hat{p}_{1;u,v}}{\hat{p}_{0;u,v}}  \prod_{u,v\in \hat{A} } \frac{1-\hat{p}_{1;u,v}}{1-\hat{p}_{0;u,v} }
+                         \right| T=t, Y=1, a_{\tilde{u},\tilde{v}}=1 \right] P[Y=1] P[a_{\tilde{u},\tilde{v}}=1|T=t]
+\end{eqnarray}
+For convience let
+\[
+\Pi(A, p, q, s)
+=
+\prod_{u,v\in A } \frac{\hat{p}_{1;u,v}}{\hat{p}_{0;u,v}}  \prod_{u,v\in \hat{A} } \frac{1-\hat{p}_{1;u,v}}{1-\hat{p}_{0;u,v} }
+\]
+Subsituting this in
+\begin{eqnarray}
+%E[L|T=t]
+&=&
+ \left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    > 
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}}  )
+\Pi(A, p, q, s)
+                         \right| T=t , Y=1, a_{\tilde{u},\tilde{v}}=0 \right] P[a_{\tilde{u},\tilde{v}}=0|T=t] P[Y=1]
+\\&& +
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t,Y=1,  a_{\tilde{u},\tilde{v}}=1 \right] P[a_{\tilde{u},\tilde{v}}=1|T=t]P[Y=1]
+\end{eqnarray}
+Now consider the difference between expected errors with $T=t_1+1$ and $T=t_1$ in the second half
+\begin{eqnarray}
+%&& E[L|T=t_1] - E[L|T=t_1+1]\\
+%&=&
+\\ &&
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}} ) 
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right] P[a_{\tilde{u},\tilde{v}}=0|T=t_1, Y=1] P[Y=1 ]
+\\&& +
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right] P[a_{\tilde{u},\tilde{v}}=1|T=t_1, Y=1] P[Y=1 ]
+\\ && -
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    > 
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}}  )
+\Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right] P[a_{\tilde{u},\tilde{v}}=0|T=t_1+1, Y=1] P[Y=1 ]
+\\&& -
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right] P[a_{\tilde{u},\tilde{v}}=1|T=t_1+1, Y=1] P[Y=1 ]
+\end{eqnarray}
+Notice for when $T=t_1+1$ and $Y=0$, edge $\tilde{u},\tilde{v}$ is not a signal edge, and when $Y=1$ it is.
+\begin{eqnarray}
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1+1, Y=0 ] = p
+\\
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1+1, Y=1 ] = q
+\end{eqnarray}
+But when $T=t_1$, edge $\tilde{u},\tilde{v}$ is not a signal edge for either $Y$ so
+\begin{eqnarray}
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1, Y=0 ] = p
+\\
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1, Y=1 ] = p
+\end{eqnarray}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+By symmetry between the equations (\ref{eqn:1st_half}) and (\ref{2nd_half}) we have that the differenece of second halves of $E[L|T=t_1] - E[L|T=t_1+1]$ is equal to 
+\begin{eqnarray}
+%&& E[L|T=t_1] - E[L|T=t_1+1]\\
+%&=&
+&&
+\left. P\left[1- \hat{p}_{1;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{0;\tilde{u},\tilde{v}} ) 
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=0, Y=0 \right] P[a_{\tilde{u},\tilde{v}}=0|T=t_1, Y=0] P[Y=0 ]
+\\&& +
+\left. P\left[\hat{p}_{1;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{0;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=1, Y=0 \right] P[a_{\tilde{u},\tilde{v}}=1|T=t_1, Y=0] P[Y=0 ]
+\\ && -
+\left. P\left[1- \hat{p}_{1;\tilde{u},\tilde{v}} 
+                    > 
+                    (1- \hat{p}_{0;\tilde{u},\tilde{v}}  )
+\Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=0, Y=0 \right] P[a_{\tilde{u},\tilde{v}}=0|T=t_1+1, Y=0] P[Y=0 ]
+\\&& -
+\left. P\left[\hat{p}_{1;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{0;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=1, Y=0 \right] P[a_{\tilde{u},\tilde{v}}=1|T=t_1+1, Y=0] P[Y=0 ]
+\end{eqnarray}
+Notice for when $T=t_1+1$ and $Y=0$, edge $\tilde{u},\tilde{v}$ is not a signal edge, and when $Y=1$ it is.
+\begin{eqnarray}
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1+1, Y=0 ] = p
+\\
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1+1, Y=1 ] = q
+\end{eqnarray}
+But when $T=t_1$, edge $\tilde{u},\tilde{v}$ is not a signal edge for either $Y$ so
+\begin{eqnarray}
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1, Y=0 ] = p
+\\
+P[a_{\tilde{u},\tilde{v}}=1| T=t_1, Y=1 ] = p
+\end{eqnarray}
+So the difference of expected error of the first half becomes
+\begin{eqnarray}
+%&& E[L|T=t_1] - E[L|T=t_1+1]\\
+%&=&
+ &&
+\left. (1-p)
+P\left[1- \hat{p}_{1;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{0;\tilde{u},\tilde{v}} ) 
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=0, Y=0 \right]  P[Y=0 ]
+\\&& +
+\left. (p) P\left[\hat{p}_{1;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{0;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=1, Y=0 \right]  P[Y=0 ]
+\\ && -
+\left. (1-p) P\left[1- \hat{p}_{1;\tilde{u},\tilde{v}} 
+                    > 
+                    (1- \hat{p}_{0;\tilde{u},\tilde{v}}  )
+\Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=0, Y=0 \right] P[Y=0 ]
+\\&& -
+\left. (p) P\left[\hat{p}_{1;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{0;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=1, Y=0 \right] P[Y=0 ]
+\end{eqnarray}
+Notice that the distribution of $\hat{p}_{1;\tilde{u},\tilde{v}}|T=t_1+1, Y=0$ is the same as $\hat{p}_{1;\tilde{u},\tilde{v}}|T=t_1, Y=0$ so the difference of expected error of the first half is 0.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Now back to the difference
+\begin{eqnarray}
+&& E[L|T=t_1] - E[L|T=t_1+1]\\
+&=&
+(1-p)
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    ( 1- \hat{p}_{1;\tilde{u},\tilde{v}}  )
+\Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right] P[Y=1 ]
+\\ && - (1-q)
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}}  )
+ \Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right] P[Y=1 ]
+\\&& +
+(p) \left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}  
+ \Pi(A, p, q, s)
+                         \right| T=t_1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right]  P[Y=1 ]
+\\&& - (q)
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}} 
+ \Pi(A, p, q, s)
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right] P[Y=1 ] +0
+\end{eqnarray}
+Now condition on $\Pi(A, p, q, s)$
+\begin{eqnarray}
+%&& E[L|T=t_1] - E[L|T=t_1+1]\\
+&=&
+\\&&+\sum_{x} \Bigg[
+%\\&&
+(1-p)
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}})   x  \right| T=t_1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right]
+       P[\Pi(A, p, q, s)=x | T=t_1, Y=1 ]  P[Y=1 ] 
+\\ && - (1-q)
+\left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    (1- \hat{p}_{1;\tilde{u},\tilde{v}})  x
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right]
+       P[\Pi(A, p, q, s)=x | T=t_1+1, Y=1 ] P[Y=1]
+\\&& +
+(p) \left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}   x \right| T=t_1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right]
+           P[\Pi(A, p, q, s)=x | T=t_1, Y=1 ] P[Y=1]
+\\&& - (q)
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}   x  \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right] 
+       P[\Pi(A, p, q, s)=x | T=t_1+1, Y=1 ] P[Y=1] 
+\Bigg]
+\end{eqnarray}
+Remebering that the distribution of $\Pi(A, p, q, s)=x$ does not change with respect to $T$ we can factor
+\begin{eqnarray}
+%&& E[L|T=t_1] - E[L|T=t_1+1]\\
+&=&
+ P[\Pi(A, p, q, s)=x | T=t_1, Y=1 ] P[Y=1]
+\\&&\sum_{x} \Bigg[
+%\\&&
+\left.  (1-p) P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                                 > (1- \hat{p}_{1;\tilde{u},\tilde{v}})   x  
+                                 \right| T=t_1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right]
+\\ &&
+ - (1-q) \left. P\left[1- \hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >   (1- \hat{p}_{1;\tilde{u},\tilde{v}})  x
+                         \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=0, Y=1 \right] 
+\\&& +
+(p) \left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}   x \right| T=t_1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right]
+\\&& - (q)
+\left. P\left[\hat{p}_{0;\tilde{u},\tilde{v}} 
+                    >
+                    \hat{p}_{1;\tilde{u},\tilde{v}}   x  \right| T=t_1+1, a_{\tilde{u},\tilde{v}}=1, Y=1 \right] 
+\Bigg]
+\end{eqnarray}
+
+
+some more work and by monotonisity of $\hat{p}_{1;\tilde{u},\tilde{v}}$ on $T$, $E[L|T]$ is monotone.
+
+
+
+
+
+
+%NEED MORE WORK/WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
+
+\subsection{Assumtotic/Approximate distribution of $T$}
+
+\subsubsection{Agnostic method}
+We approximate the binomial $p_{0;i,j}$, and $p_{1;i,j}$ with normal distributions so
+\[
+\hat{p}_{0;i,j} \approx N_{0;i,j}\sim\textrm{ Normal}(p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2)
+\]
+\[
+\hat{p}_{1;i,j} \approx N_{1;i,j}\sim\textrm{ Normal}(p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2)
+\]
+\[
+\delta_{i,j} \approx N_{1;i,j} - N_{0;i,j}
+\]
+
+%\begin{eqnarray}
+%F_{\delta_{i,j}}(y)
+%&=& P[\delta_{i,j} \leq y]
+%= P[N_{1;i,j} - N_{0;i,j} \leq y]
+%= P[N_{1;i,j} \leq y + N_{0;i,j}]\\
+%&=& \int_{-\infty}^\infty \int_{-\infty}^{y+n_0}
+%          \frac{1}{\sqrt{2\pi p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2}}
+%                     \exp\left[ -\frac{ (n_1-p_{1;i,j})^2 }{2p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2} \right]
+%\\&&
+%          \frac{1}{\sqrt{2\pi p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2}}
+%                     \exp\left[ -\frac{ (n_0-p_{0;i,j})^2 }{2p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2} \right]
+%        dn_1 dn_0
+%\\&=& \int_{-\infty}^\infty \int_{-\infty}^{y+n_0}
+%          \frac{1}{\pi s \sqrt{p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})}}
+%\\&&
+%                     \exp\left[ -\frac{ (n_1-p_{1;i,j})^2 }{p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s} 
+%                                -\frac{ (n_0-p_{0;i,j})^2 }{p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s} \right]
+%        dn_1 dn_0
+%\end{eqnarray}
+
+The cdf of the $r^{th}$ ordered statistic of $n$ iid random variables is
+\[
+F_{X_{(r:n)}}(x) = P[X_{(r:n)} \leq x] 
+= \sum_{i=r}^n 
+                 \left(\begin{matrix} n \\ i \end{matrix}\right)
+                 F_X(x)^i[1-F_X(x)]^{n-i}
+\]
+The pdf of the $r^{th}$ ordered statistic of $n$ iid random variables is
+\[
+f_{X_{(r:n)}}(x) 
+= \left(\begin{matrix} n \\ r-1, n-r, 1 \end{matrix}\right) F_X^{r-1}(x) [1-F_X(x)]^{n-r} f_X(x)
+\]
+The joint pdf of 2 ordered statistics $r<s$, $x\leq y$
+\[
+f_{(r)(s):n} (x,y)
+%\frac{n!}{(r-1)!(s-r-1)!(n-s)!}
+= \left(\begin{matrix} n \\ r-1, 1, s-r-1, 1, n-s \end{matrix}\right)
+F^{r-1}(x) f(x) [F(y)-F(x)]^{s-r-1}f(y)[1-F(y)]^{n-s}
+\]
+Let us define another random variable,
+\[
+N_p\sim \textrm{Normal}(p, p(1-p)s/2)
+\]
+\begin{eqnarray}
+P[T=k]
+&\approx&
+P[ N_{q_{(m-k+1:m)}} > N_{p_{(n^2-m:n^2-m)}}]
+\\&=&
+\int_{-\infty}^\infty
+f_{N_{q_{(m-k+1:m)}}}(x) F_{N_{p_{(n^2-m:n^2-m)}}}(x) \ dx
+\\&=&
+\int_{-\infty}^\infty
+     %f_{N_{q_{(k:m)}}}(x)
+       \left(\begin{matrix} m \\ m-k, k-1, 1 \end{matrix}\right) F_{N_{q}}^{m-k}(x) [1-F_{N_{q}}(x)]^{k-1} f_{N_{q}}(x)
+      F_{N_{p}}(x)^{n^2-m}
+\ dx
+\end{eqnarray}
+%
+%or
+%\begin{eqnarray}
+%\\&=&
+%\int_{-\infty}^\infty \big( 1- F_{N_{1;i,j_{(k:m)}}}(x) \big) f_{N_{0;i,j_{(1:n^2-m)}}}(x) dx
+%\\&=&
+%\int_{-\infty}^\infty \left( 1- %F_{N_{1;i,j_{(k:m)}}}(x) 
+%          \sum_{l=k}^m
+%                 \left(\begin{matrix} m \\ l \end{matrix}\right)
+%                 F_{N_{1;i,j}}(x)^l [1-F_{N_{1;i,j}}(x)]^{m-l}
+%\right)
+%\\&&
+%% f_{N_{0;i,j_{(1:n^2-m)}}}(x)
+%\left(\begin{matrix} n^2-m \\ r-1, n^2-m-r, 1 \end{matrix}\right)
+% F_{N_{0;i,j}}^{1-1}(x) [1-F_{N_{0;i,j}}(x)]^{n^2-m-1} f_{N_{0;i,j}}(x)
+%dx
+%\\&=&
+%\int_{-\infty}^\infty \left( 1- %F_{N_{1;i,j_{(k:m)}}}(x) 
+%          \sum_{l=k}^m
+%                 \left(\begin{matrix} m \\ l \end{matrix}\right)
+%                 F_{N_{1;i,j}}(x)^l [1-F_{N_{1;i,j}}(x)]^{m-l}
+%\right)
+%\\&&
+%% f_{N_{0;i,j_{(1:n^2-m)}}}(x)
+%\left(\begin{matrix} n^2-m \\ r-1, n^2-m-r, 1 \end{matrix}\right)
+% [1-F_{N_{0;i,j}}(x)]^{n^2-m-1} f_{N_{0;i,j}}(x)
+%dx
+%\end{eqnarray}
+
+\begin{eqnarray}
+P[T=0]
+&\approx&
+P[  N_{p_{(n^2-m-k+1:n^2-m)}} > N_{q_{(m:m)}}]
+\\&=&
+    \int_{-\infty}^\infty
+         f_{N_{p_{(n^2-m-k+1:n^2-m)}}}(x) F_{N_{q_{(m:m)}}}(x)
+    \ dx
+\\&=&
+    \int_{-\infty}^\infty
+         %f_{N_{0;i,j_{(k:n^2-m)}}}(x)
+         \left(\begin{matrix} n^2-m \\ n^2-m-k, k-1, 1 \end{matrix}\right) F_{N_{p}}^{n^2-m-k}(x) [1-F_{N_{p}}(x)]^{k-1} f_{N_{p}}(x)
+       F_{N_{q}}(x)^m
+    \ dx
+\end{eqnarray}
+
+
+For $t\in[1, 2, \ldots, k-1]$,
+%Now lets compute the distribution of $T$.
+the event that $T=t$ is when the largest $k$ of the $\delta$'s are from a Binomial($q,s/2$) and the remaining $k-t$ drawn from Binomial($p,s/2$). 
+%This event is also equivalant to having some ``cutoff'' $x$ such that , the $t^{th}$ largest Binomial($q,s/2) > x$ and the $k-t^{th}$ largest Binomial($p,s/2) > x$.
+\begin{eqnarray}
+P[T=t]
+&\approx&
+P[N_{p_{(n^2-m-k+t:n^2-m)}} < N_{q_{(m-t+1:m)}}, N_{q_{(m-t:m)}} < N_{p_{(n^2-m-k+t+1:n^2-m)}} ]
+\\&=&
+    \iint \limits_{x<y} 
+        f_{N_{q_{(m-t)(m-t+1):m}}} (x,y)
+        P[N_{p_{(n^2-m-k+t:n^2-m)}} < y, x < N_{p_{(n^2-m-k+t+1:n^2-m)}} ]
+    \ dx \ dy
+\\&=&
+%    \int \int \int \int_{x<y,\ w<y,\ x<z,\ w<z} 
+    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+          f_{N_{q_{(m-t)(m-t+1):m}}} (x,y)
+          f_{N_{p_{(n^2-m-k+t)(n^2-m-k+t+1):n^2-m}}} (w,z)
+    \ dw \ dx \ dy\ dz
+\\&=&
+%P[N_{q_{(t:m)}} 
+    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+%          f_{(m-t)(m-t+1):m}(x,y)
+          \left(\begin{matrix} n \\ m-t-1, 1, 0, 1, n-m+t-1 \end{matrix}\right)
+          F_{N_q}^{m-t-1}(x) f_{N_q}(x) [F_{N_q}(y)-F_{N_q}(x)]^{0}f_{N_q}(y)[1-F_{N_q}(y)]^{n-m+t-1}
+\\&&
+%          f_{(n^2-m-k+t)(n^2-m-k+t+1):n^2-m}(w,z)
+          \left(\begin{matrix} n^2-m \\ n^2-m-k+t-1, 1, 0, 1, k-t-1 \end{matrix}\right)
+          F_{N_p}^{n^2-m-k+t-1}(x) f_{N_p}(x) [F_{N_p}(y)-F_{N_p}(x)]^{0} f_{N_p}(y)[1-F_{N_p}(y)]^{k-t-1}
+    \ dw \ dx \ dy\ dz
+\\&=&
+%P[N_{q_{(t:m)}} 
+    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+%          f_{(m-t)(m-t+1):m}(x,y)
+          \left(\begin{matrix} n \\ m-t-1, n-m+t-1, 1, 1 \end{matrix}\right)
+          F_{N_q}^{m-t-1}(x) f_{N_q}(x) f_{N_q}(y)[1-F_{N_q}(y)]^{n-m+t-1}
+\\&&
+%          f_{(n^2-m-k+t)(n^2-m-k+t+1):n^2-m}(w,z)
+          \left(\begin{matrix} n^2-m \\ n^2-m-k+t-1, k-t-1, 1, 1 \end{matrix}\right)
+          F_{N_p}^{n^2-m-k+t-1}(x) f_{N_p}(x) f_{N_p}(y)[1-F_{N_p}(y)]^{k-t-1}
+    \ dw \ dx \ dy\ dz
+%\\&=&
+% \int_{-\infty}^\infty P[N_{q_{(t:m)} } \geq x] P[N_{p_{(k-t:n^2-m)}} \geq x] dx
+%\\
+%&=& \int_{-\infty}^\infty \big( 1-P[N_{q_{(t:m)}} < x] \big) \big(1-P[N_{p_{(k-t:n^2-m)}} < x]\big) dx
+%\\
+%&=& \int_{-\infty}^\infty \left(1-%P[N_{1;i,j_{(t:m)}
+%             \sum_{l=t}^m 
+%                 \left(\begin{matrix} m \\ l \end{matrix}\right)
+%                 F_{N_{q}}(x)^l [1-F_{N_{q}}(x)]^{m-l}
+%          \right)
+%\\&&
+%         \left(1-
+%             \sum_{l=k-t}^{n^2-m} 
+%                 \left(\begin{matrix} n^2-m \\ l \end{matrix}\right)
+%                 F_{N_{p}}(x)^l [1-F_{N_{p}}(x)]^{n^2-m-l}
+%     \right) dx
+\end{eqnarray}
+
+%P[\delta \leq x] = P[N-1 - N_0 /leq]
+
+
+
+
+
+
+
+\subsubsection{Maximum degree method}
+Now lets calculate the $T$ distribution for IE1-star method.
+The probability of picking the right vertex is
+\begin{eqnarray}
+P[ \textrm{right vertex} ]
+&=&
+P\left[\sum_{i,j: ?} \hat{p}_{1;i,j} \geq \left( \sum_{i,j\in??} \hat{p}_{1;i,j}\right)_{(1:n-1)} \right]
+%\\&\approx&
+%P\left[\sum_{i=1}^k N_{} \sum_{j=1}^{2n-1-k}   \hat{p}_{1;i,j} \geq \left( \sum_{i,j\in??} \hat{p}_{1;i,j}\right)_{(1:n-1)}
+%\left(
+%\sum_{k=1}^{2n-1} 
+%\right)_{(1:n-1)}
+% \right]
+\end{eqnarray}
+Notice after picking the right vertex that the probability of $T$ is the same as before except insteead of $n^2-m$ edges with probability $p$ there are only $2n-1-m$ edges.
+
+
+
+\subsection{Relative Efficiency}
+With these two methods we need a way to compare their performance. Relative efficiency is one way to do so. Recall that the ratio Nt /NW is a measure of the relative efficiency of the Wilcoxon test versus the t test, where Nt and NW are minimum sample sizes required to achieve some specified power at some specified size. [cite B\&D 1977
+page 352] [cite Priebe gwmw papers . . . ?]
+
+Since we are in the case for which all signal edges are created equally and all noise edges are created equally, if we constrain all canonical subspace identification methods so that $|\hat{\mathcal{E}}| = k$ for some $k$, then Priebe’s Conjecture \#1 above implies that comparing the number of signal dimensions recovered for two canonical subspace identification methods allows comparison of classification performance.
+
+Toward that end, for canonical subspace identification method $x$ define
+\[
+                            T_x (k, s, F_{GY} ) = |\mathcal{E} ∩ \hat{\mathcal{E}}_x |
+\]
+to be the number of signal dimensions recovered with training sample size $s$
+using method $x$.
+
+Let
+\[
+    s_x(t) = \min\{s : E[T_x (k, s, F_{GY} )] \geq t\}.
+\]
+The ratio $r(t) = s_{coherent} (t)/s_{agnostic} (t)$ is the relative efficiency.
+
+
+\subsection{Simulations}
+
+There do exist situations where the agnostic model outperforms the coherenet model. Notice that in our coherent model, if the wrong vertex is chosen, then $t=0$. Here is a simulation that shows situations where the agnostic models is better and situations where the coherent model is better. In this simulation $p=0.45$, $m=10$, $q=0.55$, $k=10$, $t=5$, and $n=|V|$ ranges from 10 to 150 in intervals of 10. ($m$ is the number of edges with probability $q$.) For each simulation of $E[T]$, 100 trials are run.
+
+\begin{figure}[hb]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{s_value_comparision.pdf}
+\caption{$s$ values of the agnostic and max degree models.}
+\label{fig:s_val}
+
+\end{figure}\begin{figure}[hb]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{rel_eff.pdf}
+\caption{Relative efficiency of stated simulation.}
+\label{fig:rel_eff}
+\end{figure}
+
+
+\end{document}

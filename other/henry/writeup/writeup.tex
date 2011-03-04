@@ -1,0 +1,909 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[hmargin=1in,vmargin=1in]{geometry}
+
+\title{Coherent vs. Incoherent Graph Classification}
+\author{Henry Pao, Carey E. Priebe}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+
+\section{Introduction}
+We consider the classification of (labeled) graphs. A random graph $G=(V, E)$, with $V=[n]=\{1,2,\ldots n\}$. These graphs are simple direct graphs with loops. Thus the adjacency matrix has $n^2$ entries of interest. 
+
+Consider $\{(G_i, Y_i)\}^s_{i=1}\mathop{\sim}\limits^{iid}F_{GY}$, with class labels $Y:\Omega\rightarrow\{0,1\}$ and graphs $G:\Omega \rightarrow\mathcal{G}_n$, where $\mathcal{G}$ denotes the collection of simple directed graphs with loops. For simplicity, we assume that the prior probability of class membership $\pi = P[Y=1]$ is known to be 1/2. and the sample sizes $S_y = \sum_{i=1}^s I\{Y=y\}$ are fixed. Thus $s_0 = s_1 = s/2$. We consider the independent edge model (IE), so that for $y\in\{0, 1\}$ the class-conditional distribution $F_{G|Y=y}$ is parameterized by an $n\times n$ matrix with entries $p_{y;u,v}\in[0,1]$.
+
+\subsection{IE1-star graph}
+In order to study the importance of coherence, we designed a special graph whose coherence is easy to take advantage of. Except for $m$ edges this graph has the same distribution as an Erdos-Renyi graph. To chose these $m$ edges first a vertex $v^*$ is uniformly chosen out of the $n$ verticies. Now $m$ edges out of $2n-1$ edges containing this vertex are chosen to have an edge probability of $q$.
+
+\subsection{Classifier}
+The Bayes optimal classifier for obseved graph $G$ is 
+\[
+g^*(G) = \textrm{arg}\max_y \prod_{(u,v)\in V\times V} f(a_u,v;p_{y;u,v}),
+\]
+where the Bernoulli probability $f(a;p) = pI\{a=1\} +(1-p)I\{a=0\}$.
+
+The independent edge homogeneous vs inhomogeneous model (IE1), parameterized by $n$, $p$, $q$, and $\mathcal{E}\subset V \times V$ , is given by $p_{0;u,v} = p$ for all $(u, v) \in V \times V$ and $p_{1;u,v} = q$ for all $(u, v) \in \mathcal{E}, p_{1;u,v} = p$ for all $(u, v) \in (V \times V ) \backslash \mathcal{E}$; $\mathcal{E}$ is the collection of signal edges and $\mathcal{E}^c = (V \times V ) \backslash \mathcal{E}$ is the collection of noise edges. (Notice that $F_{G|Y} =0$ is Erdos-Renyi ER$(n, p)$.) In this model, all signal edges are created equally, and all noise edges are created equally; we will see that this property simplifies our analysis.
+
+In IE1, only $\mathcal{E}$ is relevant and $g^∗$ can be written as
+\[
+g^*(G) = \textrm{arg}\max_y \prod_{(u,v)\in \mathcal{E} } f(a_{u,v}; p_{y;u,v}).
+\]
+If we estimate $p_{y;u,v}$ from the training data, we may consider classifiers
+\[
+g_{NB}(G) = \textrm{arg}\max_y \prod_{(u,v)\in V\times V} f(a_{u,v} ; p_{y;u,v} )
+\]
+and
+\[
+g_\mathcal{E} (G) = \textrm{arg} \max_y \prod_{(u,v)\in \mathcal{E}} f(a_{u,v} ; p_{y;u,v} ).
+\]
+The latter is the best we can hope for – it considers the signal edges and only
+the signal edges; the former can be swamped by noise from non-signal edges.
+
+Our interest is canonical subspace identification for this graph classification
+application; that is, estimate the collection of signal edges $\mathcal{E}$ via $\hat{\mathcal{E}}$ and consider
+the classifier
+\[
+g_{\hat{\mathcal{E}}} (G) = \textrm{arg} \max_y \prod_{(u,v)\in \hat{\mathcal{E}}} f(a_{u,v} ; p_{y;u,v} ).
+\]
+We consider two different methods to estimate $\hat{\mathcal{E}}$ for IE1-star graphs.
+
+
+if $q>p$, let $\delta_{u,v} = p_{1;u,v} - p_{0;u,v}$. thus $\hat{\delta}_{u,v} = \hat{p}_{1;u,v} - \hat{p}_{0;u,v}$
+
+\subsubsection{incoherent method: agnostic}
+The incoherent method does not utilize the stucture of the graph. Let the number of signal edges we will attempt to extract be $k=|\hat{\mathcal{E}}|$. Then our incoherent model is the $k$ largest $\hat{\delta}_{u,v}$ edges. For simplicity, the rest of this paper we will instead use $\hat{q}_{u,v}$ because this simplifies our theoretical calcuations.
+
+\subsubsection{coherrent method: max degree}
+This method takes advanage of the fact the IE1-star graphs has a vertex $v^*$ which all edges with probability $q$ are adjacent to. For convience let $v\in(u_1,u_2)\in V\times V$ mean $(u_1,u_2)\in V\times V$, and $u_1=v$ or $u_2=v$ (or $u_1=u_2=v$). First the coherent method estimates this vertex 
+\[
+\hat{v}^* = \textrm{arg}\max_v \sum_{v\in(u_1,u_2)\in V\times V} \hat{\delta}_{u_1, u_2}
+\]
+$\hat{\mathcal{E}}$ is the $k$ largest $\hat{\delta}_{u,v}$ edges adjecent to $v^*$. Ideally we would like to use $\delta_{u_1, u_2}$; however, because it highly complicates theoretical calculations, we will instead use $\hat{q}_{u_1, u_2}$. 
+%Again let the number of signal edges we will attempt to extract be $k=|\hat{\mathcal{E}}|$. The max degree model chooses the $k$ largest $\hat{q}_{u_1, u_2}$, such that $u_1$ or $u_2$ is $v^*$.
+
+
+\section{Theoretical results}
+\subsection{Monotonisity of error given $T$}
+In IE1, using $k$ canonical dimensions recovered from the training data ($|\hat{\mathcal{E}}|=k$), the probability of misclassification is monotonically decreasing as a function of $T=|\mathcal{E}\cap\hat{\mathcal{E}}|$ that is
+\[
+t_1>t_2 \Rightarrow E[L(g_{ \hat{\mathcal{E}} })| T=t_1] < E[L(g_{ \hat{\mathcal{E}} })| T=t_2].
+\]
+
+\subsubsection{$k=1$ case}
+First consider the case where only one signal edge is attempted to be recovered ($k=1$). Let $g_0$ represent the classifer if the recovered edge is not a signal edge ($t=0$) and $g_1$ represent the classifier if the recovered edge is a signal edge ($t=1$). If the above montonisity result is true we expect
+\[
+E[L(g_1)] < E[L(g_0)].
+\]
+Since we only have one edge, for simplicity let $\hat{p}_0$ and $\hat{p}_1$ denote the estimates of $p_0$ and $p_1$ for our recovered edge respectively. The following decomposes $E[L(g_0)]$ using the law of total probability conditioning on $a, Y$.
+\begin{eqnarray}
+E[L(g_0)] &=& P[g_0 \neq Y] 
+ = P[ \textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y]
+\\ &=& \sum_{j \in \{0,1\}}P[Y=j] P[\textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y|Y=j]
+\\ &=& \sum_{i, j \in \{0,1\}}P[Y=j] P[a=i| Y=j] P[\textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y|a=i, Y=j]
+\\ &=& P[Y=0] P[a=0| Y=0] P[\textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y|a=0, Y=0]
+\\&& + P[Y=0] P[a=1| Y=0] P[\textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y|a=1, Y=0]
+\\&& + P[Y=1] P[a=0| Y=1] P[\textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y|a=0, Y=1]
+\\&& + P[Y=1] P[a=1| Y=1] P[\textrm{arg} \max_y f(a ; \hat{p}_y ) \neq Y|a=1, Y=1]
+\\
+ &=& P[Y=0] P[a=0| Y=0] P[\textrm{arg} \max_y f(0 ; \hat{p}_y ) \neq 0]
+\\&& + P[Y=0] P[a=1| Y=0] P[\textrm{arg} \max_y f(1 ; \hat{p}_y ) \neq 0]
+\\&& + P[Y=1] P[a=0| Y=1] P[\textrm{arg} \max_y f(0 ; \hat{p}_y ) \neq 1]
+\\&& + P[Y=1] P[a=1| Y=1] P[\textrm{arg} \max_y f(1 ; \hat{p}_y ) \neq 1]
+\\
+ &=& \frac{1}{2} (1-p) P[\textrm{arg} \max_y (1-\hat{p}_y) \neq 0]
+\\&& + \frac{1}{2} p P[\textrm{arg} \max_y \hat{p}_y \neq 0]
+\\&& + \frac{1}{2} (1-p) P[\textrm{arg} \max_y (1-\hat{p}_y) \neq 1]
+\\&& + \frac{1}{2} p P[\textrm{arg} \max_y \hat{p}_y  \neq 1]
+\end{eqnarray}
+Note $\hat{p}_0, \hat{p}_1$ are independent of $a, Y$. Conditioning on the relationship between $\hat{p}_0$ and $\hat{p}_1$, 
+\begin{eqnarray}
+ &=& \frac{1}{2}(1-p)[ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y) ) \neq 0|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 0|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 0|\hat{p}_0>\hat{p}_1] ]
+\\&& +\frac{1}{2}p [ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0>\hat{p}_1] ]
+\\&& + \frac{1}{2}(1-p)[ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y (1- \hat{p}_y ) \neq 1|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 1|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y (1- \hat{p}_y ) \neq 1|\hat{p}_0>\hat{p}_1] ]
+\\&& +\frac{1}{2}p [ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0>\hat{p}_1] ]
+\end{eqnarray}
+In the event that $\hat{p}_0=\hat{p}_1$ the classifier's decicion is randomized thus $P[g_y \neq Y|\hat{p}_0=\hat{p}_1] = \frac{1}{2}$ [true??] for $y=\{0,1\}$. Notice with the conditional probabilities relating to $g_y$ are either 0, 0.5, or 1.
+\begin{eqnarray}
+% &=& \frac{1}{2}(1-p)[P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 0|\hat{p}_0=\hat{p}_1]
+%\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y (1- \hat{p}_y ) \neq 0|\hat{p}_0>\hat{p}_1] ]
+%\\&& +\frac{1}{2}p [ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0<\hat{p}_1] 
+%\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0=\hat{p}_1]]
+%\\&& + \frac{1}{2}(1-p)[ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y) \neq 1|\hat{p}_0<\hat{p}_1] 
+%\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 1|\hat{p}_0=\hat{p}_1]]
+%\\&& +\frac{1}{2}p [P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0=\hat{p}_1]
+%\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0>\hat{p}_1] ]
+%\\
+ &=& \frac{1}{2}(1-p)[\frac{1}{2} P[\hat{p}_0=\hat{p}_1] +P[\hat{p}_0>\hat{p}_1] ]
+\\&& +\frac{1}{2}p [ P[\hat{p}_0<\hat{p}_1] + \frac{1}{2}P[\hat{p}_0=\hat{p}_1]]
+\\&& + \frac{1}{2}(1-p)[ P[\hat{p}_0<\hat{p}_1] +\frac{1}{2}P[\hat{p}_0=\hat{p}_1]]
+\\&& +\frac{1}{2}p [\frac{1}{2}P[\hat{p}_0=\hat{p}_1] +P[\hat{p}_0>\hat{p}_1] ]
+\\
+ &=& \frac{1}{2} P[\hat{p}_0=\hat{p}_1] [\frac{1}{2} (1-p) + \frac{1}{2}p + \frac{1}{2}(1-p) + \frac{1}{2}p]
+\\&& +\frac{1}{2}(1-p)P[\hat{p}_0>\hat{p}_1]
+ +\frac{1}{2}p P[\hat{p}_0<\hat{p}_1]
+ + \frac{1}{2}(1-p) P[\hat{p}_0<\hat{p}_1]
+ +\frac{1}{2}p P[\hat{p}_0>\hat{p}_1]
+\\
+ &=& \frac{1}{2} P[\hat{p}_0=\hat{p}_1] +\frac{1}{2}P[\hat{p}_0>\hat{p}_1] +\frac{1}{2} P[\hat{p}_0<\hat{p}_1]
+\\
+ &=& \frac{1}{2}
+\end{eqnarray}
+
+
+Now consider the classifier $g_1$. Repeating the same conditioning as on $g_0$ we get
+\begin{eqnarray}
+E[L(g_1)] &=& P[g_1 \neq Y]
+\\
+ &=& P[Y=0] P[a=0| Y=0] P[\textrm{arg} \max_y f(0 ; \hat{p}_y ) \neq 0]
+\\&& + P[Y=0] P[a=1| Y=0] P[\textrm{arg} \max_y f(1 ; \hat{p}_y ) \neq 0]
+\\&& + P[Y=1] P[a=0| Y=1] P[\textrm{arg} \max_y f(0 ; \hat{p}_y ) \neq 1]
+\\&& + P[Y=1] P[a=1| Y=1] P[\textrm{arg} \max_y f(1 ; \hat{p}_y ) \neq 1]
+\\
+ &=& \frac{1}{2} (1-p) P[\textrm{arg} \max_y (1-\hat{p}_y) \neq 0]
+\\&& + \frac{1}{2} p P[\textrm{arg} \max_y \hat{p}_y \neq 0]
+\\&& + \frac{1}{2} (1-q) P[\textrm{arg} \max_y (1-\hat{p}_y) \neq 1]
+\\&& + \frac{1}{2} q P[\textrm{arg} \max_y \hat{p}_y  \neq 1]
+\end{eqnarray}
+Now again conditioning on the relationship between $\hat{p}_0$ and $\hat{p}_1$ and noting after conditioning probabilities relating to $g_y$ are either 0, 0.5, or 1.
+\begin{eqnarray}
+ &=& \frac{1}{2}(1-p)[ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y) ) \neq 0|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 0|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 0|\hat{p}_0>\hat{p}_1] ]
+\\&& +\frac{1}{2}p [ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 0|\hat{p}_0>\hat{p}_1] ]
+\\&& + \frac{1}{2}(1-q)[ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y (1- \hat{p}_y ) \neq 1|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y (1-\hat{p}_y ) \neq 1|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y (1- \hat{p}_y ) \neq 1|\hat{p}_0>\hat{p}_1] ]
+\\&& +\frac{1}{2}q [ P[\hat{p}_0<\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0<\hat{p}_1] 
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0=\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0=\hat{p}_1]
+\\&&\ \ \ \ \ \ \ \ \ \ \ +P[\hat{p}_0>\hat{p}_1] P[\textrm{arg} \max_y \hat{p}_y \neq 1|\hat{p}_0>\hat{p}_1] ]
+\\
+ &=& \frac{1}{2}(1-p)[\frac{1}{2} P[\hat{p}_0=\hat{p}_1] +P[\hat{p}_0>\hat{p}_1] ]
+\\&& +\frac{1}{2}p [ P[\hat{p}_0<\hat{p}_1] + \frac{1}{2}P[\hat{p}_0=\hat{p}_1]]
+\\&& + \frac{1}{2}(1-q)[ P[\hat{p}_0<\hat{p}_1] +\frac{1}{2}P[\hat{p}_0=\hat{p}_1]]
+\\&& +\frac{1}{2}q [\frac{1}{2}P[\hat{p}_0=\hat{p}_1] +P[\hat{p}_0>\hat{p}_1] ]
+\end{eqnarray}
+Factoring in terms of $P[\hat{p}_0<\hat{p}_1]$, $P[\hat{p}_0=\hat{p}_1]$, and $P[\hat{p}_0>\hat{p}_1]$.
+\begin{eqnarray}
+&=& P[\hat{p}_0<\hat{p}_1] [\frac{1}{2}p +\frac{1}{2}(1-q)]
+\\&& + \frac{1}{2} P[\hat{p}_0=\hat{p}_1] [\frac{1}{2}(1-p) +\frac{1}{2}p +\frac{1}{2}(1-q) +\frac{1}{2}q]
+\\&& + P[\hat{p}_0>\hat{p}_1] [\frac{1}{2}(1-p) +\frac{1}{2}q]
+\\
+&=& \frac{1}{2} P[\hat{p}_0<\hat{p}_1] [1-(q-p)]
+\\&& +\frac{1}{2} P[\hat{p}_0>\hat{p}_1] [1+(q-p)]
+\\&& +\frac{1}{2} P[\hat{p}_0=\hat{p}_1]
+\\
+&=& \frac{1}{2} - (q-p)[P[\hat{p}_0<\hat{p}_1] - P[\hat{p}_0>\hat{p}_1]]
+\end{eqnarray}
+Remember that $q>p$, so if $P[\hat{p}_0<\hat{p}_1] - P[\hat{p}_0>\hat{p}_1] > 0$ then $E[L(g_0)]>E[L(g_1)]$. Because our recovered edge is a signal edge, $\hat{p}_0\sim$Binomial(p,$s_0$) and $\hat{p}_1\sim$Binomial(p,$s_1$). And since $\hat{p}_0$ and $\hat{p}_1$ are independent,
+\begin{eqnarray}
+P[\hat{p}_0>\hat{p}_1]
+&=& \sum_{x>y:x,y\in[s/2]}P[\hat{p}_0=x]P[\hat{p}_1=y]
+\\
+&=& \sum_{x>y:x,y\in[s/2]}\left(\begin{matrix}s_0\\x\end{matrix}\right)p^x(1-p)^{s_0-x}
+                          \left(\begin{matrix}s_1\\y\end{matrix}\right)q^y(1-q)^{s_1-y}
+\\
+&=& \sum_{x>y:x,y\in[s/2]}\left(\begin{matrix}s_0\\x\end{matrix}\right)
+                          \left(\begin{matrix}s_1\\y\end{matrix}\right)p^x(1-p)^{s_0-x}q^y(1-q)^{s_1-y}
+\end{eqnarray}
+Similarly,
+\begin{eqnarray}
+P[\hat{p}_0<\hat{p}_1]
+&=& \sum_{x>y:x,y\in[s/2]}\left(\begin{matrix}s_1\\x\end{matrix}\right)
+                          \left(\begin{matrix}s_0\\y\end{matrix}\right)q^x(1-q)^{s_1-x}p^y(1-p)^{s_0-y}
+\end{eqnarray}
+Thus
+\begin{eqnarray}
+P[\hat{p}_0<\hat{p}_1] - P[\hat{p}_0>\hat{p}_1]
+&=& \sum_{x>y:x,y\in[s/2]}\left(\begin{matrix}s_0\\x\end{matrix}\right)
+                          \left(\begin{matrix}s_1\\y\end{matrix}\right)p^x(1-p)^{s_0-x}q^y(1-q)^{s_1-y}
+\\&&\ \ \ \ \ \ \ \ \ \ \ \ \ \  -\left(\begin{matrix}s_1\\x\end{matrix}\right)
+                          \left(\begin{matrix}s_0\\y\end{matrix}\right)q^x(1-q)^{s_1-x}p^y(1-p)^{s_0-y}
+\end{eqnarray}
+Note that $s_0=s_1$, allowing for us to factor
+\begin{eqnarray}
+P[\hat{p}_0<\hat{p}_1] - P[\hat{p}_0>\hat{p}_1]
+&=& \sum_{x>y:x,y\in[s/2]}\left(\begin{matrix}s_0\\x\end{matrix}\right)
+                          \left(\begin{matrix}s_1\\y\end{matrix}\right)
+[q^x(1-q)^{s_1-x}p^y(1-p)^{s_0-y} - p^x(1-p)^{s_0-x}q^y(1-q)^{s_1-y}]
+\\
+&=& \sum_{x>y:x,y\in[s/2]}\left(\begin{matrix}s_0\\x\end{matrix}\right)
+                          \left(\begin{matrix}s_0\\y\end{matrix}\right)
+p^y q^y(1-p)^{s_0-x}(1-q)^{s_0-x}
+[q^{x-y}(1-p)^{x-y} - p^{x-y}(1-q)^{x-y}]
+\end{eqnarray}
+Since $q>p$ and $x-y>0$, $q^{x-y}(1-p)^{x-y}>p^{x-y}(1-q)^{x-y}$. Therefore $P[\hat{p}_0<\hat{p}_1] - P[\hat{p}_0>\hat{p}_1]>0$ and $E[L(g_1)] < E[L(g_0)]$.
+
+
+\subsubsection{$k>1$ case}
+
+
+\subsection{Assumtotic/Approximate distribution of $T$}
+Note that $n\hat{p}_{0;i,j}$ and $n\hat{p}_{1;i,j}$ are binomals, thus they can be approximated with the following normal approximations for $n$ sufficiently large.
+\[
+\hat{p}_{0;i,j} \approx N_{0;i,j}\sim\textrm{ Normal}(p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2)
+\]
+\[
+\hat{p}_{1;i,j} \approx N_{1;i,j}\sim\textrm{ Normal}(p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2)
+\]
+%\[      \delta_{i,j} \approx N_{1;i,j} - N_{0;i,j}           \]
+
+\subsubsection{Agnostic method}
+
+%\begin{eqnarray}
+%F_{\delta_{i,j}}(y)
+%&=& P[\delta_{i,j} \leq y]
+%= P[N_{1;i,j} - N_{0;i,j} \leq y]
+%= P[N_{1;i,j} \leq y + N_{0;i,j}]\\
+%&=& \int_{-\infty}^\infty \int_{-\infty}^{y+n_0}
+%          \frac{1}{\sqrt{2\pi p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2}}
+%                     \exp\left[ -\frac{ (n_1-p_{1;i,j})^2 }{2p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2} \right]
+%\\&&
+%          \frac{1}{\sqrt{2\pi p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2}}
+%                     \exp\left[ -\frac{ (n_0-p_{0;i,j})^2 }{2p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2} \right]
+%        dn_1 dn_0
+%\\&=& \int_{-\infty}^\infty \int_{-\infty}^{y+n_0}
+%          \frac{1}{\pi s \sqrt{p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})}}
+%\\&&
+%                     \exp\left[ -\frac{ (n_1-p_{1;i,j})^2 }{p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s} 
+%                                -\frac{ (n_0-p_{0;i,j})^2 }{p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s} \right]
+%        dn_1 dn_0
+%\end{eqnarray}
+
+The cumalative distribution function of the $r^{th}$ ordered statistic of $n$ iid random variables is \cite{ordered_stat}
+\[
+F_{X_{(r:n)}}(x) = P[X_{(r:n)} \leq x] 
+= \sum_{i=r}^n 
+                 \left(\begin{matrix} n \\ i \end{matrix}\right)
+                 F_X(x)^i[1-F_X(x)]^{n-i}
+\]
+The probability density function of the $r^{th}$ ordered statistic of $n$ iid random variables is \cite{ordered_stat}
+\begin{eqnarray*}
+f_{X_{(r:n)}}(x) 
+&=& \left(\begin{matrix} n \\ r-1, n-r, 1 \end{matrix}\right) F_X^{r-1}(x) [1-F_X(x)]^{n-r} f_X(x)
+\end{eqnarray*}
+
+
+The joint probability density function of 2 ordered statistics $r<s$, $x\leq y$ \cite{ordered_stat}
+\[
+f_{(r)(s):n} (x,y)
+%\frac{n!}{(r-1)!(s-r-1)!(n-s)!}
+= \left(\begin{matrix} n \\ r-1, 1, s-r-1, 1, n-s \end{matrix}\right)
+F^{r-1}(x) f(x) [F(y)-F(x)]^{s-r-1}f(y)[1-F(y)]^{n-s}
+\]
+
+
+
+
+Let us define another random variable,
+\[
+N_p\sim \textrm{Normal}(p, p(1-p)2/s)
+\]
+%
+%or
+%\begin{eqnarray}
+%\\&=&
+%\int_{-\infty}^\infty \big( 1- F_{N_{1;i,j_{(k:m)}}}(x) \big) f_{N_{0;i,j_{(1:n^2-m)}}}(x) dx
+%\\&=&
+%\int_{-\infty}^\infty \left( 1- %F_{N_{1;i,j_{(k:m)}}}(x) 
+%          \sum_{l=k}^m
+%                 \left(\begin{matrix} m \\ l \end{matrix}\right)
+%                 F_{N_{1;i,j}}(x)^l [1-F_{N_{1;i,j}}(x)]^{m-l}
+%\right)
+%\\&&
+%% f_{N_{0;i,j_{(1:n^2-m)}}}(x)
+%\left(\begin{matrix} n^2-m \\ r-1, n^2-m-r, 1 \end{matrix}\right)
+% F_{N_{0;i,j}}^{1-1}(x) [1-F_{N_{0;i,j}}(x)]^{n^2-m-1} f_{N_{0;i,j}}(x)
+%dx
+%\\&=&
+%\int_{-\infty}^\infty \left( 1- %F_{N_{1;i,j_{(k:m)}}}(x) 
+%          \sum_{l=k}^m
+%                 \left(\begin{matrix} m \\ l \end{matrix}\right)
+%                 F_{N_{1;i,j}}(x)^l [1-F_{N_{1;i,j}}(x)]^{m-l}
+%\right)
+%\\&&
+%% f_{N_{0;i,j_{(1:n^2-m)}}}(x)
+%\left(\begin{matrix} n^2-m \\ r-1, n^2-m-r, 1 \end{matrix}\right)
+% [1-F_{N_{0;i,j}}(x)]^{n^2-m-1} f_{N_{0;i,j}}(x)
+%dx
+%\end{eqnarray}
+Consider $T=0$, this occurs when the $k^{th}$ largest nonsignal edge is larger than the largest signal edge.
+\begin{eqnarray}
+P[T=0]
+&\approx&
+P[  N_{p_{(n^2-m-k+1:n^2-m)}} > N_{q_{(m:m)}}]
+\\&=&
+    \int
+         f_{N_{p_{(n^2-m-k+1:n^2-m)}}}(x) F_{N_{q_{(m:m)}}}(x)
+    \ dx
+\\&=&
+    \int
+         %f_{N_{0;i,j_{(k:n^2-m)}}}(x)
+         \left(\begin{matrix} n^2-m \\ n^2-m-k, k-1, 1 \end{matrix}\right) F_{N_{p}}^{n^2-m-k}(x) [1-F_{N_{p}}(x)]^{k-1} f_{N_{p}}(x)
+       F_{N_{q}}(x)^m
+    \ dx
+\end{eqnarray}
+
+
+Now consider when $k\leq m$ $T=k$, this occurs exactly when the $k^{th}$ largest signal edge is greater than the largest nonsignal edge. Since the ordered signal and nonsignal edges are independent, 
+
+\begin{eqnarray*}
+P[T=k]
+&\approx&
+P[ N_{q_{(m-k+1:m)}} > N_{p_{(n^2-m:n^2-m)}}]
+\\&=&
+\int f_{N_{q_{(m-k+1:m)}}}(x) F_{N_{p_{(n^2-m:n^2-m)}}}(x) \ dx
+\\&=&
+\int
+     %f_{N_{q_{(k:m)}}}(x)
+       \left(\begin{matrix} m \\ m-k, k-1, 1 \end{matrix}\right) F_{N_{q}}^{m-k}(x) [1-F_{N_{q}}(x)]^{k-1} f_{N_{q}}(x)
+      F_{N_{p}}(x)^{n^2-m}
+\ dx
+\end{eqnarray*}
+
+
+To be general there can be cases where $k \geq m$ [thus the support of $T$ is $\{0, 1, 2, \ldots, \min(m,k)\}$]. In this case consider when $T=m$, this occurs when the smallest signal edge is greater than $k-m^{th}$ nonsignal edge.
+\begin{eqnarray*}
+P[T=m]
+&\approx& P[N_{q_{(1:m)}} > N_{p_{(n^2-m-(k-m):n^2-m)}}]
+ = P[N_{q_{(1:m)}} > N_{p_{(n^2-k:n^2-m)}}]
+\\
+&=& \int
+	f_{N_{q_{(1:m)}}}(x) F_{N_{p_{(n^2-k:n^2-m)}}}(x)\ dx
+\\
+&=& \int
+	\left(\begin{matrix} m \\ 0, m-1, 1 \end{matrix}\right) 
+	F_{N_{q}}^0(x) [1-F_{N_{q}}(x)]^{m-1} f_{N_{q}}(x)
+	\sum_{i=n^2-k}^{n^2-m}
+		\left(\begin{matrix} n^2-m \\ i \end{matrix}\right)
+		F_{N_p}(x)^i [1-F_X(x)]^{n^2-m-i} \ dx
+\\
+&=& \int
+	m [1-F_{N_{q}}(x)]^{m-1} f_{N_{q}}(x)
+	\sum_{i=n^2-k}^{n^2-m}
+		\left(\begin{matrix} n^2-m \\ i \end{matrix}\right)
+		F_{N_p}(x)^i [1-F_X(x)]^{n^2-m-i} \ dx
+\end{eqnarray*}
+Notice that when $k=m$ then the expression for $T=k$ and $T=m$ are the same.
+
+
+For $t\in[1, 2, \ldots, \min(k,m)-1]$, the event that $T=t$ is when in the largest $k$ of the $\delta$'s $t$ are from a Binomial($q,s_1$) and the remaining $k-t$ drawn from Binomial($p,s_0$). This means that there are four important ordered statistics, $N_{p_{(n^2-m-k+t:n^2-m)}}$, $N_{p_{(n^2-m-k+t+1:n^2-m)}}$, $N_{q_{(m-t:m)}}$, $N_{q_{(m-t+1:m)}}$. These statistics are at the border of being included in and excluded from $\hat{\mathcal{E}}$. This leads to the expression
+%This event is also equivalant to having some ``cutoff'' $x$ such that , the $t^{th}$ largest Binomial($q,s/2) > x$ and the $k-t^{th}$ largest Binomial($p,s/2) > x$.
+\begin{eqnarray}
+P[T=t]
+&\approx&
+P[N_{p_{(n^2-m-k+t:n^2-m)}} < N_{q_{(m-t+1:m)}}, N_{q_{(m-t:m)}} < N_{p_{(n^2-m-k+t+1:n^2-m)}} ]
+\\&=&
+    \iint \limits_{x<y} 
+        f_{N_{q_{(m-t)(m-t+1):m}}} (x,y)
+        P[N_{p_{(n^2-m-k+t:n^2-m)}} < y, x < N_{p_{(n^2-m-k+t+1:n^2-m)}} ]
+    \ dx \ dy
+\\&=&
+%    \int \int \int \int_{x<y,\ w<y,\ x<z,\ w<z} 
+    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+          f_{N_{q_{(m-t)(m-t+1):m}}} (x,y)
+          f_{N_{p_{(n^2-m-k+t)(n^2-m-k+t+1):n^2-m}}} (w,z)
+    \ dw \ dx \ dy\ dz
+\\&=&
+%P[N_{q_{(t:m)}} 
+    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+%          f_{(m-t)(m-t+1):m}(x,y)
+          \left(\begin{matrix} m \\ m-t-1, 1, 0, 1, t-1 \end{matrix}\right)
+          F_{N_q}^{m-t-1}(x) f_{N_q}(x) [F_{N_q}(y)-F_{N_q}(x)]^{0}f_{N_q}(y)[1-F_{N_q}(y)]^{t-1}
+\\&&
+%          f_{(n^2-m-k+t)(n^2-m-k+t+1):n^2-m}(w,z)
+          \left(\begin{matrix} n^2-m \\ n^2-m-k+t-1, 1, 0, 1, k-t-1 \end{matrix}\right)
+          F_{N_p}^{n^2-m-k+t-1}(w) f_{N_p}(w) [F_{N_p}(z)-F_{N_p}(w)]^{0} f_{N_p}(z)[1-F_{N_p}(z)]^{k-t-1}
+    \ dw \ dx \ dy\ dz
+\\&=&
+%P[N_{q_{(t:m)}} 
+    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+%          f_{(m-t)(m-t+1):m}(x,y)
+          \left(\begin{matrix} m \\ m-t-1, t-1, 1, 1 \end{matrix}\right)
+          F_{N_q}^{m-t-1}(x) f_{N_q}(x) f_{N_q}(y)[1-F_{N_q}(y)]^{t-1}
+\\&&
+%          f_{(n^2-m-k+t)(n^2-m-k+t+1):n^2-m}(w,z)
+          \left(\begin{matrix} n^2-m \\ n^2-m-k+t-1, k-t-1, 1, 1 \end{matrix}\right)
+          F_{N_p}^{n^2-m-k+t-1}(w) f_{N_p}(w) f_{N_p}(z)[1-F_{N_p}(z)]^{k-t-1}
+    \ dw \ dx \ dy\ dz
+%\\&=&
+% \int_{-\infty}^\infty P[N_{q_{(t:m)} } \geq x] P[N_{p_{(k-t:n^2-m)}} \geq x] dx
+%\\
+%&=& \int_{-\infty}^\infty \big( 1-P[N_{q_{(t:m)}} < x] \big) \big(1-P[N_{p_{(k-t:n^2-m)}} < x]\big) dx
+%\\
+%&=& \int_{-\infty}^\infty \left(1-%P[N_{1;i,j_{(t:m)}
+%             \sum_{l=t}^m 
+%                 \left(\begin{matrix} m \\ l \end{matrix}\right)
+%                 F_{N_{q}}(x)^l [1-F_{N_{q}}(x)]^{m-l}
+%          \right)
+%\\&&
+%         \left(1-
+%             \sum_{l=k-t}^{n^2-m} 
+%                 \left(\begin{matrix} n^2-m \\ l \end{matrix}\right)
+%                 F_{N_{p}}(x)^l [1-F_{N_{p}}(x)]^{n^2-m-l}
+%     \right) dx
+\end{eqnarray}
+
+%P[\delta \leq x] = P[N-1 - N_0 /leq]
+
+Let this distribution be denoted as follows
+\[
+P[T=t] = f_{T_{n^2, m}}(t),
+\]
+where $n^2$ is the total number of edges, and $m$ is the number of signal edges.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{P_t_asym_vs_mc_n=10,m=10,k=10,p=045,q=055,s=100.pdf}
+\caption{A comparison of a monte carlo simulation and asymtotic distribution of the agnostic method with $n=10$, $m=10$, $k=10$, $p=0.45$, $q=0.55$, $s_0=s_1=100$.}
+\label{fig:ag_asym}
+\end{figure}
+
+Figure \ref{fig:ag_asym} shows an example of the accuracy of the asymtotic distribution for a specific set of parameters.
+
+
+
+\subsubsection{Maximum degree method}
+%Now lets calculate the $T$ distribution for IE1-star method.
+Let $v^*$ be the ``right'' vertex. Let $I = 1$ if the edge $(v^*, v^*)$ is a signal edge [and $I=0$ if it is not], and $R$ be the number of verticies $u\in V$ such that edges $(v^*,u)$ and $(u,v^*)$ are both signal edges. We will refer to this type of edge as a doubled signal edge. This means that there are exactly $R$ vertices with 2 signal edges, $m-2R-I$ with 1 signal edge, and $n-1-(m-2R-I)-R = n-m+R-1+I$ verticies with 0 signal edges [and $v^*$ with $m$ signal edges].  Then we can rewrite the probability of picking the right vertex as
+\begin{eqnarray}
+P[ \hat{v}^* = v^* ]
+&=&
+\sum_{i,r} P[I=i,R=r]P[\hat{v}^* = v^*|I=i,R=r]
+%\sum_r\Big( P[I=1,R=r]P[\hat{v}^* = v^*|I=1,R=r]
+%+P[I=0,R=r]P[\hat{v}^* = v^*|I=0,R=r] \Big)
+%%%%%%%%%%%
+%\\&=&
+%\sum_r \Big( P[I]P[R=r|I]P[\hat{v}^* = v^*|I,R=r]
+%\\&& +P[\bar{I}]P[R=r|\bar{I}]P[\hat{v}^* = v^*|\bar{I},R=r] \Big)
+%
+%&=& P\left[\textrm{arg}\max_v \sum_{v\in i,j\in V\times V} \hat{p}_{1;i,j} = v^* \right]
+%= P\left[\sum_{v^*\in i,j\in V\times V} \hat{p}_{1;i,j}\geq \left( \sum_{i,j\in??} \hat{p}_{1;i,j}\right)_{(1:n-1)} \right]
+%\\&\approx&
+%P\left[\sum_{i=1}^k N_{} \sum_{j=1}^{2n-1-k}   \hat{p}_{1;i,j} \geq \left( \sum_{i,j\in??} \hat{p}_{1;i,j}\right)_{(1:n-1)}
+%\left(
+%\sum_{k=1}^{2n-1} 
+%\right)_{(1:n-1)}
+% \right]
+\end{eqnarray}
+$P[I=i,R=r]$ can be found with combinitorics. First choose the $r$ doubled signal edges, next choose the vertices for remaining signal edges, and remembering that either incoming or outgoing edge can be signal. We get
+\begin{eqnarray}
+P[I=1,R=r] &=& \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-1 \end{matrix}\right)2^{m-2r-1}}
+{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+%P[I] &=& \frac{\left(\begin{matrix}2n-2\\m-1 \end{matrix}\right)}
+%{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+%\\P[R=r|I] &=& \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-1 \end%{matrix}\right)2^{m-2r-1}}
+%{\left(\begin{matrix}2n-2\\m-1 \end{matrix}\right)}
+\end{eqnarray}
+Notice that the support of $R$ depends on $m$. The support of $R$ is $\max(0, m-n)$ to $\lfloor (m-1)/2\rfloor$.
+
+Similarly for $I=0$, except the support of $R$ is now $\max(0, m-n+1)$ to $\lfloor m/2\rfloor$ if $m<n+1$.
+\begin{eqnarray}
+P[I=0,R=r] &=& \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r \end{matrix}\right)2^{m-2r}}
+{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+\end{eqnarray}
+Or more consicely for $I\in\{0,1\}$ and $R$ from $\max(0,m-i-n+1)$ to $\lfloor (m-i)/2\rfloor$
+\begin{eqnarray}
+P[I=i,R=r] &=& \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-i \end{matrix}\right)2^{m-2r-i}}
+{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+\end{eqnarray}
+
+
+
+%\begin{eqnarray}
+%P[I=i,R=r]
+%&=& \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-i \end{matrix}\right)2^{m-2r-i}}
+%{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+%\end{eqnarray}
+
+
+
+%% using submatrix to approximate P[right v]
+%Let $d_v$ be the ``degree'' of vertex $v$ (includes both incoming and outgoing edges)
+%\[
+%d_v = \sum_{v\in{u_1,u_2}} \hat{q}_{u_1,u_2}.
+%\]
+%Note that
+%\[
+%P[\hat{v}^* = v^*] = P[d_{v^*} > \max_{v\neq v^*} d_v]
+%\]
+%
+%
+%Consider the adjacency matrix of an E1-star gragh with the $v^*$ vertex in the first row and column.
+%\begin{eqnarray*}
+%\left[
+%\begin{matrix}
+%p_{1;v^*,v^*} & p_{1;v^*,v_2} & p_{1;v^*,v_3} & \ldots & p_{1;v^*,v_n} \\
+%p_{1;v_2,v^*} & p_{1;v_2,v_2} & p_{1;v_2,v_3} & \ldots & p_{1;v_2,v_n} \\
+%p_{1;v_3,v^*} & p_{1;v_3,v_2} & p_{1;v_3,v_3} & \ldots & p_{1;v_3,v_n} \\
+%\vdots &&& \ddots & \vdots\\
+%p_{1;v_n,v^*} & \ldots &&& p_{1;v_n,v_n}
+%\end{matrix}
+%\right]
+%\end{eqnarray*}
+%Notice that now the submatrix without the first row and column is equivalant to an adjacency matrix of a ER($n-1$). Let $\Delta_G$ be the maximum degree for graph $G$. Let $\Delta_{E1*(n)\backslash v^*} = \max_{v\neq v^*} d_v$ be the maximum degree of a E1-star graph with $n$ verticies excluding the degree for vertex $v^*$. Thus
+%\[
+%\Delta_{ER(n-1)}+2 \geq \Delta_{E1*(n)\backslash v^*} \geq \Delta_{ER(n-1)}
+%\]
+%Let $v_d$ be the vertex of $\Delta_{ER(n-1)}$. Now we can write a tighter bound by including the edges adjacent to $v^*$.
+%\[
+%\Delta_{ER(n-1)}+2 \geq \Delta_{E1*(n)\backslash v^*} \geq \Delta_{ER(n-1)} +\hat{p}_{1;v_d,v^*} +\hat{p}_{1;v^*,v_d}
+%\]
+%for constant $p$ with respect to $n$
+%\[
+%\Delta_{E1*(n)\backslash v^*} \approx \Delta_{ER(n-1)} +\hat{p}_{1;v_d,v^*} +\hat{p}_{1;v^*,v_d}
+%\]
+%So
+%\begin{eqnarray*}
+%P[d_{v^*} > \max_{v\neq v^*} d_v] \approx  P[d_{v^*} > \Delta_{ER(n-1)} +\hat{p}_{1;v_d,v^*} +\hat{p}_{1;v^*,v_d}]
+%\end{eqnarray*}
+%
+%
+%Using the assumption that all the edges are independent and conditioning on $I$ and $R$, 
+%\begin{eqnarray*}
+%P[\hat{p}_{1;v_d,v^*} +\hat{p}_{1;v^*,v_d} = x]
+%&=&	 P[\textrm{0 signal}] P\left[ \frac{1}{s_0} (\textrm{Binomial}(p,s_0) + \textrm{Binomial}(p,s_0)) = x\right]\\
+%&&	+P[\textrm{1 signal}] P\left[ \left(\frac{1}{s_0}\textrm{Binomial}(p,s_0) + \frac{1}{s_1}\textrm{Binomial}(q,s_1)\right) = x\right]\\
+%&&	+P[\textrm{2 signal}] P\left[ \frac{1}{s_1} (\textrm{Binomial}(q,s_1) + \textrm{Binomial}(q,s_1)) = x\right]
+%\\
+%&=& \sum_{r,i} P[I=i,R=r]
+%	\left(P[\textrm{0 signal}|I=i,R=r] P\left[ \frac{1}{s_1} \textrm{Binomial}(p,2s_0) = x\right]
+%\right.\\
+%&&	+P[\textrm{1 signal}|I=i,R=r] P\left[ \frac{1}{s_1} (\textrm{Binomial}(p,s_0) + \textrm{Binomial}(q,s_1)) = x\right]\\
+%&&	\left.
+%	+P[\textrm{2 signal}|I=i,R=r] P\left[ \frac{1}{s_1} \textrm{Binomial}(q,2s_1) = x\right]
+%\right)
+%\\
+%&=& \sum_{r,i} P[I=i,R=r]
+%	\left(\frac{r}{n-1} P\left[ \frac{1}{s_1} \textrm{Binomial}(p,2s_0) = x\right]
+%\right.\\
+%&&	+\frac{m-i-2r}{n-1} P\left[ \frac{1}{s_1} (\textrm{Binomial}(p,s_0) + \textrm{Binomial}(q,s_1)) = x\right]\\
+%&&	\left.
+%	+\frac{n-1-m+i-r}{n-1} P\left[ \frac{1}{s_1} \textrm{Binomial}(q,2s_1) = x\right]
+%\right)
+%\end{eqnarray*}
+%Let us refine our old notation of a normal random variable to be able to reflect number of verticies/samples,
+%\[
+%N_{p,n}\sim \textrm{Normal}(p,p(1-p)/n)
+%\]
+%Using the same normal approximation for binomial distributions as before
+%\begin{eqnarray*}
+%P[\hat{p}_{1;v_d,v^*} +\hat{p}_{1;v^*,v_d} < x]
+%\approx \sum_{r,i} &P[I=i,R=r]&
+%	\left( \frac{r}{n-1} F_{N_{p,2s_0}} (x)
+%	+\frac{m-i-2r}{n-1} P[N_{p,s_0}+N_{q,s_1} < x]\right.
+%\\&&\left.
+%	+\frac{n-1-m+i-r}{n-1} F_{N_{q,2s_1}} (x)
+%\right)
+%\end{eqnarray*}
+%The distribution of $d_{v^*}$ can be approximated as
+%\[
+%d_{v^*} = \frac{1}{s_0}\textrm{Binomial}(p, (2n-1-m)s_0) + \frac{1}{s_1} \textrm{Binomial}(q, m s_1)
+%\approx N_{p(2n-1-m),s_0/(2n-1-m)} + N_{qm, s_1 /m}
+%\]
+%From \cite{} we know that the assumptotic distribution for $\Delta_{ER(n-1)}$ is a Gumbel distribution.
+%
+%
+%\begin{eqnarray*}
+%P[d_{v^*} > \max_{v\neq v^*} d_v] \approx  P[d_{v^*} > \Delta_{ER(n-1)} +\hat{p}_{1;v_d,v^*} +\hat{p}_{1;v^*,v_d}]
+%\end{eqnarray*}
+
+
+
+
+
+
+
+
+
+
+Let $d_v$ be the ``degree'' of vertex $v$ (includes both incoming and outgoing edges)
+\begin{equation}
+\label{eqn:f_t}
+d_v = \sum_{v\in{u_1,u_2}} \hat{q}_{u_1,u_2}.
+\end{equation}
+
+
+Given $R$ and $I$, the event $v\neq v^*$ can be divided into 3 dijoint sets: $d_v$ with 0, 1, or 2 signal edges. Let us denote a vertex with $i$ signal edges as $d(i)$. [Thus $d(2)_{(r:r)}$ is maximum degree of $r$ vertices with 2 signal egdes.]
+\begin{eqnarray*}
+P[\hat{v}^* = v^*|I=i,R=r]
+&=& P[d_{v^*} > \max_{v\neq v^*} d_v|I=i,R=r]
+\\ &=&
+P[d_{v^*} >  d(2)_{(r:r)}, d_{v^*} > d(1)_{(m-2r-i:m-2r-i)}, d_{v^*} > d(0)_{(n-m+r-1+i:n-m+r-1+i)}]
+%P[d_{v^*} >  d(2)_{(r:r)}, d_{v^*} > d(1)_{(m-2r-1:m-2r-1)}, d_{v^*} > d(0)_{(n-m+r:n-m+r)}]
+\end{eqnarray*}
+%Similarly for $\bar{I}$,
+%\begin{eqnarray*}
+%P[\hat{v}^* = v^*|\bar{I},R=r]
+%&=&
+%P[d_{v^*} >  d(2)_{(r:r)}, d_{v^*} > d(1)_{(m-2r:m-2r)}, d_{v^*} > d(0)_{(n-m+r-1:n-m+r-1)}]
+%\end{eqnarray*}
+%or more consicely
+%\[
+%P[\hat{v}^* = v^*|I=i,R=r]
+%=
+%P[d_{v^*} >  d(2)_{(r:r)}, d_{v^*} > d(1)_{(m-2r-i:m-2r-i)}, d_{v^*} > d(0)_{(n-m+r-1+i:n-m+r-1+i)}]
+%\]
+Notice that $d_{v^*}\sim$Binomial$(q,ms_1) + $Binomial$(p,s_1(2n-1-m))$, and $d_{j}\sim$Binomial$(q,s_1j) + $Binomial$(p,s_1(2n-1-j))$.
+% Let us refine our notation of a normal random variable to be able to reflect number of verticies,
+%\[
+%N_{p,n}\sim \textrm{Normal}(pn,p(1-p)n/s)
+%\]
+Let $I=i$, and using the normal approximation of binomials
+\begin{eqnarray*}
+d(0)_{(n-m+r-1+i:n-m+r-1+i)} &\approx& N_{p,(2n-1)_{(n-m+r-1+i:n-m+r-1+i)}}
+\\
+d(1)_{(m-2r-i:m-2r-i)} &\approx& \left[N_{p,(2n-2)} +N_{q,1}\right]_{(m-2r-i:m-2r-i)}
+\\&& = \left[\textrm{Normal}\left(p(2n-2)+q, \frac{p(1-p)(2n-2)+q(1-q)}{s}\right)\right]_{(m-2r-i:m-2r-i)}
+\\
+d(2)_{(r:r)} &\approx& \left[N_{p,(2n-3)} +N_{q,2}\right]_{(r:r)}
+\\&& = \left[\textrm{Normal}\left(p(2n-3)+2q, \frac{p(1-p)(2n-3)+2q(1-q)}{s}\right)\right]_{(r:r)}
+\\
+d_{v^*} &\approx& N_{q,m}+N_{p,(2n-1-m)}
+\\&& = \textrm{Normal}\left(p(2n-1-m)+mq, \frac{p(1-p)(2n-1-m)+mq(1-q)}{s}\right)
+.
+\end{eqnarray*}
+For the convience of notation let the normal approximations be written as
+\begin{eqnarray*}
+d(j) &\approx& N_{d(j)}
+\\
+d_{v^*} &\approx& N_{d_{v^*}}.
+\end{eqnarray*}
+
+
+When $n\rightarrow\infty$ the dependence of $d_v$ diminishes \cite{}. Thus assumtotically
+\begin{eqnarray*}
+P[\hat{v}^* = v^*|I=i,R=r]
+&=&
+P[d_{v^*} >  d(2)_{(r:r)}, d_{v^*} > d(1)_{(m-2r-i:m-2r-i)}, d_{v^*} > d(0)_{(n-m+r-1+i:n-m+r-1+i)}]
+\\&\approx&
+P[d_{v^*} >  d(2)_{(r:r)}] P[ d_{v^*} > d(1)_{(m-2r-i:m-2r-i)}]P[ d_{v^*} > d(0)_{(n-m+r-1+i:n-m+r-1+i)}]
+\end{eqnarray*}
+Note that when $r=0$, $d(2)_{(r:r)}$ does not make sence. $r=0$ means that all verticies but $v^*$ have no more than 2 signal edges. The expression should not have the term $P[d_{v^*} >  d(2)_{(r:r)}]$. To rectify this let $F_{d(j)_{(0:0)}}(x) = 1$ for all $j$,$x$. [This occurs again when $m-2r-i=0$]
+
+
+Continuing using these normal approximations
+\begin{eqnarray*}
+P[\hat{v}^* = v^*|I=i,R=r]
+&\approx&
+P[N_{d_{v^*}} >  N_{d(2)_{(r:r)}}] P[ N_{d_{v^*}} > N_{d(1)_{(m-2r-i:m-2r-i)}}]P[ N_{d_{v^*}} > N_{d(0)_{(n-m+r-1+i:n-m+r-1+i)}}]
+\\&=&
+\int f_{d_{v^*}}(z) P[z >  N_{d(2)_{(r:r)}}] P[ z > N_{d(1)_{(m-2r-i:m-2r-i)}}]P[ z > N_{d(0)_{(n-m+r-1+i:n-m+r-1+i)}}] \ dz
+\\&=&
+\int f_{d_{v^*}}(z) F_{N_{d(2)}}^r(z) F_{N_{d(1)}}^{m-2r-i} F_{N_{d(0)}}^{n-m+r-1+i}(z) \ dz
+\end{eqnarray*}
+
+
+%\begin{eqnarray}
+%P[ \hat{v}^* = v^* ]
+%&=&
+%\sum_r\Big( P[I,R=r]P[\hat{v}^* = v^*|I,R=r]
+%+P[\bar{I},R=r]P[\hat{v}^* = v^*|\bar{I},R=r] \Big)
+%\\&\approx&
+%\sum_r\Big( P[I,R=r]
+%%P[d >  d_{2_{(r:r)}}]
+%%P[d > d_{1_{(m-2r-1:m-2r-1)}}]
+%%P[d > d_{0_{(n-m+r:n-m+r)}}]
+%%P[d_{v^*} = d]
+%P[\hat{v}^* = v^*|I,R=r]
+%+P[\bar{I},R=r]P[\hat{v}^* = v^*|\bar{I},R=r] \Big)
+%\end{eqnarray}
+
+
+
+
+Now the probability of $\hat{v}^* = v^*$ can be explicitly written
+\begin{eqnarray*}
+P[\hat{v}^* = v^*]
+&=& \sum_{i,r} P[I=i,R=r]P[\hat{v}^* = v^*|I=i,R=r]
+\\
+&\approx&
+	\sum_{i,r} \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-i \end{matrix}\right)2^{m-2r-i}}
+{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+		\int f_{d_{v^*}}(z) F_{N_{d(2)}}^r(z) F_{N_{d(1)}}^{m-2r-i} F_{N_{d(0)}}^{n-m+r-1+i}(z) \ dz
+%    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+%          \left(\begin{matrix} m \\ m-t-1, t-1, 1, 1 \end{matrix}\right)
+%          F_{N_q}^{m-t-1}(x) f_{N_q}(x) f_{N_q}(y)[1-F_{N_q}(y)]^{t-1}
+%\\&&\ \ \ \ 
+%          \left(\begin{matrix} 2n-1-m \\ 2n-1-m-k+t-1, k-t-1, 1, 1 \end{matrix}\right)
+%          F_{N_p}^{2n-1-m-k+t-1}(w) f_{N_p}(w) f_{N_p}(z)[1-F_{N_p}(z)]^{k-t-1}
+%    \ dw \ dx \ dy\ dz
+\end{eqnarray*}
+
+
+
+
+
+
+
+Notice given $\hat{v}^* = v^*$, the distribution of $T$ is the same as the agnostic method except instead of $n^2-m$ edges with probability $p$ there are only $2n-1-m$ edges, equation (\ref{eqn:f_t}). The distribution of $T=t$ for $t>2$ can be approximated as follows
+\begin{eqnarray*}
+P[T=t] 
+&=& P[T=t|\hat{v}^* = v^*] P[\hat{v}^* = v^*]+ P[T=t|\hat{v}^* \neq v^*] P[\hat{v}^* \neq v^*]
+\\
+&=& P[T=t|\hat{v}^* = v^*] P[\hat{v}^* = v^*]
+\\
+&\approx& f_{T_{2n-1, m}}(t)
+	\sum_{i,r} \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-i \end{matrix}\right)2^{m-2r-i}}
+{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+		\int f_{d_{v^*}}(z) F_{N_{d(2)}}^r(z) F_{N_{d(1)}}^{m-2r-i} F_{N_{d(0)}}^{n-m+r-1+i}(z) \ dz
+%    \iiiint \limits_{x<y,\ w<y,\ x<z,\ w<z}
+%          \left(\begin{matrix} m \\ m-t-1, t-1, 1, 1 \end{matrix}\right)
+%          F_{N_q}^{m-t-1}(x) f_{N_q}(x) f_{N_q}(y)[1-F_{N_q}(y)]^{t-1}
+%\\&&\ \ \ \ 
+%          \left(\begin{matrix} 2n-1-m \\ 2n-1-m-k+t-1, k-t-1, 1, 1 \end{matrix}\right)
+%          F_{N_p}^{2n-1-m-k+t-1}(w) f_{N_p}(w) f_{N_p}(z)[1-F_{N_p}(z)]^{k-t-1}
+%    \ dw \ dx \ dy\ dz
+\end{eqnarray*}
+
+For $t\leq 2$ if the wrong vertex is chosen, then it is still possible to correctly pick 0, 1, or 2 signal edges.
+% Let $J$ be the number of signal edges for the current vertex, for example $J=m$ for $v^*$. 
+Using the same method used to calulate $P[\hat{v}^* = v^*|I=i,R=r]$, we can approximate the probability of choosing a vertex with $J$ signal edges
+\begin{eqnarray*}
+%P[J = 0| \hat{v}^* \neq v^*, I=i, R=r]
+P[\hat{v}^* = d(0)| I=i, R=r]
+&\approx&
+P[d(0)_{(n-m+r-1+i:n-m+r-1+i)} >  d(2)_{(r:r)}]
+\\&&
+P[ d(0)_{(n-m+r-1+i:n-m+r-1+i)} > d(1)_{(m-2r-i:m-2r-i)}]
+\\&&
+P[ d(0)_{(n-m+r-1+i:n-m+r-1+i)} > d_{v^*}]
+\\
+%P[J = 1| \hat{v}^* \neq v^*, I=i, R=r]
+P[\hat{v}^* = d(1)| I=i, R=r]
+&\approx&
+P[d(1)_{(m-2r-i:m-2r-i)} >  d(2)_{(r:r)}] 
+\\&&
+P[ d(1)_{(m-2r-i:m-2r-i)} > d(0)_{(n-m+r-1+i:n-m+r-1+i)}]
+\\&&
+P[ d(1)_{(m-2r-i:m-2r-i)} > d_{v^*}]
+\\
+%P[J = 2| \hat{v}^* \neq v^*, I=i, R=r]
+P[\hat{v}^* = d(2)| I=i, R=r]
+&\approx&
+P[d(2)_{(r:r)} > d(0)_{(n-m+r-1+i:n-m+r-1+i)}]
+\\&&
+P[ d(2)_{(r:r)} > d(1)_{(m-2r-i:m-2r-i)}]
+\\&&
+P[ d(2)_{(r:r)} > d_{v^*}]
+\end{eqnarray*}
+
+\begin{figure}[!b]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{P_t_asym_vs_mc_n=20,m=10,k=10,p=045,q=055,s=100.pdf}
+\caption{A comparison of a monte carlo simulation and asymtotic distribution of the max degree method with $n=20$, $m=10$, $k=10$, $p=0.45$, $q=0.55$, $s_0=s_1=100$.}
+\label{fig:maxdeg_asym}
+\end{figure}
+
+
+For $t\leq2$ the distribution of $T$ can be written as
+\begin{eqnarray*}
+P[T=t]
+&=&
+P[T=t|\hat{v}^* = v^*] P[\hat{v}^* = v^*]+ \sum_{j=0}^2 P[T=t|\hat{v}^* = d(j)] P[\hat{v}^* = d(j)]
+\\
+&=&
+P[T=t|\hat{v}^* = v^*]  P[\hat{v}^* = v^*]+ \sum_{j=0}^2 P[T=t|\hat{v}^* = d(j)] \sum_{i,r} P[I=i,R=r] P[\hat{v}^* = d(j)|I=i,R=r]
+\\
+&\approx&
+f_{T_{2n-1,m}}(t)  P[\hat{v}^* = v^*]+ \sum_{j=0}^2 f_{T_{2n-1,j}}(t) \sum_{i,r} P[I=i,R=r] P[\hat{v}^* = d(j)|I=i,R=r]
+%\\
+%&=&
+%P[T=t|\hat{v}^* = v^*] \sum_{i,r} P[I=i,R=r] P[\hat{v}^* = v^*|I=i,R=r]
+%\\&&
+%+ \sum_{j=0}^2 P[T=t|\hat{v}^* = d(j)] \sum_{i,r} P[I=i,R=r] P[\hat{v}^* = d(j)|I=i,R=r]
+%\\
+%&=&
+%P[T=t|\hat{v}^* = v^*] \sum_{i,r} P[I=i,R=r] 
+%\\&&
+%\left(P[\hat{v}^* = v^*|I=i,R=r]+ \sum_{j=0}^2 P[T=t|\hat{v}^* = d(j)] P[\hat{v}^* = d(j)|I=i,R=r]\right)
+%\\
+%&\approx&
+%	f_{T_{2n-1,m}}(t) P[\hat{v}^* = v^*]
+%	+ \sum_{j=0}^2 f_{T_{2n-1,j}}(t) \sum_{i,r} P[I=i,R=r] P[\hat{v}^* = d(j)|I=i,R=r]
+%\\
+%&\approx&
+%f_{T_{2n-1,m}}(t) \sum_{i,r} \frac{\left(\begin{matrix}n-1\\r \end{matrix}\right) \left(\begin{matrix}n-1-r\\m-2r-i \end{matrix}\right)2^{m-2r-i}}
+%{\left(\begin{matrix}2n-1\\m \end{matrix}\right)}
+%		\int f_{d_{v^*}}(z) F_{N_{d(2)}}^r(z) F_{N_{d(1)}}^{m-2r-i} F_{N_{d(0)}}^{n-m+r-1+i}(z) \ dz
+%\\
+%&&+ \sum_{j=0}^2 f_{T_{2n-1,j}}(t) \sum_{i,r} P[I=i,R=r] P[\hat{v}^* = d(j)|I=i,R=r]
+\end{eqnarray*}
+
+
+Figure \ref{fig:maxdeg_asym} shows an example of the accuracy of the asymtotic distribution for a specific set of parameters.
+
+
+
+
+\subsection{Relative Efficiency}
+With these two methods we need a way to compare their performance. Relative efficiency is one way to do so. Recall that the ratio Nt /NW is a measure of the relative efficiency of the Wilcoxon test versus the t test, where Nt and NW are minimum sample sizes required to achieve some specified power at some specified size. [cite B\&D 1977
+page 352] [cite Priebe gwmw papers . . . ?]
+
+Since we are in the case for which all signal edges are created equally and all noise edges are created equally, if we constrain all canonical subspace identification methods so that $|\hat{\mathcal{E}}| = k$ for some $k$, then Priebe’s Conjecture \#1 above implies that comparing the number of signal dimensions recovered for two canonical subspace identification methods allows comparison of classification performance.
+
+Toward that end, for canonical subspace identification method $x$ define
+\[
+                            T_x (k, s, F_{GY} ) = |\mathcal{E} \cap \hat{\mathcal{E}}_x |
+\]
+to be the number of signal dimensions recovered with training sample size $s$
+using method $x$.
+
+Let
+\[
+    s_x(t) = \min\{s : E[T_x (k, s, F_{GY} )] \geq t\}.
+\]
+The ratio $r(t) = s_{coherent} (t)/s_{agnostic} (t)$ is the relative efficiency.
+
+
+\subsection{Simulations}
+
+There do exist situations where the agnostic model outperforms the coherenet model. Notice that in our coherent model, if the wrong vertex is chosen, then $t=0$. Here is a simulation that shows situations where the agnostic models is better and situations where the coherent model is better. In all simulations $m=10$, $k=10$, $t=8$ and $n=|V|$ ranges from 10 to 150 in intervals of 10. ($m$ is the number of edges with probability $q$.) For each simulation of $E[T]$, 1000 trials are used.
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{n=10_10_150,p=01,q=02,m=10,k=10,t=8,r=1000/samples.pdf}
+\caption{$s$ values of the agnostic and max degree models with $p=0.1$, $q=0.2$.}
+\label{fig:p01_q02_s_val}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{n=10_10_150,p=01,q=02,m=10,k=10,t=8,r=1000/rel_eff.pdf}
+\caption{Relative efficiency simulation with $p=0.1$, $q=0.2$.}
+\label{fig:p01_q02_rel_eff}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{n=10_10_150,p=045,q=055,m=10,k=10,t=8,r=1000/samples.pdf}
+\caption{$s$ values of the agnostic and max degree models with $p=0.45$, $q=0.55$.}
+\label{fig:p045_q055_s_val}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{n=10_10_150,p=045,q=055,m=10,k=10,t=8,r=1000/rel_eff.pdf}
+\caption{Relative efficiency simulation with $p=0.45$, $q=0.55$.}
+\label{fig:p045_q055_rel_eff}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{n=10_10_150,p=08,q=09,m=10,k=10,t=8,r=1000/samples.pdf}
+\caption{$s$ values of the agnostic and max degree models with $p=0.8$, $q=0.9$.}
+\label{fig:p08_q09_s_val}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[trim = 1in 3in 1in 3in, clip, width=5in]{n=10_10_150,p=08,q=09,m=10,k=10,t=8,r=1000/rel_eff.pdf}
+\caption{Relative efficiency simulation with $p=0.8$, $q=0.9$.}
+\label{fig:p08_q09_rel_eff}
+\end{figure}
+%n=10_10_150,p=045,q=055,m=10,k=10,t=5,r=1000
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{paper}
+
+\end{document}
+

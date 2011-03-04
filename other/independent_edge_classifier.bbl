@@ -1,0 +1,57 @@
+\begin{thebibliography}{10}
+
+\bibitem{DGL96}
+L.~Devroye, L.~Gy{\"o}rfi, and G.~Lugosi, {\em {A Probabilistic Theory of
+  Pattern Recognition}}.
+\newblock Springer, 1996.
+
+\bibitem{Gartner03}
+T.~Gartner, ``{A survey of kernels for structured data},'' {\em ACM SIGKDD
+  Explorations Newsletter}, vol.~5, no.~1, p.~58, 2003.
+
+\bibitem{HastieFriedman01}
+T.~Hastie, R.~Tibshirani, and J.~Friedman, {\em {The Elements of Statistical
+  Learning: Data Mining, Inference, and Prediction}}.
+\newblock Springer, 2001.
+
+\bibitem{FreundSchapire95}
+Y.~Freund and R.~Schapire, ``{A desicion-theoretic generalization of on-line
+  learning and an application to boosting},'' pp.~23--37, 1995.
+
+\bibitem{KashimaInokuchi02}
+H.~Kashima and A.~Inokuchi, ``{Kernels for graph classification},'' vol.~2002,
+  2002.
+
+\bibitem{KashimaInokuchi03}
+A.~I. Hisashia~Kashima, Koji~Tsuda, ``Marginalized kernels between labeled
+  graphs,'' {\em International Conference on Machine Learning}, 2003.
+
+\bibitem{KudoMatsumoto04}
+T.~Kudo, E.~Maeda, and Y.~Matsumoto, ``{An application of boosting to graph
+  classification},'' in {\em Proc. of NIPS}, pp.~729--736, Citeseer, 2004.
+
+\bibitem{BunkeRiesen08}
+H.~Bunke and K.~Riesen, ``{Graph Classification Based on Dissimilarity Space
+  Embedding},'' in {\em Proceedings of the 2008 Joint IAPR International
+  Workshop on Structural, Syntactic, and Statistical Pattern Recognition},
+  p.~1007, Springer, 2008.
+
+\bibitem{RiesenBunke09}
+K.~Riesen and H.~Bunke, ``Graph classification by means of lipschitz
+  embedding.,'' {\em IEEE Trans Syst Man Cybern B Cybern}, vol.~39,
+  pp.~1472--1483, Dec 2009.
+
+\bibitem{FlachLachiche04}
+P.~Flach and N.~Lachiche, ``{Naive Bayesian classification of structured
+  data},'' {\em Machine Learning}, vol.~57, no.~3, pp.~233--269, 2004.
+
+\bibitem{TrentinIorio09}
+E.~Trentin and E.~D. Iorio, ``Classification of graphical data made easy,''
+  {\em Neurocomputing}, vol.~In Press, Corrected Proof, pp.~--, 2009.
+
+\bibitem{LiuYu05}
+H.~Liu and L.~Yu, ``{Toward integrating feature selection algorithms for
+  classification and clustering},'' {\em IEEE Transactions on knowledge and
+  data engineering}, pp.~491--502, 2005.
+
+\end{thebibliography}

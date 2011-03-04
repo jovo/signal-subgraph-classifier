@@ -1,0 +1,768 @@
+% \documentclass[10pt,journal,cspaper,compsoc]{IEEEtran}
+\input{/Users/jovo/Research/latex/latex_paper.tex} 
+\usepackage{url}
+\lhead{Vogelstein JT, et al}
+\rhead{Independent Edge Graph Classification}
+
+
+% \ifCLASSOPTIONcompsoc
+%   \usepackage[nocompress]{cite}
+% \else
+%   \usepackage{cite}
+% \fi
+% 
+% \ifCLASSINFOpdf
+%   \usepackage[pdftex]{graphicx}
+% \else
+%   \usepackage[dvips]{graphicx}
+% \fi
+
+% \usepackage[cmex10]{amsmath}
+\interdisplaylinepenalty=2500
+% \usepackage{algorithmic}
+\usepackage{array}
+\usepackage{mdwmath}
+\usepackage{mdwtab}
+
+\usepackage{url}
+\usepackage{amsfonts}
+\usepackage{subfigure}
+
+\usepackage{algorithm}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+% \usepackage{hyperref}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% \providecommand{\mt}[1]{\widetilde{#1}}
+% \providecommand{\mc}[1]{\mathcal{#1}}
+% \providecommand{\mb}[1]{\mathbf{#1}}
+% \providecommand{\mh}[1]{\hat{#1}}
+% \providecommand{\mv}[1]{\vec{#1}}
+% \providecommand{\mvb}[1]{\mathbf{#1}}
+% \providecommand{\mhc}[1]{\mh{\mathcal{#1}}}
+% \providecommand{\norm}[1]{\left \lVert#1 \right  \rVert}
+% \providecommand{\abs}[1]{\left \lvert#1 \right  \rvert}
+% 
+% \newcommand{\Real}{\mathbb{R}}
+% \newcommand{\PP}{\mathbb{P}}          
+% \newcommand{\EE}{\mathbb{E}}          
+% \newcommand{\conv}{\rightarrow}
+% \newcommand{\mED}{\mc{E}_{\Delta}}
+% \newcommand{\hLD}{$\mh{\Lam}_{\Delta}$}
+% \newcommand{\hbD}{\widehat{\mathbf{D}}}
+% \newcommand{\T}{^{\ensuremath{\mathsf{T}}}}           % transpose
+% 
+% \newtheorem{thm}{Theorem}
+% 
+% \newcommand{\argmax}{\operatornamewithlimits{argmax}}
+% \newcommand{\argmin}{\operatornamewithlimits{argmin}}
+% 
+% \newcommand{\del}{\delta}
+% \newcommand{\sig}{\sigma}
+% \newcommand{\lam}{\lambda}
+% \newcommand{\gam}{\gamma}
+% \newcommand{\eps}{\varepsilon}
+% \newcommand{\bth}{\btha}
+% \newcommand{\bth}{\mb{\btha}}
+\newcommand{\hth}{\mh{\bth}}
+\newcommand{\pp}{p}
+\newcommand{\qq}{q}
+
+% \newcommand{\Del}{\Delta}
+% \newcommand{\Sig}{\Sigma}
+% \newcommand{\Lam}{\Lambda}
+% \newcommand{\Gam}{\Gamma}
+% \newcommand{\bTh}{\bTha}
+% \newcommand{\bTh}{\mb{\bTha}}
+
+% \inpu{/Users/jovo/Research/meta/latex_commands}
+
+\begin{document}
+\title{PRE-DRAFT: Graph Classification under an independent edge model}
+
+\author{Joshua~T.~Vogelstein$^{1}$, %,~\IEEEmembership{Member,~IEEE,}
+		Henry Pao$^1$
+        R.\ Jacob~Vogelstein$^{1,2}$, %John~Doe,~\IEEEmembership{Fellow,~OSA,}
+        and~Carey~E.~Priebe$^{1}$ %Jane~Doe,~\IEEEmembership{Life~Fellow,~IEEE}% <-this % stops a space
+% \IEEEcompsocitemizethanks{\IEEEcompsocthanksitem JTV is blah.  CEP is blah.  RJV is blah. 
+% E-mail: joshuav@jhu.edu %see http://www.michaelshell.org/contact.html
+% \IEEEcompsocthanksitem J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+% \thanks{}
+\\
+$^1$ Johns Hopkins University, Department of Applied Mathematics \& Statistics \\
+$^2$ Johns Hopkins University Applied Physics Laboratory, National Security Technology Department 
+}
+
+
+\maketitle
+
+
+% The paper headers
+% \markboth{PLoS Comp Bio}%
+% {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Computer Society Journals}
+
+% \IEEEcompsoctitleabstractindextext{%
+\begin{abstract}
+%\boldmath
+The statistical analysis of data that are well represented by networks, or graphs, is a rapidly developing field.  In particular, many aspects of the world, including economics, telecommunications, social networks, and transportation grids, to name a few, are well characterized by graphs. While much work has been devoted to studying the statistics of individual graphs, less attention has been given to the analysis of collections of graphs.  Our interest here is to develop classifiers that operate directly on graphs, without requiring embedding the graphs into vector spaces.  Therefore, our approach is to develop a joint model, $\PP[G,Y]$, characterizing the possible distributions of random graphs, $G$ and classes, $Y$.  We study some simple special cases by assuming edges are independent, but not identically, distributed. Based on this model, we develop classifiers that are consistent and more efficient than more na\"ive classifiers, given sufficient data.   In our motivating example, the graphs correspond to brain connectivity, i.e.\ connectomes, of individuals.  These results suggest several avenues for the development of classification algorithms for graphs.
+
+\end{abstract}
+
+% Note that keywords are not normally used for peer review papers.
+% \begin{keywords}
+% blah, blah, blah.
+% \end{keywords}}
+
+
+% make the title area
+
+
+% \IEEEdisplaynotcompsoctitleabstractindextext
+% \IEEEpeerreviewmaketitle
+
+\section{Introduction} % (fold)
+\label{sec:introduction}
+
+Current technology facilitates acquiring large swaths of data in myriad diverse fields, ranging from telecommunications to neuroinformatics. As  data \emph{collection} technologies become increasingly sophisticated,  they beckon an analogous development of data \emph{analysis} technologies.  Statistical theory, and in particular, pattern recognition, has therefore received widespread attention and devotion in the recent decades, including an explosion in so-called ``machine learning'' techniques, including both supervised and unsupervised learning.  Supervised learning algorithms have largely focused on problems that loosely satisfy the following assumptions: data has been exchangeably sampled from some distribution: $(x_s,y_s) \overset{exch.}{\sim} \PP[X,Y]$, where each $x_s \in \mc{X} \subseteq \Real^d$ is a ``feature vector,'' $y_s \in \mc{Y} \subseteq\Real^{d'}$ is a (set of) class variable(s), and $\PP[X,Y]$ is some joint distribution \cite{DGL96}.  Given these assumptions, one then desires to build a function that utilizes training data to make a prediction of $y$ given a new $x$, $f: \mc{X} \times (\mc{X} \times \mc{Y})^S \mapsto \mc{Y}$, where $S$ is the number of training samples.  
+
+Here we are interested in a slightly different setting.  In particular, rather than $x \in \Real^d$,  we assume that the features form a graph.  A graph is a double composed of a set of $n$ vertices, and up to $n^2$ edges between its vertices.   The space of graphs, $\mc{G}$, is not Euclidean, because edges share vertices, and therefore, the graphs have structure.  Therefore, while one could na\"ively apply standard supervised learning algorithms to graph classification, they will discard structural information. Tools designed specifically to operate on graph spaces could perhaps facilitate extracting more information from these data.
+
+To date, most work on these kinds of problems has utilized ``graph kernels'' \cite{Gartner03}.  More specifically, the investigator first defines a set of graph kernels, projects each graph into the graph kernel space, and then utilizes standard machine learning techniques \cite{HastieFriedman01}, typically some kind of boosting algorithm \cite{FreundSchapire95} (for example, \cite{KashimaInokuchi02, KashimaInokuchi03, KudoMatsumoto04}). \cite{BunkeRiesen08} and \cite{RiesenBunke09} defined various embeddings and then built classifiers based on distance between embedded graphs). \cite{FlachLachiche04} and \cite{TrentinIorio09} assume edges are independent, and then use standard tools to perform classification.  While effective, these methods lack a certain desirable interpretability: for many applications, we desire to understand which edges/vertices convey the signal.  
+
+A somewhat different approach is considered here, both explicitly utilizing graph structure and admitting interpretable results.  Of primary interest here is the development of consistent classifiers, that is, classifiers guaranteed to converge to the Bayes optimal classifier with enough data.  Moreover, the preference is that these classifiers converge quickly, as data is often limited.  Analytics and simulations demonstrate the utility of this framework for classifying graphs.  We then apply these classifiers to a real-world application: that of classifying gender based only on ``conntectome'' data,  where each graph corresponds to the macroanatomical structure of a human brain.  These classifiers can differentiate gender with better accuracy then more na\"ive classifiers, in less time, with more interpretability.
+
+% section introduction (end)
+
+\section{Methods} % (fold)
+\label{sec:methods}
+
+\subsection{Background} % (fold)
+% \label{sub:terminology_and_notation}
+
+\subsubsection{Preliminaries}
+\label{sec:prelim}
+Upper case latin letters are random variables, $X: \Omega \mapsto \mc{X}$, whose samples $x$ take values in  the sample space, $\mc{X}$, with cardinality $|\mc{X}|$.  The probability distribution of $X$ will be $\PP[X]$, and the probability mass function of $X$ taking value $x$ will be written $\PP[x]$. Both vectors and matrices will be indicated by bold notation, $\mb{x} \in \Real^{d \times d'}$.
+
+A random graph, $G$, takes values $g \in \mc{G}$, defined by a tuple $(\mc{V},\mc{E})$, where $\mc{V}$ is the set of $|\mc{V}|=n$ vertices, and $\mc{E}$ is the set of edges (or arcs) between them. 
+% 
+% subsubsection random_graphs (end)
+% 
+% \subsubsection{Random classes} % (fold)
+% \label{ssub:random_classes}
+% 
+Let $Y$ be a random class, taking values $y \in \mc{Y}$.  We are particularly interested in scenarios in which $\mc{Y}=\{0,1\}$.  Given these definitions, a joint distribution, $\PP_{\bth} [G,Y]$, specifies the probability of observing any graph $g \in \mc{G}$ (to be defined below) and any class $y \in \mc{Y}$, with parameter $\bth \in \bTh$.  The model is the collection of all possible joint distributions under consideration, $\mc{P}=\{\PP_{\bth}[G,Y] | \bth \in \bTh \}$. Let $\PP[g|y]$ indicate the \emph{likelihood} of observing $g$ given $y$, $\PP[y]$ denote the \emph{prior} probability of observing $y$, and $\PP[y|g]$ be the \emph{posterior} probability of observing $y$ given $g$ (note that we sometimes drop the $\bth$ subscript for brevity).  
+ 
+
+% subsubsection model (end)
+
+% \subsubsection{Parametric models} % (fold)
+% \label{ssub:parameters}
+
+% A model is said to be parametric if the distribution can be characterized entirely by a finite set of parameters, $\bth \in \bTh \subseteq \Real^p$, where $p<\infty$ is the dimensionality of the parameter. Strictly speaking, the parameter of the model must be \emph{identifiable}.  Formally, $\bth: \bTh \mapsto \mc{P}$ is the inverse map from $\bTh$ to $\mc{P}$ if and only if the latter map is one-to-one, that is $\PP_{\bth_1}=\PP_{\bth_2} \Rightarrow \bth_1=\bth_2$ (and $\PP_{\bth_u}$ indicates a distribution characterized by $\bth_u$).
+
+
+% subsubsection parameters (end)
+
+
+% \subsubsection{Data} % (fold)
+% \label{ssub:data}
+
+
+Throughout, data is assumed to be sampled exchangeably from some true (but typically unknown) distribution, $x \overset{exch.}{\sim} \PP_{\bth}[G,Y]$.  A collection of $S$ training samples is denoted by $\mc{T}_S=\{(g_s,y_s)\}$.  Let $\mc{S}_y$ indicate the set of data points in class $y$, and $|\mc{S}_y|=S_y$.
+% subsubsection data (end)
+% subsection terminology_and_notation (end)
+% 
+% \subsection{Parameter estimates} % (fold)
+% \label{sub:estimators}
+% 
+
+A parameter estimate uses some data to obtain an estimate of the true (but typically known) parameter $\bth^*$, $\hth_S: \mc{X}^S \mapsto \bTh$.  An unbiased estimator is one for which its expectation equals the true parameter value: $\EE[\hth_S] = \bth^*$.  An asymptotically unbiased estimator is one for which $\EE[\hth_S] \conv \bth^*$ as $S \conv \infty$. Technically, this is a \emph{sequence} of estimators, as each estimator is a function of $S$ data points, so they have different domain spaces, and are therefore different functions.   A consistent estimator (sometimes called an asymptotically consistent estimator) is a sequence of estimators that converges in probability to $\bth^*$. Formally, an estimator is consistent if and only if $\lim_{S\conv \infty} \PP[\hth_S=\bth^*]=1$.
+
+
+
+
+% subsection estimators (end)
+
+\subsubsection{Basic classification theory} % (fold)
+\label{sub:basic_classification_theory}
+
+% subsection basic_classification_theory (end)
+
+In the graph classification setting, we define a graph classifier as any function that takes as input a graph $g$ and outputs an expected class, $f: \mc{G} \mapsto \mc{Y}$, when $\mc{Y}$ is discrete.  Graph classification quality is assessed by misclassification rate:
+\begin{align} \label{eq:L}
+	L_f = \PP[f(G) \neq Y] = \int_{g \in \mc{G}} \PP[f(g) \neq y]  \PP[g] dg.
+\end{align}
+We would like to find a graph classifier, $f^*$, with minimum misclassification rate, also called the Bayes optimal graph classifier. 
+% :
+% \begin{align}
+% 	f^* =\argmin_{f \in \mc{F}} L_f,
+% \end{align}
+It can be shown that selecting the class that maximizes the class-conditional posterior is Bayes optimal \cite{DGL96}:
+\begin{align} \label{eq:bayes}
+	\mh{y} &= f^*(g) =\argmin_{f \in \mc{F}} L_f(g) = \argmax_{y \in \{0,1\}} \PP[y | g] 
+	% \nonumber \\ &
+	= \argmax_{y \in \{0,1\}} \PP[g | y] \PP[y]  
+\end{align}
+where $\mc{F}$ is the space of all possible classifiers. The misclassification rate of the Bayes optimal graph classifier is called the \emph{Bayes error} (or \emph{Bayes risk}).  Because $f^*$ is typical unknown, one can approximate $f^*$ by utilizing training data
+%In particular, we will assume a corpus of $S$ data points have been sampled exchangeably from the joint distribution, $(g,y), \{(g_s,y_s)\} \overset{exch.}{\sim} \PP[G,Y]$, for $s \in [S]$, where $[S]=\{1,2,\ldots, S\}$ and
+ % $\mc{T}_S =\{(g_s,y_s)\}$ denotes the set of $S$ samples.  
+to construct an classifier estimate: $\mh{f}(\cdot; \mc{T}_S): \mc{G} \times (\mc{G} \times \mc{Y})^S \mapsto \mc{Y}$.  
+% When $\PP[G,Y]$ is unknown a priori,   In a slight abuse on naming convention, we also call functions that are trained on a data corpus graph classifiers, $f: \mc{G} \times (\mc{G} \times \mc{Y})^S \mapsto \mc{Y}$.
+A \emph{Bayes plug-in} classifier first estimates the likelihood $\PP[G|Y]$ and prior, $\PP[Y]$, and then plugs them in to \eqref{eq:bayes} to obtain:
+\begin{align} \label{eq:plugin}
+	\mh{y} &= \argmax_{y \in \{0,1\}} \mh{\PP}[g | y] \mh{\PP}[y].  
+\end{align}
+Assessing the quality of an estimated classifier is a sticky wicket, as the integral in \eqref{eq:L} is typically intractable without an infinite amount of data.  Instead, we typically approximate this integral using a (sub-)sampling procedure.  In particular, select subsets of the data: \{$\mc{T}_{s_1},\ldots, \mc{T}_{S_C}\}$, where each $\mc{T}_{S_c} \subseteq \mc{T}_S$, and compute the \emph{cross-validated error}, an estimate of the misclassification rate for an estimated classifier:
+\begin{align} \label{eq:L2}
+	\mh{L}_{\mh{f}(\cdot; \mc{T}_S)} = \sum_{c=1}^C P[\mh{f}(g; \mc{T}_{S_c}) \neq y]  P[\mc{T}_{S_c}],
+\end{align}
+noting that \eqref{eq:L2} generalizes the ideas of ``leave-one-out'' and related approaches by allowing any sampling strategy, any size subsets, and any number of subsamples.  %Below we describe several different types of classifiers with different properties.
+A consistent classifier is one that converges to Bayes classifier, that is: $\lim_{S\conv \infty} \PP[L_{\mh{f}}=L_{f^*}]=1$.
+
+
+\section{Models} % (fold)
+\label{sub:models}
+
+Let $\PP_{\bth}[G]$ indicate the probability distribution over graphs.  We assume that our collection of graphs shares the same set of \emph{labeled} vertices, $\mc{V}$, so that all the variability is in the edge list.  We then make the following assumptions about the edges.  First, edges are binary random variables, so $a_{uv}=1$ whenever there is an edge from vertex $u$ to vertex $v$, and $a_{uv}=0$ otherwise.  Second, loops are forbidden, so $a_{uu}=0$ $\forall u \in \mc{V}$.  Third, the graphs are undirected, so $a_{uv}=a_{vu}$ $\forall u,v \in \mc{V}$. Collectively, these three assumptions means that the graphs under investigation are \emph{simple graphs}, although the $2^{nd}$ and $3^{rd}$ assumption can be relaxed in everything that follows without any substantive changes. 
+ 
+Because both the possible values of each edge and the number of vertices are finite, the number of possible graphs is also finite.  More specifically, $|\mc{E}|=d_n=\binom{n}{2}$ for simple graphs (if an edge is possibly in the edge list, then we write $u \sim v \in \mc{E}$).  One can therefore define a probability mass function, $\PP_{\bth}[G]$, characterizing the distribution over graphs.  The most general model for these random graphs is therefore a categorical random variable, which assigns a probability to each possible graph.  Because there are $2^{d_n}$ possible simple graphs with $n$ vertices, this categorical model would have a parameter with $2^{d_n}-1$ dimensions.  
+
+Clearly, estimating such a parameter from data will be intractable in all but the smallest graphs, as $2^{d_n}$ is superexponential in $n$ (for example, when $n=10$, $2^{d_n}>10^13$).  Thus, we search for simpler models, for which we hope to be able to achieve parameter estimates sufficiently accurate to enable good classification accuracy.  There is a delicate balance here, we desire a model that is sufficiently complex to facilitate accurate classification, but sufficiently simple to enable both estimation given the amount of data we expect to collect, as well as interpretability.  Below, we describe several such models, each with increasing levels of complexity.
+
+
+
+
+% The value of each edge, $a_{uv}$, is encoded in a $n \times n$ element array called an adjacency matrix, $\mb{a}=\{a_{uv}\}$.  When the set of vertices is fixed, the graph is called a \emph{labeled graph}.  When comparing multiple graphs, if they are all labeled graphs, then all of the information about the graph is within the adjacency matrix, so one can simply refer to the random adjacency matrix $\mb{A}$.   Below, we assume all edges are binary, thus $a_{uv} \in \{0,1\}$. We denote the probability distribution of a random graph, $\PP[G]$.  Below, we elaborate on various probability distributions on graphs.   
+% 
+% Since we have assumed binary edges, given a fixed number of vertices, $n$, the number of possible graphs is finite; specifically $2^{d_n}$, where $d_n$ is the dimensionality of the adjacency matrix.  
+% 
+% A hollow graph forbids self-loops, so $a_{vv}=0\quad \forall v \in \mc{V}$. Undirected graphs require that $a_{uv}=a_{vu}\quad \forall u \sim v \in \mc{E}$ (note that $a_{uv}=1$ indicates the presence of an edge from $v$ to $u$). Directed graphs impose no such requirements.  The number of possible labeled graphs for a set of vertices is $|\mc{G}|=2^d$, where $d$ is the dimensionality of the graphs (and this is also the number of distinct adjacency matrices).  A \emph{simple graph} has a hollow, symmetric, and binary adjacency matrix, so $d={n \choose 2}$.  Directed graphs with self-loops have $d=n^2$.  
+% Here, we describe a few different independent edge models, each with different constraints on the parameters.
+
+
+\subsection{Identical and independent edge model} % (fold)
+\label{sub:ER}
+
+
+Perhaps the simplest and most well-known random graph model one could assume is the Erd\"os-R\'enyi (ER) random graph model, which asserts that each edge is independent and identically distributed (i.i.d.): $\PP[A_{uv}=\pp], \, \forall u \sim v \in \mc{E}$ \cite{ER, Bollobas}: %.  To use this assumption for graph classification, we would assume that 
+\begin{align}
+	\PP_{\bth}[G]&=\PP_{\bth}[\mb{A}]=\prod_{u \sim v \in \mc{E}} \PP_{\bth}[A_{uv}] %= \prod_{uv} \PP[A_{uv} | p^Y]
+	% \nonumber \\&
+	= \prod_{u \sim v \in \mc{E}} \text{Bern}(a_{uv}; \pp) = \prod_{u \sim v \in \mc{E}} a_{uv}^{\pp}(1-a_{uv})^{1-\pp},
+\end{align}
+where $\bth=\pp$.  Thus, we have reduced the dimensionality of the parameter from $2^{d_n}$ to $1$. It seems unlikely that this simple model will suffice for all but the simplest classifications problems.
+ %The distribution of these ER graphs is therefore determined entirely by $V$ and $\pp$ (and assumptions of whether the graph is directed and/or hollow).  
+We therefore generalize this i.i.d. model by relaxing the second `i', namely, letting edges by independent, but not identically distributed.  
+
+% Below, we elaborate on two special cases of this generalization.  In each case, some edges are Bern$(\pp)$, and others are Bern$(\qq)$, where $\qq\neq \pp$; the two models differ in which edges have probability $\qq$. %In each case, the \emph{signal subgraph} is the graph defined by the edges with probability $\qq$.  
+
+\subsection{Incoherent edge model} % (fold)
+\label{ssub:incoherent_subspace}
+
+Perhaps the simplest generalization of the above totally ``homogeneous'' model is to allow edges to be independent, but some have probability $\pp$ and others have probability $\qq$.  Moreover, if the edges with probability $\qq$ are scattered ``incoherently'' around the adjacency matrix, we call this an \emph{incoherent edge model}. More formally, we consider the set of $m$ edges, $\mc{E}_{inc}=\{A_{uv} | u \sim v \in \mc{E}_{inc}\}$, where $|\mc{E}_{inc}|=m$, each of which has probability $\qq$, and the rest have probability $\pp$.  Thus, we have the following model:
+\begin{equation} \label{eq:M_u}
+	\PP_{\bth}[G] = \prod_{u \sim v \notin \mc{E}_{inc}} \text{Bern}(a_{uv}; p) \prod_{u \sim v \in \mc{E}_{inc}} \text{Bern}(a_{uv}; \qq).
+\end{equation}
+The parameters of this model are therefore: $\bth_{inc}=(p,\qq,\mc{E}_{inc})$. Note that $\mc{E}_{inc}$ could be thought of as a binary matrix, indicating for each edge whether its parameter was $\pp$ or $\qq$.
+
+
+
+% subsection incoherent_subspace (end)
+
+\subsection{Coherent edge model} % (fold)
+\label{ssub:incoherent_subspace}
+
+In the above model, the edges with probability $\qq$ were incoherently scattered across all edges.  Here, we assume that all the edges with probability $\qq$ share $\gamma$ common vertices.  More formally, $\mc{E}_*=\{A_{uv} | u \in \mc{V}_* \text{ or } v \in \mc{V}_*\}$, where $\mc{V}_*$ is the set of ``star'' vertices, and $|\mc{V}_*|=\gamma$.  This leads to a model identical to \eqref{eq:M_u}, except replace the $\mc{E}_{inc}$ with $\mc{E}_*$. The parameter of the coherent model is therefore: $\bth_{*}=(p,\qq,\mc{E}_*)$.  The top 3 panels of Figure \ref{fig:models} shows examples of all three models.
+
+
+\begin{figure}[h!]
+\centering \includegraphics[width=.9\linewidth]{/Users/jovo/Research/figs/misc/ER_INC_STAR1}
+\caption{Schematic depicting the probability of each edge for the various models. Top panels show the various homogeneous models.  The bottom panels show two heterogeneous class-conditional distributions, as well as their difference.}
+\label{fig:models}
+\end{figure}
+
+
+\subsection{Heterogeneous model} % (fold)
+\label{sub:heterogeneous_model}
+
+In the above models, while each edge was independent, the each edge's probability was either completely homogeneous (in the identical and independent model) or largely homogeneous (in both the incoherent and coherent edge models).  Here we also consider the heterogeneous model, in which each edge is sampled according to some probability, yielding:
+\begin{align}
+		\PP_{\bth}[G]&=\PP_{\bth}[\mb{A}]=\prod_{u \sim v \in \mc{E}} \PP_{\bth}[A_{uv}] %= \prod_{uv} \PP[A_{uv} | p^Y]
+		% \nonumber \\&
+		= \prod_{u \sim v \in \mc{E}} \text{Bern}(a_{uv}; \pp_{uv}) = \prod_{u \sim v \in \mc{E}} a_{uv}^{\pp_{uv}}(1-a_{uv})^{1-\pp_{uv}}.
+\end{align}
+In some sense, this is the most general model described so far.  In another sense, it has less structure,  is harder to estimate, and is a model selection problem (finding which edges have probability $\qq$, and how many such edges are there).
+
+
+% subsection heterogeneous_model (end)
+
+\subsection{Joint models}
+
+The above models only characterize the distribution of graphs, not the distribution of graphs and classes, $\PP[G,Y]$.  For Bayes risk to be non-zero, the two classes must have some difference: $\PP[G | Y=0] \neq \PP[G | Y=1]$.  In  independent edge models, this means that for at least one edge, $\PP[A_{uv} | Y=0] \neq \PP[A_{uv} | Y=1]$.  Moreover, the above  models can be considered models of the class-conditional differences, that is: (i) all, (ii) an incoherent collection, or (iii) a coherent collection of edges could have different distributions (or some combination thereof).  Let the \emph{signal subgraph}, denoted by $\mc{E}_{s}$, be the collection of edges with class-conditional differences, that is: $\mc{E}_{s}=\{u \sim v | p_{uv|0} \neq p_{uv|1} \}$. In such a scenario, the edge probabilities could be totally heterogeneous.  The bottom panel of Figure \ref{fig:models} shows an example of two class-conditional models with a coherent signal subgraph.
+
+ 
+% subsection models (end)
+
+\section{Bayes Plug-in Classifiers}
+
+The Bayes optimal graph classifier for all the above models  (which assume all edges are independent), is given by:
+\begin{align} \label{eq:nb}
+	f(g) &= \argmax_y \PP[g,y] = \argmax_y \PP[g|y] \PP[y] 
+	\nonumber \\&= \argmax_y \prod_{u\sim v\in\mc{E}} \PP[a_{uv} | \pp_{uv|y}] \PP[y]
+	% \nonumber \\&
+	= \argmax_y \PP[y] \prod_{u\sim v\in\mc{E}} \text{Bern}(a_{uv}; \pp_{uv|y}) 
+	\nonumber \\&= \argmax_y \pi^y \prod_{u\sim v\in\mc{E}} a_{uv}^{\pp_{uv|y}} (1-a_{uv})^{1-\pp_{uv|y}}, 
+\end{align}
+where $\pi^Y=\PP[Y]$, and  $\pp_{uv|y}$ is the probability $a_{uv}=1$ in class $y$.  In practice, neither $\pi_y$ nor $\{p_{uv|y}\}$ are known.  The Bayes plugin estimator therefore estimates both, and plugs them in to Eq. \eqref{eq:nb}.  Below, we provide details for estimating both. 
+
+
+\subsection{Parameter estimates}
+
+% Because the parameters will be unknown, one must first estimate them.  Given the estimates, they can be plugged in to either \eqref{eq:nb} or \eqref{eq:subgraph}.  Estimating $\{p_{uv|y}\}$ is quite trivial given $\mc{E}_{s}$, which could potentially be the complete graph.  Specifically, t
+
+The maximum likelihood estimate of $\pi_y$ is simply the sum of graphs in class $y$, dividing by the total number of graphs: $\mh{\pi}_y=S_y/S$. The maximum likelihood estimate (MLE) of $\mh{p}_{uv|y}$ is the mean of $a_{uv}$, averaged over all $i$ in class $y$:
+\begin{align}
+	\mh{p}_{uv|y}^{MLE} = \frac{1}{S_y} \sum_{i \in \mc{S}_y} a_{uv}^{(i)},
+\end{align}
+where  $a_{uv}^{(i)}$ indicates the value of edge $u\sim v$ in graph $i$.  When $S$ is relatively small, $\mh{p}_{uv|y}$ can be zero, which is problematic for a plug-in classifier.  Therefore, we use an estimator that is both robust to model misspecifications and smoothes the estimate away from zero without adding much bias.   An M-estimator is any estimator that maximizes a certain contrast function:
+\begin{align}
+	\mh{p}_{uv|y} = \argmin_{p} \sum_{i \in \mc{S}_y} \rho(a_{uv}^{(i)}, p)
+\end{align}
+ where $\rho(a_{uv}^{(i)},p)$ is called a contrast function. For instance, the MLE uses $\rho(\cdot, p)=-\log \PP[\cdot]$.  Here, we propose a slightly modified estimator:
+\begin{align} \label{eq:rho}
+	\mh{p}_{uv|y} = \frac{\sum_{i\mc{S}_y} a_{uv}^{(i)} + 1/(2S)}{S+1/(2S)},
+\end{align}
+so that the parameter estimate is never actually zero.   Eq. \eqref{eq:rho} implicitly defines the following contrast function
+\begin{align}
+\rho(a_{uv}^{(i)},\bth)=-\frac{a_{uv}^{(i)}+1/(2S)}{S+1/(2S)}.	
+\end{align}
+% Note that not only does this M-estimator provide some smoothing properties, akin to regularization, it is also a robust estimator, that is, an estimator robust to various model misspecifications (for instance, edge independence is likely to be inaccurate often). 
+Other estimators with smoothing and robustness, include the \emph{maximum a posteriori} estimators, which we do not consider here, other than to acknowledge their existence and potential great utility.  
+
+
+% In addition to estimating the parameters for the Bayes plugin estimators, we must also estimate the signal subgraph, $\mc{E}_s$.   Below, we suggest several possible approaches to finding the signal subgraph.
+
+
+
+
+\subsection{Signal Subgraph Search} % (fold)
+\label{sec:signal_subgraph_searches}
+
+
+The na\"{i}ve Bayes classifier takes $\mc{E}$ to be all $\binom{n}{2}$ edges.  If a signal subgraph exists, however, one can outperform the na\"{i}ve Bayes classifier.  In particular, if one assumes that edges are independent in both classes, but that only a small subset of edges differ between the two classes, $\mc{E}_{s}=\{u \sim v | \pp_{uv|0} \neq \pp_{uv|1}\}$, then one can use this information to obtain a better classifier, by only looking at the signal subgraph:
+\begin{align} \label{eq:subgraph}
+	f(g) &= \argmax_y \pi^y \prod_{u \sim v \in \mc{E}_{s}} a_{uv}^{\pp_{uv|y}} (1-a_{uv})^{1-\pp_{uv|y}}.
+\end{align}
+This approach does not depend on homogeneity of edges, nor the coherency, as each edge $a_{uv}^{(i)}$ could be sampled according to its own potentially unique distribution $p_{uv|y}$.  Below we provide several approaches to searching for the signal subgraph.
+
+% section signal_subgraph_searches (end)
+
+\subsubsection{Exhaustive search for signal subgraphs} % (fold)
+\label{ssub:classifier_based_signal_subgraph_searches}
+
+The number of signal subgraphs is equal to the number of graphs in the random graph family, $|\mc{G}|=2^d$, where $d$ is around $n^2$ depending on assumed constraints (see Section \ref{sec:prelim} for details).  Thus, one could enumerate all possible signal subgraphs, $\{\mc{E}_1,\ldots, \mc{E}_{2^d}\}$,
+% $\mc{C}=\mc{P}(d)=\{\mc{E}_1,\ldots, \mc{E}_p\}$, where $p=|\mc{C}| = \sum_{n'=1}^{d} {d\choose{n'}}=2^{d}$ 
+and compute $\mh{L}_{f_{\mc{E}_c}(\cdot; \mc{T}_S)}$ for each $c \in [2^d]$.  Finally, let $\mh{c}=\argmin_c \mh{L}_{f_{\mc{E}_c}(\cdot; \mc{T}_S)}$.  Unfortunately, even when $V$ is relatively small (e.g., $\approx 10$), $2^d$ is quite large ($\approx 10^{30}$), making this approach computationally intractable.  Also, this approach depends on the particular classification algorithm.  It is therefore often desirable to be able to search more efficiently for signal subgraphs independent of the classifier.
+
+% subsubsection classifier_based_signal_subgraph_searches (end)
+
+
+\subsubsection{Incoherent signal subgraph search} % (fold)
+\label{ssub:classifier_free_signal_subgraph_searches}
+
+In the face of such a large subspace, many algorithms have been developed to find approximately optimal subspaces, including most prominently so-called forward search and backwards prune strategies \cite{LiuYu05}.  In general, these (greedy) strategies have no guarantees of consistency even though they can be quite computationally intensive.  
+
+However, given the independent edge assumption, we can compute the significance of each edge independently, to obtain a rank ordering of edges.  More specifically, given $p_{uv|0}$ and $p_{uv|1}$ for all $u \sim v \in \mc{E}$, one can compute the dissimilarity, $\delta_{uv}=\delta(p_{uv|1},p_{uv|0})$, which conveys the difference in position between the two classes.  $\delta_{uv}$ is thus an uncorrected test-statistic. Because $\delta$ is a dissimilarity, it satisfies: (i) $\delta(\pp_{uv|1},\pp_{uv|0}) \geq 0$, (ii) with equality if and only if $\pp_{uv|1}=\pp_{uv|0})$, and (iii) $\delta(\pp_{uv|1},\pp_{uv|0}) =\delta(\pp_{uv|0},\pp_{uv|1})$.   
+
+Given a suitably defined dissimilarity, it should be non-zero for any edge in the signal subgraph, and identically zero otherwise, that is: $\delta_{uv} > 0 \, \forall u\sim v \in \mc{E}_s$ and $\delta_{uv}=0 \, \forall u\sim v \notin \mc{E}_s$.  Thus, if one had the true $\delta_{uv}$'s, finding the signal subgraph would be trivial: all edges with non-zero $\delta_{uv}$ are in the signal subgraph.  Unfortunately, because $p_{uv}$ is unobserved, $\delta_{uv}$ must be estimated.  
+
+We consider three dissimilarity metrics: (i) absolute magnitude, (ii) z-score, and (iii) a Fisher's exact test.  The absolute magnitude estimator for $\delta_{uv}$ is simply $\mh{\delta}_{uv}^a=|\mh{p}_{uv}^1-\mh{p}_{uv}^1|$, where $|\cdot|$ indicates the absolute value. 
+
+The absolute magnitude dissimilarity does not consider the variance of the estimators.  In particular, the variance of the estimators $\mh{p}$ is a function of the true $\pp$, because it has a binomial distribution: $\mh{p}_{uv|y} \sim$ Binomial$(S_y,\pp_{uv|y})$.  Therefore, it would be desirable to scale the confidence of the difference between the two classes by the uncertainty around each estimate.  One option is to normalize each estimate by its variance:
+\begin{align} \label{eq:cor}
+	\mh{\delta}_{uv}^z=  \abs{ \frac{\mh{p}_{uv|1}}{\mh{p}_{uv|1} (1-\mh{p}_{uv|1})} -  \frac{\mh{p}_{uv|0}}{\mh{p}_{uv|0} (1-\mh{p}_{uv|0})}},
+\end{align}
+which is akin to a $z$-score when estimators have a Gaussian distribution, which is the most powerful test statistic in that domain.
+  
+Finally, Fisher's exact test computes an exact test statistic comparing the distribution of categorical variables in two classes against the null distribution that the two classes have the same distribution \cite{Ross}. Specifically, Fisher showed that the probability of obtaining a particular distribution of categories in two classes is given by the hypergeometric distribution:	$\mh{\delta}_{uv}^F=\binom{S_0}{\#_{uv|0}}\binom{S_1}{\#_{uv|1}}/\binom{S}{\#_{uv}}$, where $\#_{uv|y}=\sum_{i \in \mc{S}_y} a_{uv}^{(i)}$ and $\#_{uv} = \sum_{i \in \mc{S}} a_{uv}^{(i)}$.
+
+
+% \begin{table}[h!]
+% 	\begin{center}
+% \begin{tabular}{c|c|c|c}
+% 	& true & false & total \\ \hline
+% class 0 & $\#_0$ & $S_0-\#_0$ & $S_0$ \\
+% class 1 & $\#_1$ & $S_1-\#_1$ & $S_1$ \\ \hline
+% totals & $\#_0-\#_1$ & $S-\#_0-\#_1$ & $S$
+% \end{tabular}
+% \end{center}  
+% \caption{Contingency table, where }
+% \label{tab:1}
+% \end{table}
+
+ Regardless of which dissimilarity metric we use, one can then rank them,  $\delta_{(1)}\geq  \ldots \geq \delta_{(|\mc{E}_s|)}$.  If the number of edges in the true signal subgraph, $m$, were known, then one could choose the $m$ most significant dissimilarities, $\mh{\delta}_{(1)}, \ldots, \mh{\delta}_{(m)}$.  Under the independent edge model, using Fisher's exact test with $m$ edges is the optimal estimate of $\mc{E}_s$. Note that this approach is a strict generalization of the na\"{i}ve Bayes classifier, in that by letting $m=V$, one recovers the na\"ive Bayes classifier.
+
+% subsubsection classifier_free_signal_subgraph_searches (end)
+
+\subsubsection{Coherent signal subgraph search} % (fold)
+\label{sub:utilizing_graph_structure}
+
+When the signal subgraph is expected to have some structure, we can utilize this prior information to improve our search.  Specifically, assume that class-conditional difference forms a coherent model.  In this case, instead of looking for \emph{edges} to define the signal subgraph, one can look for anomalous \emph{vertices}.  In particular, the vertices that compose $\mc{V}_*$ should have a larger number of significant edges than the vertices not in $\mc{V}_*$.  We therefore devise Algorithm \ref{alg:1}.
+
+
+\begin{algorithm}[h!]                      % enter the algorithm environment
+\caption{Coherent signal subgraph search}          % give the algorithm a caption
+\label{alg:1}                           % and a label for \ref{} commands later in the document
+\begin{algorithmic}                    % enter the algorithmic environment
+\REQUIRE $\gamma$, $m$
+\STATE $\bullet$ Compute $\mh{\delta}_{uv} \, \forall \, u \sim v \in \mc{E}$ %and sort them to obtain $\mh{\delta}_{(1)},\ldots,\mh{\delta}_{(|\mc{E}|)}$
+\STATE $\bullet$ Compute the number of edges incident to vertex $v$ with significance less than $w$:  $Z_v(w)=\sum_v \II\{\mh{\delta}_{uv}\leq w\} + \sum_v \II\{\mh{\delta}_{vu} \leq w\}$
+\STATE $\bullet$ Find the minimum $w$ such that there are $m$ total edges incident to $\gamma$ vertices with significance maximally $w$: $w_{\gamma}=\min_w$ s.t. $\sum_{v \in [\gamma]} Z_v(w)=m$
+\STATE $\bullet$  Let the signal subgraph contain those edges.
+\ENSURE $\mc{E}_s(\gamma,m)$
+\end{algorithmic}
+\end{algorithm}
+
+Note that by letting $\gamma=V$, one recovers the incoherent signal subgraph search algorithm, so this approach is a generalization of that one.  Moreover, this strategy is robust to a vertex having some important edges, and others wholly unimportant, as only the important ones form the signal subgraph.
+
+%  For simplicity, assume that $q>p$.  Now, define the degree of a vertex as the number of edges incident to it, that is, $d_u=\sum_v A_{uv}$.  In the Star$_\gamma$ model, the expected degree of $V_*$ is larger than the expected degree of all the other vertices, because $q>p$.  Therefore, if the true expected degree of each vertex was available, one could sort them, $d_{(1)}, \ldots, d_{(n)}$, and then the vertex with the largest expected degree would be $V_*$.  In the classification domain, instead of computing the degree of each vertex, one can compute the degree difference for each vertex: $\delta_u = |d_u^0-d_u^1|$.  Then, the vertex with the biggest degree difference is $V_*$.
+% 
+% Although the true expected degree is unavailable typically, one can easily estimate the degree of each vertex for each class using:
+% \begin{align}
+% 	\mh{d}_u^y= \frac{1}{S_y}\sum_{s \in \mc{S}_y} \sum_{j\in \mc{V}} a_{s;uv}
+% \end{align}
+% where $\mc{S}_y$ is the set of observations in class $y$, $S_y$ is the cardinality of that set, and $a_{s;uv}$ is edge indicator for sample $s$.  Estimating the degree difference for each vertex, $\mh{\delta}_u = |\mh{d}_u^0-\mh{d}_u^1|$, and ranking them to find the largest one, $\mh{\delta}_{(1)}$, is therefore an estimator of the signal subgraph.
+
+% Note that there is no model selection problem here, as it was assumed that only a single vertex had a different expected degree.  When this assumption is not made, a similar strategy can be employed as above to perform model selection for this model.
+
+
+% subsection utilizing_graph_structure (end)
+
+
+\subsection{Model selection} % (fold)
+\label{sub:model_selection}
+
+When $\gamma$ and $m$ are known, the above algorithms may be used as described above.  However, in general these hyper-parameters will be unknown.  To estimate them from the data, we build classifiers for all possible choices of $\gamma$ and $m$, and choose the best one.  
+
+% the size of the signal subgraph is known, then the optimal selection of $m$ edges is simply $\delta_{(1)},\ldots, \delta_{(m)}$, the $m$ edges with the lowest $\delta$'s.  When $m$ is not known a priori, $m$ must also be estimated, which is a model selection problem.   Cross-validation can then be used to choose the optimal $m$, given the data $\mc{T}_S$.  More specifically, one obtains a sequence of classifiers, $\mh{f}_1, \ldots, \mh{f}_{m'}$, each one including an additional dimension, and then uses the one with the lowest empirical risk, $\mh{L}_{\mh{f}_{m'}(\cdot; \mc{T}_S)}$, that is, let $\mh{m}=\argmin_{m'} \mh{L}_{f_{\mhc{E}_{m'}}(\cdot; \mc{T}_S)}$.  This approach is hereafter referred to as the \emph{incoherent signal subgraph} search method.  Given $\mc{E}_{\mh{m}}$, one can apply any of the above classifiers to the selected subgraph.  Note that this approach assumes that the class-conditional signal is somewhat \emph{sparse}.  Figure \ref{fig:subgraph_types} depicts $\delta$'s for different assumptions on the class conditional differences.  The left panel shows an example where class conditional differences are dense, and the middle panel shows an example where these differences are sparse.  A third option, depicted on the right, shows the class-conditional difference being both sparse and structured.
+
+% subsection model_selection (end)
+
+
+
+% section theory (end)
+
+
+
+
+\section{Results} % (fold)
+\label{sub:theoretical_results}
+
+% % \subsubsection{Consistency} (fold)
+% 
+% In this section, we provide a number of theorems and their corresponding proofs, related to classifying independent edge random graph models.
+% 
+% \paragraph{Consistent Estimators} % (fold)
+% \label{sub:consistent_estimators}
+% 
+% % subsection consistent_estimators (end)
+% Each of the above models is characterized by a set of parameters, either $\pp$, $\{p,q,\mc{E}_{inc}\}$, or $\{p,q,\mc{E}_*\}$.  
+% Each edge in each model is Bernoulli, so each edge can be estimated independently using Eq. \eqref{eq:bern}.  Therefore, the plugin estimator for any independent edge random graph model could be:
+% \begin{align}
+% 	\mh{\PP}[A=a]= \prod_{u,v\in \mc{V}} a_{uv}^{\mh{p}_{uv}}(1-a_{uv})^{1-\mh{p}_{uv}}
+% \end{align}
+% where we have dropped the subscript $S$ for brevity.  Note however, that if any $\mh{p}_{uv}=0$, then $\PP[A=a]=0$.  
+% 
+% 
+% Note that for these simple models, better parameter estimates are readily available.  For instance, averaging over $\mh{p}_{uv}$ in the ER model would give an improved estimate for $\pp$ (bias is not introduced, and variance is reduced, so the estimate is better from a bias-variance trade-off perspective).  However, we abstain for such averaging so that the theory and simulations generalize to more heterogeneous models (where each $a_{uv}$ might be distributed according to its own $p_{uv}$).
+% 
+% 
+% % subsection model_estimates 
+% 
+% 
+% \paragraph{Consistent classifiers} % (fold)
+% \label{sub:model_based_consistent_classifiers}
+% 
+% 
+% For each of the above three models, we desire to have estimators that are consistent.  Under certain conditions, consistent estimators can be plugged into \eqref{eq:bayes} to obtain consistent classifiers.\footnote{which conditions?}  
+% 
+% 
+% 
+% % subsection estimator_consistency (end)
+% % \subsubsection{$\mh{p}_M$ is a consistent estimator} % (fold)
+% % \label{ssub:_p_m_us_a_consistent_estimator}
+% 
+% 
+% 
+% % subsubsection _p_m_us_a_consistent_estimator (end)
+% 
+% % \subsubsection{Incoherent signal subgraph search is consistent} % (fold)
+% % \label{ssub:subsubsection_name}
+% 
+% 
+% \begin{thm}\label{thm:}
+% 	The set $\mh{\delta}_{(1)}, \ldots, \mh{\delta}_{(m)}$ converges to $\mc{E}$ as $n \conv \infty$.
+% \end{thm}
+% 
+% \begin{proof}\label{pf:}
+% 	As $n\conv \infty$, $\mh{p}_{uv|y} \conv \pp_{uv|y}$ for all $u \sim v \in \mc{E}$ and $y \in \{0,1\}$.  Thus, $\mh{\delta}_{uv}=|\mh{p}_{uv}^0-\mh{p}_{uv}^1| \conv \delta_{uv}=|\pp_{uv|0}-\pp_{uv|1}|$.  The result therefore follows trivially.
+% \end{proof}
+% 
+% % subsubsection subsubsection_name (end)
+% 
+% 
+% % \subsubsection{Incoherent signal subgraph search is an M-estimator of the signal subgraph for \emph{dependent} edge models} % (fold)
+% % \label{ssub:incoherent_signal_subgraph_search_us_an_m_estimator_of_the_signal_subgraph_for_}
+% 
+% 
+% \begin{thm}
+% 	Incoherent signal subgraph search is an M-estimator of the signal subgraph for \emph{dependent} edge models
+% \end{thm}
+% 
+% \begin{proof}\label{pf:}
+% 	....
+% \end{proof}
+% 
+% % subsubsection incoherent_signal_subgraph_search_us_an_m_estimator_of_the_signal_subgraph_for_ (end)
+% 
+% \begin{thm}
+% 	Corrected incoherent signal subgraph search is consistent
+% \end{thm}
+% 	
+% % subsection corrected_INCoherent_signal_subgraph_search_us_consistent 
+% 
+% 
+% \subsubsection{Star$_\gamma$ signal subgraph search is consistent} % (fold)
+% \label{sub:star__1_signal_subgraph_search_us_consistent}
+% 
+% % subsection star__1_signal_subgraph_search_us_consistent (end)
+% (end)
+
+\subsection{Consistency} % (fold)
+\label{sub:estimator_consistency}
+
+We have three different questions of consistency here, consistency of (i) the estimator, $\pp_{uv|y}$, (ii) the signal subgraph $\mc{E}_s$, and (iii) the classifier, $f(\cdot, \mc{T}_S)$.
+
+First, we prove consistency of our estimator, as defined by Eq. \eqref{eq:rho}:
+
+\begin{thm}
+If $a$ is Bernoulli distributed with probability $\pp$, then
+$\mh{p}$ is a consistent estimator for $\pp$, where $\mh{p}$ is defined by Eq. \eqref{eq:rho}.
+\end{thm}
+
+\begin{proof}
+	
+To prove that an estimator is consistent, it is sufficient to show that it converges to another estimator known to be consistent.  The maximum likelihood estimator (MLE) is consistent for a Bernoulli random variable:
+\begin{align} \label{eq:bern}
+	\mh{p}_S = \frac{1}{S} \sum_{s=1}^S a_s.
+\end{align}
+Moreover, the estimator defined by Eq. \eqref{eq:rho} converges to the MLE:
+\begin{align}
+	&\EE\left[\frac{\sum_{s\in[S]} a_s+ 1/(2S)}{S + 1/(2S)}\right] = \frac{\EE[\sum_{s\in[S]} a_s] + 1/(2S)}{S + 1/(2S)} \nonumber\\&= \frac{\EE[\sum_{s\in[S]} a_s]}{S + 1/(2S)} + \frac{1/(2S)}{S + 1/(2S)} 
+\end{align}
+As $S\conv\infty$, the second term converges to zero, and $S+1/(2S)$ converges to $S$, yielding the MLE.  Thus, this estimator is consistent.
+\end{proof}
+
+
+Second, both the incoherent and coherent signal subgraph algorithms are consistent estimators of the signal subgraph.  To see this, first consider the absolute magnitude dissimilarity measure, $\delta_{uv}=\abs{p_{uv|0}-p_{uv|1}}$.  When using the true (but unknown) values of $p_{uv|y}$, $\delta_{uv} > 0$ for all $u\sim v \in \mc{E}_s$, and $\delta_{uv}=0$ otherwise.  When estimating $p_{uv|y}$'s, as long as the estimates are consistent, then the estimate of $\delta_{uv}$ is consistent, by virtue of consistency being closed under addition.  Therefore, when using the absolute value distance, the incoherent signal subgraph search (assuming the size of the signal subgraph is known), is a consistent estimator of the signal subgraph.  The same argument applies to the coherent signal subgraph search.  Finally, this is true also when using the z-score estimator and Fisher's exact test, by a similar argument.  
+
+Third, a Bayes plugin classifier is consistent as long as the parameter estimates used to plug-in are consistent, therefore, the Bayes plugin classifiers that we employ are all consistent classifiers.
+
+Given that each classifier is consistent, a natural question to ask is which is more efficient, that is, which classifier converges more quickly to the truth (as $S \conv \infty$).  More specifically, that classification performance scales with signal subgraph estimation performance.  Then, we ask under what conditions will the coherent signal subgraph search be more efficient than the incoherent signal subgraph search.  
+
+\subsection{Monotonicity Proofs} % (fold)
+\label{ssub:monotonicity_of_error_given_t_}
+
+In IE1, using $k$ canonical dimensions recovered from the training data ($|\hat{\mathcal{E}}|=k$), the probability of misclassification is monotonically decreasing as a function of $T=|\mathcal{E}\cap\hat{\mathcal{E}}|$ that is
+\[
+t_1>t_2 \Rightarrow E[L(g_{ \hat{\mathcal{E}} })| T=t_1] < E[L(g_{ \hat{\mathcal{E}} })| T=t_2].
+\]
+
+
+
+\subsection{Approximate Asymptotic distribution of $T$} % (fold)
+\label{ssub:approximate_asymptotica_distribution_of_t_}
+
+Note that $n\hat{p}_{0;i,j}$ and $n\hat{p}_{1;i,j}$ are binomals, thus they can be approximated with the following normal approximations for $n$ sufficiently large.
+\[
+\hat{p}_{0;i,j} \approx N_{0;i,j}\sim\textrm{ Normal}(p_{0;i,j},p_{0;i,j}(1-p_{0;i,j})s/2)
+\]
+\[
+\hat{p}_{1;i,j} \approx N_{1;i,j}\sim\textrm{ Normal}(p_{1;i,j},p_{1;i,j}(1-p_{1;i,j})s/2)
+\]
+%\[      \delta_{i,j} \approx N_{1;i,j} - N_{0;i,j}           \]
+
+
+
+
+\begin{figure}[h!]
+\centering
+\mbox{\subfigure{\includegraphics[width=3in]{/Users/jovo/Research/figs/sims/henry/P_t_asym_vs_mc_n=10,m=10,k=10,p=045,q=055,s=100.pdf}
+\subfigure{\includegraphics[width=3in]{/Users/jovo/Research/figs/sims/henry/P_t_asym_vs_mc_n=10,m=10,k=10,p=045,q=055,s=100.pdf} }}}
+\caption{Left: A comparison of a monte carlo simulation and asymtotic distribution of the agnostic method with $n=10$, $m=10$, $k=10$, $p=0.45$, $q=0.55$, $s_0=s_1=100$. Right: A comparison of a monte carlo simulation and asymtotic distribution of the max degree method with $n=20$, $m=10$, $k=10$, $p=0.45$, $q=0.55$, $s_0=s_1=100$.}
+\label{fig12}
+\end{figure}
+
+
+
+
+\subsection{Relative Efficiency}
+
+\begin{align}
+	T_x(k,s,F_{GY}) = \abs{\mc{E} \cap \mh{\mc{E}}_s}
+\end{align}
+
+
+\begin{figure}[h!]
+\centering
+\mbox{\subfigure{\includegraphics[width=3in]{/Users/jovo/Research/figs/sims/henry/n=10_10_150,p=01,q=02,m=10,k=10,t=8,r=1000/rel_eff.pdf}
+\subfigure{\includegraphics[width=3in]{/Users/jovo/Research/figs/sims/henry/n=10_10_150,p=045,q=055,m=10,k=10,t=8,r=1000/samples.pdf} }}}
+\caption{Left: Relative efficiency simulation with $p=0.1$, $q=0.2$. Right: $s$ values of the agnostic and max degree models with $p=0.45$, $q=0.55$.}
+\label{fig12}
+\end{figure}
+
+
+
+\clearpage
+\section{Connectome classification results} % (fold)
+\label{sub:connectome_classification_results}
+
+
+We apply the above classification procedure to connectome data.  Briefly, diffusion MRI (dMRI) data was collected from 50 subjects as part of the Baltimore Longitudinal Study on Aging as described in \cite{???}.  The dMRI data was then processed using the JIST/CATNAP framework \cite{???} to obtain $70 \times 70$ element binary, symmetric, and hollow adjacency matrices. Of the 50 subjects, 21 were male, and 29 were female.  We estimated the coherent signal subgraph for all possible values of $\gamma,m$ as described using Algorithm \ref{alg:1}, using $\delta^F_{uv}$ as the dissimilarity measure, and estimated $\{\pp_{uv|y}\}$ using Eq. \eqref{eq:rho}.  We then plugged these estimates into Eq. \eqref{eq:subgraph}. 
+The top panel of Figure  \ref{fig:Lhats_blsa} shows the performance of each classifier as a function of $\gamma$ and $m$.  Note that performance is relatively robust to small changes in either hyper-parameter.  The bottom left panel shows the best obtained $\mh{L}$ for each value of $\gamma$.  If the signal subgraph was completely incoherent, than the best performance would be expected at $\gamma=n$, that is, the incoherent classifier, but clearly that is not the case: the best performance occurs at $\gamma=7$.  The right panel shows the full incoherent classifier performance as a function of $m$.  Note that this is identical to the bottom line of the top panel.    If the na\"ive Bayes classifier were best, than the smallest $\mh{L}$ would be obtained at $m=\binom{n}{2}=d=2415$.  However, of the $d$ edges, only around $1500$ were different across the two classes, so the na\"ive Bayes classifier performance clearly cannot improve over some incoherent signal subgraphs, and the best performance occurs with $m=2$, which seems like noise, and is still not as small as the best values obtained using the coherent signal subgraph search method.  
+
+
+\begin{figure}[h!]
+\centering \includegraphics[width=.9\linewidth]{/Users/jovo/Research/figs/MRI/BLSA/BLSA50_Lhats_loo_robust_coherent.pdf}
+\caption{Classifier performance}
+\label{fig:Lhats_blsa}
+\end{figure}
+
+
+
+
+
+% subsection connectome_classification_results (end)
+
+
+
+
+% section results (end)
+
+\section{Discussion} % (fold)
+\label{sec:discussion}
+
+
+% \subsection{Summary} % (fold)
+% \label{sub:summary}
+
+This work contributes novel, model-based graph classification algorithms.  The algorithms are proven to be consistent, and approach Bayes optimal performance faster than the na\"ive Bayes approach when the model assumptions are correct, given enough data.  However, when the number of data points is relatively small, a misspecified model is \emph{expected} to outperform the correctly specified model, because it wins the bias-variance trade-off.  We then show that this approach indeed improves upon the na\"ive Bayes performance for a real application: gender classification using dMRI data.  
+
+The improved performance of the coherent signal subgraph classifier over both the na\"ive Bayes classifier and the incoherent classifier leads us to wonder how coherent the gender signal subgraph is.  To visualize coherency, we generate a coherogram, which shows the number of edges incident to each vertex as $w$ is increased from its minimum to its maximum value.  Figure \ref{fig:coherogram} shows that the gender signal subgraph is not that coherent.  Nonetheless, the coherent signal subgraph classifier outperforms the na\"ive Bayes classifier.  
+
+\begin{figure}[h!]
+\centering \includegraphics[width=.5\linewidth]{/Users/jovo/Research/figs/MRI/BLSA/BLSA50_coherogram.pdf}
+\caption{coherogram}
+\label{fig:coherogram}
+\end{figure}
+
+These results may be significant for a number of reasons.  First, as graphs are becoming an increasingly dominant representation of data, random graph models and classifiers based on those models will perhaps become increasingly important tools in the data analysts toolbox.  Second, the performance of each classifier is generally believed to be a function of the true distribution from which the data was sampled.  However, this work shows that the best performance may be achieved by a misspecified model, whenever the amount of data available is insufficient to fit the true model.  More specifically, to predict which classifier will perform best, it is not sufficient to simply assume independence or not, but rather, both the size of the data and the amount data available are key determinants of prediction which classifiers will be best.  
+
+Finally, while our signal subgraph searches are not exhaustive, when the edges truly are independent, our searches are optimal.  Even when they are not, our search methods are in fact robust estimators (M-estimators) of the true signal subgraph.  Regardless, the model assumptions made in this work can be straightforwardly generalized in a couple ways.  First, one can imagine a signal subgraph that is partially coherent and partially incoherent, such as perhaps the gender signal subgraph.  An algorithm to find the signal subgraph in this scenario would merely add some number of incoherent edges to the coherent signal subgraph.  Second, the signal subgraph could be thought of as a latent feature, that is, each vertex or edge could have a binary latent feature, indicating whether or not it is in the signal subgraph.  Estimating the signal subgraph could therefore be cast as a latent feature inference problem.  Recent works analyzing estimating latent feature vectors for random graph models include \cite{???}.  
+
+The coherent signal subgraph model is closely related to conditionally independent edge models, which specify that the probability of an edge between any pair of vertices is a function of each vertex's feature vector.  In the coherent signal subgraph, one could assume that the feature vector for the $\mc{V}_*$ vertices are identical across classes, whereas the feature vectors for the other vertices differ across classes.  Therefore, future work will investigate more directly estimating feature vectors for the purpose of classification.
+
+
+
+
+
+
+\clearpage
+\appendix
+
+\section*{Acknowledgments}
+
+The authors would like to acknowledge helpful discussions with ...
+
+% \section{References}
+% \bibliography{biblist}
+\bibliography{/Users/jovo/Research/latex/biblist}
+\bibliographystyle{ieeetr}
+
+% % use section* for acknowledgement
+% \ifCLASSOPTIONcompsoc
+%   % The Computer Society usually uses the plural form
+%   \section*{Acknowledgments}
+% \else
+%   % regular IEEE prefers the singular form
+%   \section*{Acknowledgment}
+% \fi
+% 
+% 
+% The authors would like to thank...
+% 
+% % Can use something like this to put references on a page
+% % by themselves when using endfloat and the captionsoff option.
+% \ifCLASSOPTIONcaptionsoff
+%   \newpage
+% \fi
+% 
+% 
+% \IEEEtriggeratref{8}
+% \IEEEtriggercmd{\enlargethispage{-5in}}
+% 
+% \bibliographystyle{IEEEtran}
+% % argument is your BibTeX string definitions and bibliography database(s)
+% \bibliography{/Users/jovo/Research/latex/biblist}
+% %
+% % <OR> manually copy in the resultant .bbl file
+% % set second argument of \begin to the number of references
+% % (used to reserve space for the reference number labels box)
+% \begin{thebibliography}{1}
+% 
+% \bibitem{IEEEhowto:kopka}
+% %This is an example of a book reference
+% H. Kopka and P.W. Daly, \emph{A Guide to {\LaTeX}}, third ed. Harlow, U.K.: Addison-Wesley, 1999.
+% 
+% 
+% \end{thebibliography}
+% 
+% 
+% \begin{IEEEbiography}{Joshua T. Vogelstein}
+% Biography text here.
+% \end{IEEEbiography}
+% 
+% % if you will not have a photo at all:
+% \begin{IEEEbiographynophoto}{R.\ Jacob Vogelstein}
+% Biography text here.
+% \end{IEEEbiographynophoto}
+% 
+% % insert where needed to balance the two columns on the last page with
+% % biographies
+% \newpage
+% 
+% \begin{IEEEbiographynophoto}{Carey E.\ Priebe}
+% Biography text here.
+% \end{IEEEbiographynophoto}
+% 
+% % You can push biographies down or up by placing
+% % a \vfill before or after them. The appropriate
+% % use of \vfill depends on what kind of text is
+% % on the last page and whether or not the columns
+% % are being equalized.
+% 
+% %\vfill
+% 
+% % Can be used to pull up biographies so that the bottom of the last one
+% % is flush with the other column.
+% %\enlargethispage{-5in}
+% 
+
+
+% that's all folks
+\end{document}
+
+
+
