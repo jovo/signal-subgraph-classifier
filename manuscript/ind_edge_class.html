@@ -170,22 +170,22 @@ Below we describe estimators for each of the three parameters that satisfy the a
 
 <h4>Signal Subgraph Estimators</h4>
 
-Na&iumlvely, one might consider a search over all signal subgraphs, plugging each one in to the classifier, and select the best performing signal subgraph.  This strategy performs poorly with respect to two of the above desiderata.  First, the number of signal subgraphs scales super-exponentially with the number of vertices (see <a href="#2">Figure 2</a>, left panel). Specifically, the number of edges in a simple graph with $V$ vertices is $d_V=\binom{V}{2}$, so the number of unique subgraphs is $2^{\binom{V}{2}}$.  Searching over all of them is therefore ridiculously computationally taxing. Second, the estimate will be determined partially by the chosen classifier; which makes interpreting the results a bit tricky, as one cannot ascertain whether the signal subgraph chosen is the one that works best for some classifier, or is the true signal subgraph (assuming that they could be different).  We therefore consider several alternatives.
+Na&iumlvely, one might consider a search over all signal subgraphs, plugging each one in to the classifier, and select the best performing signal subgraph.  This strategy performs poorly with respect to two of the above desiderata.  First, the number of signal subgraphs scales super-exponentially with the number of vertices (see <a href="#2">Figure 2</a>, left panel). Specifically, the number of edges in a simple graph with $V$ vertices is $d_V=\binom{V}{2}$, so the number of unique subgraphs is $2^{\binom{V}{2}}$.  Searching over all of them is therefore ridiculously computationally taxing. Second, the estimate will be determined partially by the chosen classifier.  This makes interpreting the results a bit tricky, as one cannot ascertain whether the signal subgraph chosen is the one that works best for some classifier, or is the true signal subgraph (assuming that they could be different).  We therefore consider several alternatives.
 
 <figure>
-<table align="center">
-<tr> 
-	<img src="../figs/num_of_graphs.png" width="750" height="250" alt="Num Of Graphs">
+<!-- <table align="center"> -->
+<!-- <tr>  -->
+	<img src="../figs/num_of_graphs.png" width="750" height="300" alt="Num Of Graphs">
 	<!-- <td><img align="left" src="/Users/jovo/Research/figs/misc/num_of_graphs.png" width="300" /></td>
 		<td><img align="left" src="/Users/jovo/Research/figs/misc/num_of_cans.png" width="300" /></td> -->
-	</tr>
-</table>
-<table align="center">
-<tr>
+	<!-- </tr> -->
+<!-- </table> -->
+<!-- <table align="center"> -->
+<!-- <tr>
 	<img src="/Users/jovo/Research/figs/misc/com_inc_coh.png" width="750" />
-</tr>
-</table>
-Figure 1: Exhaustive searches for the signal subgraph, even given severe constraints, are computationally intractable even for moderately sized graphs (e.g., with $\mc{O}(10)$ vertices).  Top panels show the number of unique simple subgraphs as a function of the number of vertices, $V$ (a simple graph is: undirected, binary, and lacks self-loops).  Note the ordinates are all log scale.   On the left is the unconstrained scenario, that is, all possible subgraphs for a given order (number of vertices).  In the middle panel, each line shows the number of subgraphs with fixed size (number of edges), ranging from 10 to 100, incrementing by 10 with each line.  The right panel shows the number of subgraphs for various fixed sizes and only a single star-vertex, that is, all edges are incident to one vertex.  Bottom panels show a particular example subgraph via its adjacency matrix-white elements indicate an edge.
+</tr> -->
+<!-- </table> -->
+Figure 1: Exhaustive searches for the signal subgraph, even given severe constraints, are computationally intractable for small graphs (e.g., with $\mc{O}(10)$ vertices).  Top panels show the number of unique simple subgraphs as a function of the number of vertices, $V$.  Note the ordinates are all log scale.   On the left is the unconstrained scenario, that is, all possible subgraphs for a given order (number of vertices).  In the middle panel, each line shows the number of subgraphs with fixed size (number of edges), ranging from 10 to 100, incrementing by 10 with each line.  The right panel shows the number of subgraphs for various fixed sizes and only a single star-vertex, that is, all edges are incident to one vertex.  Bottom panels show a particular example subgraph via its adjacency matrix; white elements indicate an edge.
 </figure>
 
 
@@ -197,13 +197,12 @@ Figure 1: Exhaustive searches for the signal subgraph, even given severe constra
 </div>
 </figure> -->
 
-Recall that each edge is independent, which means that whether or not each edge is in the signal subgraph can be evaluated on its own.  Formally, consider a hypothesis test for each edge.  The null hypothesis is that the class-conditional edge distributions are the same, so $H_0: f_{uv|0}=f_{uv|1}$ for all $(u,v) \in \ss$.  The composite alternative hypothesis is that they differ, $H_A: f_{uv|0} \neq f_{uv|1}$ for all $(u,v) \in \ss$.  Given such hypothesis tests, one can construct test statistics using the data: $T=T_{uv}^{(n)}: \mc{D}_n \mapsto \Real_{\geq 0}$.  
-We reject the null in favor of the alternative whenever the value of the test-statistic is greater than some critical-value $c$: $T(\mc{D}_n)>c$.  We can therefore construct a <em>significance matrix</em>: $\mb{q}_n=q_{uv}^{(n)}$, which encapsulates the significance of the difference for each edge between the classes.  
+Recall that each edge is independent, which means that whether or not each edge is in the signal subgraph can be evaluated on its own.  Formally, consider a hypothesis test for each edge.  The null hypothesis is that the class-conditional edge distributions are the same, so $H_0: f_{uv|0}=f_{uv|1}$ for all $(u,v) \in \ss$.  The composite alternative hypothesis is that they differ, $H_A: f_{uv|0} \neq f_{uv|1}$ for all $(u,v) \in \ss$.  Given such hypothesis tests, one can construct test statistics using the data: $T=T_{uv}^{(n)}: \mc{D}_n \mapsto \Real_{\geq 0}$.  We reject the null in favor of the alternative whenever the value of the test-statistic is greater than some critical-value $c$: $T(\mc{D}_n)>c$.  We can therefore construct a <em>significance matrix</em>: $\mb{q}_n=q_{uv}^{(n)}$, which encapsulates the significance of the difference for each edge between the classes.  
 
 
 <h5>Incoherent Signal Subgraph Estimators</h5>
 
-Now make the additional assumption that we know, <em>a priori</em>, the size of the signal subgraph, $|\mc{E}|=s$.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$, where $d_V$ is the number of distinct edges in a graph with $V$ vertices.  Thus, the number of subgraphs with a specified size also scales super-exponentially (see <a href="#2">Figure 2</a>, left panel), and searching them all is computationally intractable at this time.  However, in such a scenario, one can choose the critical value, <em>a posteriori</em>, to ensure that only $s$ edges are rejected, $c = \min_{c'} \II\{\sum_{(u,v) \in \ss} \II \{T_{uv}^{(n)} \gt c'\}-s\}$.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test-statistics.  Let $T_{(1)} \lt T_{(2)} \lt \cdots \lt T_{(d_V)}$ indicated the <em>ordered</em> test statistics (the superscript indicating the number of samples, $n$, has been dropped for brevity).  Then, the <em>incoherent signal subgraph estimator</em> is given by: $\hss^{inc}$=$\{T_{(1)}, \ldots, T_{(s)}\}$.
+Now make the additional assumption that we know, <em>a priori</em>, the size of the signal subgraph, $|\mc{E}|=s$.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$, where $d_V$ is the number of distinct edges in a graph with $V$ vertices.  Thus, the number of subgraphs with a specified size also scales super-exponentially (see <a href="#2">Figure 2</a>, left panel), and searching them all is computationally intractable at this time.  However, in such a scenario, one can choose the critical value, <em>a posteriori</em>, to ensure that only $s$ edges are rejected, $c = \min_{c'} \II\{\sum_{(u,v) \in \ss} \II \{T_{uv}^{(n)} \gt c'\}-s\}$.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test-statistics.  Let $T_{(1)} \lt T_{(2)} \lt \cdots \lt T_{(d_V)}$ indicated the <em>ordered</em> test statistics (the superscript indicating the number of samples, $n$, has been dropped for brevity).  Then, the <em>incoherent signal subgraph estimator</em> is given by: $\hss^{inc}$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.
 
 <h5>Coherent Signal Subgraph Estimators</h5>
 
@@ -311,44 +310,34 @@ This section first characterizes the asymptotic properties of the above describe
 
 <h4>Likelihood and Prior term Estimators</h4>
 
-MAP estimators are known to be consistent and efficient, both for finite samples and asymptotically, under certain special cases.  Specifically, letting $d_V=\binom{V}{2}$ (the number of edges in a simple graph as a function of the number of vertices, $V$), and assuming $n \conv \infty$ and $d_V \conv \infty$ but $d_V/n \conv 0$, we know that: $\mh{p}_{uv|y}^{MAP} \conv p_{uv|y}$.
+MAP estimators are known to be consistent and efficient, both for finite samples and asymptotically, under certain special cases.  Specifically, letting $d_V=\binom{V}{2}$ (the number of edges in a simple graph as a function of the number of vertices, $V$), and assuming $n \conv \infty$ and $V$ is fixed,  we know that: $\mh{p}_{uv|y}^{MAP} \conv p_{uv|y}$. Letting $V \conv \infty$ as well, XXXX.
 
 <br><br>
 
-Both estimators are trivial to compute, as closed-form analytic solutions are available for both.  And the estimators are quite interpretable: the likelihood parameters are the just probability of observing each edge, and the prior parameters are just the probability of observing each class. 
+Both prior and likelihood estimates are trivial to compute, as closed-form analytic solutions are available for both.  And the estimators are quite interpretable: the likelihood parameters are the just probability of observing each edge, and the prior parameters are just the probability of observing each class. 
 
 <h4>Incoherent Signal Subgraph Estimator</h4>
 
-<strong>Proposition 1</strong>:  The incoherent signal subgraph estimator, $\hss^{inc}$, converges to $\ss$ as $n \conv \infty$ and $d_V \conv \infty$ but $d_V/n \conv 0$, given the model defined by Equation 1.  In other words, $\hss^{inc}$ is a consistent estimator of $\ss$.
+A variety of test-statistics are available for computing the edge-specific class-conditional signal, $T_{uv}^{(n)}$.  For simplicity, we consider the absolute difference: $T_{uv}=|\mh{p}_{uv|0}-\mh{p}_{uv|1}|$, where $\mh{p}_{uv|y}$ is the ML estimate of the class-conditional likelihood.  Given this definition, one can construct an incoherent signal subgraph estimate: $\hss^{inc}=\{a_{(1)},\ldots,a_{(s)}\}$ using the ordered significant values, $T_{(u)}$.
+
 <br><br>
 
-<strong>Proof</strong>: Fisher showed that one can calculate exactly the probability of any contingency table, given finite sample spaces.  For this problem, for each edge, one can construct the following contingency table:
+<strong>Proposition 1</strong>:  The incoherent signal subgraph estimator, $\hss^{inc}$, converges to $\ss$ as $n \conv \infty$ and $d_V$ is fixed, given the model defined by Equation 1.  In other words, $\hss^{inc}$ is a consistent estimator of $\ss$.
+<br><br>
 
-
-<center>
-<table border="1">
-<tr><td></td><td>class 0</td><td>class 1</td><td>total</td></tr>
-<tr><td>edge</td><td>$n_{uv|0}$</td><td>$n_{uv|1}$</td><td>$n_{uv}$</td></tr>
-<tr><td>no edge</td><td>$n_0-n_{uv|0}$</td><td>$n_1-n_{uv|1}$</td><td>$n-n_{uv}$</td></tr>
-<tr><td>totals</td><td>$n_0$</td><td>$n_1$</td><td>n</td></tr>
-</table>
-</center>
-
-The probability of obtaining any such contingency table is therefore provided by the hypergeometric distribution:
-
-\begin{align}
-\PP[x=n_{uv|1}] := \frac{n_{uv}!(n-n_{uv})!n_0!n_1!}{n_{uv|0}!n_{uv|1}!(n_0-n_{uv|0})!(n_1-n_{uv|1})!n!}
-\end{align}
-
-The p-value is then the probability of obtaining a contigency table at least as extreme as the observed table: $T_n := \PP[x \geq n_{uv|1}]$.  When $p_{uv|0}\neq p_{uv|1}$, the expected value converges to zero; otherwise, the expected value converges to unity (see Appendix for proof).  Thus, $T_n$ is an asymptotically unbiased, and using $T_n$ for each edge will yield a consistent estimate of $\ss$.  This holds true for both the $V$ fixed and $d_v/n\conv \infty$ case (see Appendix for details). 
+<strong>Proof</strong>:  As $n \conv \infty$, $\mh{p}_{uv|y} \conv p_{uv|0}$.  Thus, $|\mh{p}_{uv|0}-\mh{p}_{uv|1}| \conv |p_{uv|0} - p_{uv|1}|$.  For all edges in the signal subgraph, $p_{uv|0}\neq p_{uv|1}$ by definition, thus $T_{uv}^{(n)} \conv |p_{uv|0} - p_{uv|1}|>0$.  Moreover, for all edges in the signal subgraph, $T_{uv}^{(n)} \conv |p_{uv|0}-p_{uv|1}|=0$. Therefore, in the limit,  $\{T_{uv} : (u,v) \in \ss\} > \{T_{uv} : (u,v) \notin \ss\}$, implying that $\hss^{inc} \conv \ss$. 
 
 
 $\square$
 
-<strong>Proposition 2</strong>:  The incoherent signal subgraph estimator, $\hss^{inc}$,  is an efficient estimator of $\ss$.
 <br><br>
 
-<strong>Proof</strong>:  ??? $\square$
+<strong>Proposition 2</strong>:  The incoherent signal subgraph estimator, $\hss^{inc}$,  is an asymptotically efficient estimator of $\ss$.
+<br><br>
+
+<strong>Proof</strong>:  The estimates $\{\mh{p}_{uv|y}\}$ are asymptotically efficient [B&D].  Without loss of generality, assume $p_{uv|0} \gt p_{uv|1}$ so that $|p_{uv|0}-p_{uv|1}| = p_{uv|0}-p_{uv|1}$.  Efficiency is closed under subtraction, so $T_{uv}^{(n)}$ is also efficient.  Finally, $\hss^{inc}$ is simply a collection of edges, each of which has an efficient estimator, so the whole collection is efficient. 
+
+$\square$
 
 <br><br>
 
@@ -356,6 +345,8 @@ $\square$
 <br><br>
 
 <strong>Proof</strong>:  $\hss^{inc}$ can be thought of as an M-estimator, where the contrast function is: 
+
+
 
 <br><br>
 
@@ -391,9 +382,9 @@ From this figure, one might notice a few tendencies.  First, both the incoherent
 
 <figure id="1">
 <div>  <!-- align="center" -->
-<img src="../figs/homo_V70_s20_p10_q30_coherogram.png" width="750" height="600" alt="Homo V70 P10 Q20 Coherogram" align="center">
+<img src="../figs/homo_V70_s20_p10_q30_SigIncCohErogram.png" width="750" height="600" alt="Homo V70 P10 Q20 Coherogram" align="center">
 <figcaption>
-Figure 2: An example of the coherent signal subgraph estimate's improved accuracy over the incoherent signal subgraph estimate, for a particular homogeneous two-class model specified by: $\mc{H}(70,1,20;0.5,0.1,0.3,\ss)$. Each row shows the same columns but for increasing the number of vertices of the graphs.  The columns show the: (far left) significant matrix, computed using Fisher's exact test; (middle left) incoherent estimate of the signal subgraph; (middle right) coherent estimate of the signal subgraph; (far right)  coherogram.  As the number of data samples increases (lower rows), both the incoherent and coherent estimates converge to the truth (the ordinate label of each panel indicates the number of edges correctly identified).  For these examples, the coherent estimator finds more true edges.  The coherogram is the object that estimates the coherency of the signal; it is also converging to the truth-the signal subgraph here contains a single star-vertex.
+Figure 2: An example of the coherent signal subgraph estimate's improved accuracy over the incoherent signal subgraph estimate, for a particular homogeneous two-class model specified by: $\mc{H}(70,1,20;0.5,0.1,0.3)$. Each row shows the same columns but for increasing the number of graph/class samples.  The columns show the: (far left) negative log-significant matrix, computed using Fisher's exact test (lighter means more significant; each panel is scaled independent of the others because only relative significance matters here); (middle left) incoherent estimate of the signal subgraph; (middle right) coherent estimate of the signal subgraph; (far right) coherogram.  As the number of data samples increases (lower rows), both the incoherent and coherent estimates converge to the truth (the ordinate label of each panel indicates the number of edges correctly identified).  For these examples, the coherent estimator tends to find more true edges.  The coherogram visually depicts the coherency of the signal; it is also converging to the truth-the signal subgraph here contains a single star-vertex.  
 </figcaption>
 </div>
 </figure>
@@ -402,7 +393,7 @@ Figure 2: An example of the coherent signal subgraph estimate's improved accurac
 <div>
 <img src="../figs/homo_V70_s20_p10_q30_Lhats.png" width="750" height="250" alt="Homo V70 S20 P10 Q30 Lhats"  align="center">
 <figcaption>
-Figure 3: Performance statistics demonstrating the coherent signal subgraph estimator outperforming the incoherent signal subgraph estimator, in terms of both the signal subgraph identification and classification, for the same model as in Figure 2.  The left panel shows the approximate missed-edge rate for each estimator as a function of the number of training samples, $n$.  The right panel shows the corresponding misclassification rate for the two estimators, as well as the naive Bayes plugin classifier.  It should be clear that performance of all estimators increases monotonically with $n$ for both criteria.  Error bars show standard error of the mean here and elsewhere (averaged over 20 trials; each trial used 100 samples for held-out data). Note that $L_{chance} = 0.5 \geq \mh{L}_{NB} \geq \mh{L}_{INC} \geq \mh{L}_{COH} \geq L_* = XXX$ for all $n$ here.
+Figure 3: Performance statistics as a function of sample size demonstrating the coherent signal subgraph estimator outperforming the incoherent signal subgraph estimator, in terms of both the signal subgraph identification and classification, for the same model as in Figure 2.  The left panel shows the approximate missed-edge rate for each estimator as a function of the number of training samples, $n$.  The right panel shows the corresponding misclassification rate for the two estimators, as well as the naive Bayes plugin classifier.  It should be clear that performance of all estimators increases monotonically with $n$ for both criteria.  Error bars show standard error of the mean here and elsewhere (averaged over 20 trials; each trial used 100 samples for held-out data). Note that $L_{chance} = 0.5 \geq \mh{L}_{NB} \geq \mh{L}_{INC} \geq \mh{L}_{COH} \geq L_* = XXX$ for essentially all $n$ here.
 </figcaption>
 </div>
 </figure>
@@ -411,33 +402,22 @@ The above numerical results suggest that the coherent estimator outperforms the 
 
 <figure id="1">
 <div>
-<img src="../figs/RE3_s8_p10_q20_RE.png" width="750" height="300" alt="RE3 S8 P10 Q20 RE">
+<img src="../figs/RE3_V30_s5_p10_q100.png" width="750" height="300" alt="RE3 S8 P10 Q20 RE">
 <figcaption>
-Figure 4: The relative efficiency of the coherent and incoherent estimators is a function not just of the model, but also the number of samples.  Specifically, for the model $\mc{H}(10,1,8;0.5,0.1,0.2)$, we compute the missed-edge rates for both the incoherent estimator (gray line) and the coherent estimator (black line).  The left panel shows that while the incoherent estimator achieves a better (lower) missed-edge rate than the coherent estimator, the incoherent estimator's converge rate is slower, therefore, the coherent estimator catches up and outperforms the incoherent estimator, until both eventually converge at the truth.  The right panel shows the relative efficiency curve for this model. Note that it dips below unity, and then converges monotonically back up to unity, as it must because both estimators are consistent. 
+Figure 4: The relative performance of the coherent and incoherent estimators is a function not just of the model, but also the number of samples.  Specifically, for the model $\mc{H}(30,1,5;0.5,0.1,0.2)$, we compute the missed-edge rates for both the incoherent estimator (gray line) and the coherent estimator (black line).  The left panel shows that while the incoherent estimator achieves a better (lower) missed-edge rate than the coherent estimator, the incoherent estimator's converge rate is slower, therefore, the coherent estimator catches up and outperforms the incoherent estimator, until both eventually converge at the truth.  The middle and left panels show the relative rate and efficiency curves for this model. Note that they dip below unity, and then converge back up to unity, as they must because both estimators are consistent. 
 </figcaption>
 </div>
 </figure>
 
 
-
-<!-- <figure id="1">
-<div align="center">
-<img src="/Users/jovo/Research/figs/misc/com_inc_coh.png" width="800" />
-<figcaption>
-efficiency vs s and n (fixed V)
-left: fraction correct vs. s (different lies for different n); both inc and coh
-right: RE
-</figcaption>
-</div>
-</figure> -->
 
 Thus, to choose which estimator will likely achieve best, knowledge of the model, $\mc{H}(V,p,q,m,s)$, is insufficient; rather, both the model and the number of samples must be known a priori.  
 
 <figure id="1">
 <div>
-<img src="../figs/coherent_image_V70_s20_p10_q30_Lhats.png" width="750" height="280" alt="Coherent Image V70 S20 P10 Q30 Lhats">
+<img src="../figs/coherent_image_V70_s20_p10_q30_nTr200_nTe500.png" width="750" height="280" alt="Coherent Image V70 S20 P10 Q30 Lhats">
 <figcaption>
-Figure 5: When constraints on the number of edges ($s$) or star-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\mh{s}$ and $\mh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the same model as in Figure 4, using 100 training samples and 100 test samples.  The left panel depicts performance of the incoherent estimator by varying the number of edges from 1 to 1000. Note that in this simulation, while $s^*=8$, $\mh{s}_{INC}=XXX$.  This "conservatism" is typical and appropriate in many model selection situations (see text for details).  The right panel shows $\mh{L}_{COH}$ as a function of both $m$ and $s$.  For this simulation, $\mh{m}=XXX$ and $\mh{s}=XXX$. (NOTE TO SELF: add mhat and shat to title)
+Figure 5: When constraints on the number of edges ($s$) or star-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\mh{s}$ and $\mh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the same model as in Figure 4, using 200 training samples and 500 test samples.  The left panel depicts performance of the incoherent estimator by varying the number of edges from 1 to 1000. Note that in this simulation, while $s^*=8$, $\mh{s}_{inc}=23$.  This "conservatism" is typical and appropriate in many model selection situations (see text for details).  The right panel shows $\mh{L}_{coh}$ as a function of both $m'$ and $s'$.  For this simulation, $\mh{m}=1$ and $\mh{s}=24$.
 </figcaption>
 </div>
 </figure>
@@ -446,9 +426,9 @@ Figure 5: When constraints on the number of edges ($s$) or star-vertices ($m$) a
 
 <figure id="1">
 <div>
-<img src="../figs/BLSA0317_FA_Lhats.png" width="750" height="280" alt="BLSA0317 FA Lhats">
+<img src="../figs/BLSA0317_Count_Lhats.png" width="750" height="450" alt="BLSA0317 FA Lhats">
 <figcaption>
-Figure 6: MR connectome gender signal subgraph estimation can be implemented by cross-validating over the estimators and hyperparameters.  Note that this analysis suggests that the "best" signal subgraph (for this inference task on these data) has $\mh{m}=XXX$ and $\mh{s}=XXX$.  As in the simulated data, we expect these estimates (and the particular edges in the signal subgraph) would change with more/different data. 
+Figure 6: MR connectome gender signal subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the "best" signal subgraph (for this inference task on these data) has $\mh{m}=12$ and $\mh{s}=400$.  As in the simulated data, we expect these estimates (and the particular edges in the signal subgraph) would change with more/different data. The top two panels depict the same as Figure 5.  The middle two depict misclassification rate (left) for a few different choices of $\mh{m}$ as a function of $s'$ and (right) a zoomed in depiction of the top right panel. The bottom left panel shows the estimated signal subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal subgraph for these data is not particularly coherent.
 </figcaption>
 </div>
 </figure>
@@ -456,22 +436,19 @@ Figure 6: MR connectome gender signal subgraph estimation can be implemented by 
 
 <figure id="1">
 <div>
-<img src="../figs/BLSA0317_coherogram.png" width="750" height="375" alt="BLSA0317 Coherogram">
+<!-- <img src="../figs/BLSA0317_coherogram.png" width="750" height="375" alt="BLSA0317 Coherogram"> -->
 <figcaption>
-Figure 7: The coherogram captures the coherency of the MR connectome gender data.
+Figure 7: Model checking via synthetic data analysis is fundamental to understanding the performance of our estimators, and deciding how to improve them.  The top panels demonstrate that the simulated performance is better than the performance on real data, suggesting that some of the assumptions are inaccurate.  The middle panels suggest that if the model assumptions and parameter estimates were correct, than we would require approximately XXX samples before misclassification rate apparently converges (note that Bayes optimal performance is unknown in this data).  
 </figcaption>
 </div>
 </figure>
 
 
-<div style="page-break-before: always">pagebreak</div>
 <figure id="1">
 <div>
-<img src="../figs/synthetic_BLSA0317_FA_Lhats.png" width="750" height="280" alt="Synthetic BLSA0317 FA Lhats">
-<img src="../figs/synthetic_BLSA0317_rates_rates.png" width="750" height="250" alt="Synthetic BLSA0317 Rates Rates">
 <img src="../figs/cov_BLSA0317_rates_rates.png" width="750" height="250" alt="Cov BLSA0317 Rates Rates">
 <figcaption>
-Figure 8: Model checking via synthetic data analysis is fundamental to understanding the performance of our estimators, and deciding how to improve them.  The top panels demonstrate that the simulated performance is better than the performance on real data, suggesting that some of the assumptions are inaccurate.  The middle panels suggest that if the model assumptions and parameter estimates were correct, than we would require approximately XXX samples before misclassification rate apparently converges (note that Bayes optimal performance is unknown in this data).  Finally, the bottom panel shows the correlation matrix between all the edges in the coherent signal subgraph estimate. It should be clear that many of these edges, which were assumed independent, are in fact highly correlated.  This perhaps explains why the synthetic data analysis yielded improved estimates over the actual data: edges are not independent as assumed.  Moreover, this suggests that improved performance might be achieved by relaxing the independent edge assumption.
+Figure 8: The correlation matrix between all the edges in the coherent signal subgraph estimate. It should be clear that many of these edges, which were assumed independent, are in fact highly correlated.  This perhaps explains why the synthetic data analysis yielded improved estimates over the actual data: edges are not independent as assumed.  Moreover, this suggests that improved performance might be achieved by relaxing the independent edge assumption.
 </figcaption>
 </div>
 </figure>
@@ -535,6 +512,29 @@ LASSO/ENET, low-rank+sparse, other graph classification approaches (invariants, 
 
 
 <h2>Appendix: Proof of Fisher's exact test properites</h2>
+
+<strong>Proof</strong>: Fisher showed that one can calculate exactly the probability of any contingency table, given finite sample spaces.  For this problem, for each edge, one can construct the following contingency table:
+
+
+<center>
+<table border="1">
+<tr><td></td><td>class 0</td><td>class 1</td><td>total</td></tr>
+<tr><td>edge</td><td>$n_{uv|0}$</td><td>$n_{uv|1}$</td><td>$n_{uv}$</td></tr>
+<tr><td>no edge</td><td>$n_0-n_{uv|0}$</td><td>$n_1-n_{uv|1}$</td><td>$n-n_{uv}$</td></tr>
+<tr><td>totals</td><td>$n_0$</td><td>$n_1$</td><td>n</td></tr>
+</table>
+</center>
+
+The probability of obtaining any such contingency table is therefore provided by the hypergeometric distribution:
+
+\begin{align}
+\PP[x=n_{uv|1}] := \frac{n_{uv}!(n-n_{uv})!n_0!n_1!}{n_{uv|0}!n_{uv|1}!(n_0-n_{uv|0})!(n_1-n_{uv|1})!n!}
+\end{align}
+
+The p-value is then the probability of obtaining a contigency table at least as extreme as the observed table: $T_n := \PP[x \geq n_{uv|1}]$.  When $p_{uv|0}\neq p_{uv|1}$, the expected value converges to zero; otherwise, the expected value converges to unity (see Appendix for proof).  Thus, $T_n$ is an asymptotically unbiased, and using $T_n$ for each edge will yield a consistent estimate of $\ss$.  This holds true for both the $V$ fixed and $d_v/n\conv \infty$ case (see Appendix for details). 
+
+
+$\square$
 
 
 Fisher showed that the probability of obtaining any such set of values was given by the hypergeometric distribution:
