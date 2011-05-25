@@ -3,11 +3,11 @@ clear, clc
 datatype='count';
 
 if strcmp(datatype,'FA')
-    load('/Users/jovo/Research/data/MRI/BLSA/BLSA_0317/BLSA_0317_FAMtx');
+    load('../../data/BLSA_0317_FAMtx');
     fname='BLSA0317_FA';
     t=0.4;
 else
-    load('/Users/jovo/Research/data/MRI/BLSA/BLSA_0317/BLSA_0317_CountMtx');
+    load('../../data/BLSA_0317_countMtx');
     fname='BLSA0317_Count';
     t=200;
 end
@@ -26,24 +26,24 @@ for i=1:n
     As(:,:,i)=tril(A,-1);
 end
 
-
+savestuff=0;
 
 %% alg stuff
 i=0;
 
-i=i+1;
-alg(i).name='naive bayes';
-alg(i).edge_list=find(tril(ones(V)-diag(ones(V,1)),-1));
-
-i=i+1;
-alg(i).name='incoherent';
-alg(i).edge_list=1:choose(V,2)/2; %round(logspace(1,log10(choose(V,2)/2),100));
+% i=i+1;
+% alg(i).name='naive bayes';
+% alg(i).edge_list=find(tril(ones(V)-diag(ones(V,1)),-1));
+% 
+% i=i+1;
+% alg(i).name='incoherent';
+% alg(i).edge_list=[400 500 600]; %1:choose(V,2)/2; %round(logspace(1,log10(choose(V,2)/2),100));
 
 i=i+1;
 alg(i).name='coherent';
-alg(i).star_list=1:V/2;
+alg(i).star_list=30; %1:V/2;
 for m=1:length(alg(i).star_list)
-    alg(i).edge_list{m}=1:V*alg(i).star_list(m);
+    alg(i).edge_list{m}=1000; %1:V*alg(i).star_list(m);
 end
 
 % i=i+1;
@@ -62,7 +62,7 @@ for i=1:nAlgs
     Lhats{i}=Out(i).Lhat;
 end
 
-save(['../../data/' fname])
+if savestuff==1, save(['../../data/' fname]); end
 
 
 %% plot rates
@@ -143,7 +143,7 @@ set(gca,'XTick',xtick,'XTickLabel',round(100*wset(xtick))/100)
 
 %
 set(h,'fontsize',fs)
-print_fig(['../figs/' fname '_results'],[5 3]*1.5)
+if savestuff==1, print_fig(['../../figs/' fname '_results'],[5 3]*1.5); end
 
 
 %% generate other stats
@@ -161,4 +161,4 @@ shat = J(Imin);
 [coherent wcounter] = coherent_estimator(SigMat,mhat,shat);
 [coherogram Coherogram wset] = get_coherograms(As,ClassIDs);
 
-save(['../data/' fname])
+if savestuff==1, save(['../../data/' fname]); end

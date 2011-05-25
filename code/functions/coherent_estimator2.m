@@ -10,8 +10,8 @@ function [coherent wcounter] = coherent_estimator(SigMat,num_stars,num_edges)
 %   wcounter:   how many levels we had to extend to get enough edges
 
 %% code
-wset=unique([0; sort(SigMat(:))]);
-wset(wset>1-1e-3)=[];
+wset=unique(sort(SigMat(:)));
+wset(wset==1)=[];
 wcounter = 1;
 [V ~] = size(SigMat); 
 
