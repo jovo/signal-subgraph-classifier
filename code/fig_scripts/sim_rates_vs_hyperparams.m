@@ -76,7 +76,7 @@ save(['../../data/' fname])
 
 %% plot rates
 
-% load(['../data/' fname])
+% load(['../../data/' fname])
 clear h
 figure(1), clf
 
@@ -86,7 +86,7 @@ sa=0.5;
 fs=12;
 ms=24;
 xmax=1000;
-h(1)=subplot(121);  hold all
+h(1)=subplot(211);  hold all
 semilogx(Lhats{2},'color','k','linewidth',2)
 min2=min(Lhats{2});
 shat_inc=find(Lhats{2}==min2);
@@ -118,7 +118,7 @@ plot(1,0.5,'.','color',0.5*[1 1 1],'markersize',ms)
 text(1.1,0.48,['$\hat{L}_{chance} \quad$  $=0.5$'],'interp','latex')
 
 
-h(2)=subplot(122);
+h(2)=subplot(212);
 cb=imagesc(Lhats{1});
 min1=min(Lhats{1}(:));
 coh_inds=find(Lhats{1}==min1);
@@ -126,11 +126,12 @@ coh_inds=find(Lhats{1}==min1);
 [I Iind]=min(II);
 miny=min(Lhats{1}(:));
 maxy=max(Lhats{1}(:));
-colorbar('YTick',[miny:miny/2:maxy])
+colorbar('YTick',[.1:.1:.5])
 xlabel('size of signal subgraph','fontsize',fs)
 ylabel('number of star-vertices','fontsize',fs)
 tit=['coherent estimator'];
-title(tit,'interp','none')
+title(tit,'interp','none','fontsize',fs)
+colormap('gray')
 
 annotation('textarrow',[0.67 0.58],0.61*[1 1],'color','w')
 
@@ -138,7 +139,7 @@ text(600,14,['$\hat{L}_{coh}=$' num2str(min1)],'interp','latex','color','w')
 
 set(h,'fontsize',fs)
 
-print_fig(['../../figs/' fname],[8 3]*1.5)
+print_fig(['../../figs/' fname],[4 6])
 
 
 

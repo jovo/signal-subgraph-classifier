@@ -4,11 +4,11 @@ datatype='count';
 
 if strcmp(datatype,'FA')
     load('../../data/BLSA_0317_FAMtx');
-    fname='BLSA0317_FA';
+    fname='BLSA0317_FA_Lhats';
     t=0.4;
 else
-    load('../../data/BLSA_0317_countMtx');
-    fname='BLSA0317_Count';
+    load('~/Research/data/MRI/BLSA/BLSA_0317/BLSA_0317_countMtx');
+    fname='BLSA0317_Count_Lhats';
     t=200;
 end
 
@@ -31,19 +31,19 @@ savestuff=0;
 %% alg stuff
 i=0;
 
-% i=i+1;
-% alg(i).name='naive bayes';
-% alg(i).edge_list=find(tril(ones(V)-diag(ones(V,1)),-1));
-% 
-% i=i+1;
-% alg(i).name='incoherent';
-% alg(i).edge_list=[400 500 600]; %1:choose(V,2)/2; %round(logspace(1,log10(choose(V,2)/2),100));
+i=i+1;
+alg(i).name='naive bayes';
+alg(i).edge_list=find(tril(ones(V)-diag(ones(V,1)),-1));
+
+i=i+1;
+alg(i).name='incoherent';
+alg(i).edge_list=1:choose(V,2)/2; %round(logspace(1,log10(choose(V,2)/2),100));
 
 i=i+1;
 alg(i).name='coherent';
-alg(i).star_list=30; %1:V/2;
+alg(i).star_list=1:V/2;
 for m=1:length(alg(i).star_list)
-    alg(i).edge_list{m}=1000; %1:V*alg(i).star_list(m);
+    alg(i).edge_list{m}=1:V*alg(i).star_list(m);
 end
 
 % i=i+1;

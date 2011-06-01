@@ -22,7 +22,7 @@ for i=1:n
     AdjMats(:,:,i)=A;
     
     for k=2:length(csvfile.textdata)
-        if strcmpi(files(i).name(6:7),csvfile.textdata{k,1}(1:2))
+        if strcmpi(files(i).name(10:11),csvfile.textdata{k,1}(1:2))
             if strcmpi(csvfile.textdata{k,3},'male')
                 ClassIDs(i)=1;
             else
