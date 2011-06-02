@@ -11,7 +11,7 @@
 \usepackage{graphicx}
 \usepackage{amsfonts}
 \usepackage{amsthm}
-%\usepackage{cite}
+\usepackage{cite}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \input{/Users/jovo/Research/latex/latex_commands.tex}
@@ -41,9 +41,7 @@ E-mail: joshuav@jhu.edu
 \IEEEcompsoctitleabstractindextext{%
 \begin{abstract}
 %\boldmath
-The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.
-
-The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.The abstract goes here.
+While there has been much recent interest in statistical inference, most work operates on vector-valued objects.  In this work, we consider the following ``graph classification'' question: given a collection of graphs and associated classes, how can we predict the class of a newly observed graph.  To address this question we propose a statistical model for graph/class pairs.  Given this model, we devise a set of estimators to find the class-conditional signal, referred to here as the ``signal subgraph.'' The classifiers differ by their assumption about the ``coherency'' of the signal subgraph, that is, what is the minimum number of vertices to which all signal subgraph edges are incident. Which estimator works best is shown to be a function not just of the coherency of the model, but also of the number of training samples.  These estimators are employed on an interesting neuroscience question: can we classify connectomes according to gender.  The answer is yes, significantly better than a na\"{i}ve strategy.  A synthetic data analysis demonstrates that even if the model were correct, given the relatively small number of data samples, the estimated signal subgraph should be taken with a grain of salt.  We conclude by discussing several possible extensions.
 \end{abstract}
 
 % Note that keywords are not normally used for peer review papers.
@@ -61,7 +59,7 @@ Computer Society, IEEEtran, journal, \LaTeX, paper, template.
 
 \section{Introduction}
 
-\IEEEPARstart{G}{raphs} are becoming increasingly popular vehicles for data representation, spanning fields from optical character recognition \cite{}, to chemistry \cite{}, to neuroscience \cite{}.  While statistical inference techniques for vector-valued data are widespread, statistical tools for the analysis of graph-valued data are relatively rare \cite{}. In this work we propose and analyze a relatively simple yet rich random graph model---sufficiently simple to characterize its asymptotic properties, and sufficiently rich to afford useful empirical applications.  For concreteness, we consider the task of \emph{graph classification}: given a collection of graphs and their corresponding classes, can we accurately estimate the class of a new graph lacking a class label?  Our approach is statistical in nature. We first define a graph/class model.  This model admits that the class-conditional signal is encoded in a subset of edges, the \emph{signal subgraph}. Finding the signal subgraph amounts to providing an understanding of what are the differences between the two classes of graphs.  This approach is quite different from quantifying a number of graph invariants (such as clustering coefficient), and building a classifier in a graph invariant space.  Specifically, in the proposed model-based approach, we use both (i) the vertex labels and (ii) graph structure to help classify.  To our knowledge, this is the first proposed strategy using both of those cues.  We demonstrate via proofs, simulation, and a neurobiological data set (MR connectomes \cite{}) that ignoring one or the other of these cues significantly degrades one's ability to classify.
+\IEEEPARstart{G}{raphs} are becoming increasingly popular vehicles for data representation, spanning fields from optical character recognition \cite{}, to chemistry \cite{}, to neuroscience \cite{}.  While statistical inference techniques for vector-valued data are widespread, statistical tools for the analysis of graph-valued data are relatively rare \cite{}. In this work we propose and analyze a relatively simple yet rich random graph model---sufficiently simple to characterize its asymptotic properties, and sufficiently rich to afford useful empirical applications.  For concreteness, we consider the task of \emph{graph classification}: given a collection of graphs and their corresponding classes, can we accurately estimate the class of a new graph lacking a class label?  Our approach is statistical in nature. We first define a graph/class model.  This model admits a class-conditional signal encoded in a subset of edges, the \emph{signal subgraph}. Finding the signal subgraph amounts to providing an understanding of what are the differences between the two classes of graphs.  Moreover, we are interested in learning to what extend this signal is ``coherent'', that is, the signal subgraph is incident to a relatively small number of vertices.  This approach is quite different from most previous approaches which utilize only (i) vertex labels or (ii) graph structure.  More specifically, one could simply represent the adjacency matrix as a big vector, and use standard machine learning techniques.  Alternately, one could ignore vertex labels and compute a set of graph invariants (such as clustering coefficient). One could then classify using only these invariants.  Neither of these approaches use both vertex labels and graph structure.   We demonstrate via proofs, simulation, analysis of a neurobiological data set (MR connectomes \cite{}), and synthetic data analysis, that utilizing graph structure can significantly enhance one's classification accuracy.  However, the best approach for any particular data set is a function of both the amount of data and the true model.  
 
 \section{Methods} % (fold)
 \label{sec:methods}
@@ -170,14 +168,14 @@ Before proceeding, recall that each edge is independent, which means that whethe
 \label{par:paragraph_name}
 
 
-Assume the size of the signal subgraph, $|\mc{E}|=s$, is known.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$, where $d_V$ is the number of distinct edges in a graph with $V$ vertices; also super-exponential (see Figure \ref{fig:numgraphs}, middle panel). Thus searching them all is computationally intractable at this time.  When $s$ is given and the independent edge assumption is ``good'', one can choose the critical value \emph{a posteriori} to ensure that only $s$ edges are rejected, $c = \min_{c'} \II\{\sum_{(u,v) \in \mc{S}} \II \{T_{uv}^{(n)} > c'\}-s\}$,  where $\II\{\cdot\}$ is the identity function, equaling one whenever its argument is true, and zero otherwise.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test-statistics.  Formally, let $T_{(1)} < T_{(2)} < \cdots < T_{(d_V)}$ indicated the \emph{ordered} test statistics (dropping the superscript indicating the number of samplesfor brevity).  Then, the \emph{incoherent signal subgraph estimator} is given by: $\mhc{S}^{inc}_n$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.
+Assume the size of the signal subgraph, $|\mc{E}|=s$, is known.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$, where $d_V$ is the number of distinct edges in a graph with $V$ vertices; also super-exponential (see Figure \ref{fig:numgraphs}, middle panel). Thus searching them all is computationally intractable at this time.  When $s$ is given and the independent edge assumption is ``good'', one can choose the critical value \emph{a posteriori} to ensure that only $s$ edges are rejected, $c = \min_{c'} \II\{\sum_{(u,v) \in \mc{S}} \II \{T_{uv}^{(n)} > c'\}-s\}$,  where $\II\{\cdot\}$ is the identity function, equaling one whenever its argument is true, and zero otherwise.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test-statistics.  Formally, let $T_{(1)} < T_{(2)} < \cdots < T_{(d_V)}$ indicated the \emph{ordered} test statistics (dropping the superscript indicating the number of samplesfor brevity).  Then, the \emph{incoherent signal subgraph estimator} is given by: $\mhc{S}^{inc}_n$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.  %Importantly, this strategy utilizes the vertex labels, as averaging across graphs assumes that vertex $E_{uv}$ in one graph is the same as vertex $E_{uv}$ in another graph.  So, while this approach uses vertex labels, it completely ignores graph structure.
 % paragraph paragraph_name (end)
 
 \paragraph{\emph{Coherent Signal Subgraph Estimators}}
 
 In addition to the size of the signal subgraph, also assume that each of the edges in the signal subgraph are incident to one of $m$ special vertices called \emph{star vertices}. While this assumption further constrains the candidate sets of edges, the number of feasible sets still scales super exponentially (see Figure \ref{fig:numgraphs}, right panel).  Instead, we again take a greedy approach.  
 
-First, compute the significance of each edge, as above, yielding ordered test-statistics, and rank edges by significance with respect to each vertex,  $E_{k,(1)} \leq E_{k,(2)} \leq \ldots \leq E_{k,(n-1)}$ for all $k \in \mc{V}$.  Second, recursively increase the critical value, $c$. With each iteration, assign each vertex a ``score'' equal to the number of edges per vertex with significance smaller than the critical value, $w_{(i);c}=\sum_{u \in [V]} \II\{T_{i,u} < c\}$.  If there exists $m$ vertices whose scores sum to greater than or equal the size of the signal subgraph, $s$, then stop iterating.  That is, find $\min_c !$ such that $\sum_{i} w_{(i);c}\geq s$.  Call the collection of $s$ most significant edges from within that subset the \emph{incoherent signal subgraph estimate}, $\mhc{S}^{coh}_n$.
+First, compute the significance of each edge, as above, yielding ordered test-statistics, and rank edges by significance with respect to each vertex,  $E_{k,(1)} \leq E_{k,(2)} \leq \ldots \leq E_{k,(n-1)}$ for all $k \in \mc{V}$.  Second, recursively increase the critical value, $c$. With each iteration, assign each vertex a ``score'' equal to the number of edges per vertex with significance smaller than the critical value, $w_{(i);c}=\sum_{u \in [V]} \II\{T_{i,u} < c\}$.  If there exists $m$ vertices whose scores sum to greater than or equal the size of the signal subgraph, $s$, then stop iterating.  That is, find $\min_c !$ such that $\sum_{i} w_{(i);c}\geq s$.  Call the collection of $s$ most significant edges from within that subset the \emph{incoherent signal subgraph estimate}, $\mhc{S}^{coh}_n$. %This approach uses both vertex labels and graph structure.
 
 \paragraph{\emph{Coherograms}}
 
@@ -318,7 +316,7 @@ To better characterize the relative performance of the two signal subgraph estim
 \end{figure}
 
 
-\subsection{Relative Efficiencies} % (fold)
+\subsection{Relative Efficiency} % (fold)
 \label{sub:relative_efficiencies}
 
 The above numerical results suggest that the coherent estimator outperforms the incoherent estimator.  However, that result is a function of both the model, $\mc{M}_V$ (which includes the number of vertices), and the number of samples $n$.  %Unfortunately, analytical results computing the finite sample efficiencies of each estimator are beyond our means, as is an exhaustive treatment.  Nonetheless, 
@@ -354,30 +352,44 @@ The bottom panel shows the performance by varying both $m$ and $s$, which has a 
 \subsection{MR Connectome Classification} % (fold)
 \label{sub:mr_connectome_classification}
 
-A connectome may be defined as the complete set of connections of the brain \cite{}.  MR connectomes utilize multi-modal Magnetic Resonance (MR) imaging to determine both the vertex and edge set for each individual \cite{}.  Inspired by the results on simulated data, we wondered whether this strategy worked on real data, in which the model was most certainly a poor description of the data.  Lacking strong priors on either the number of edges or star-vertices in the signal subgraph (or even whether a signal subgraph existed), we searched over a large space of hyper-parameters using cross-validated misclassification performance as our metric of success.  Figure \ref{fig:data} shows the results.  The top left panel shows that with a relatively small number of edges, around 10, we achieve the best performance using the incoherent signal subgraph estimator, $\mh{L}_{inc}=0.27$, and much better performance than the na\"{i}ve Bayes classifier, $\mh{L}_{nb}=0.39$.  The top right panel shows the coherent signal subgraph estimators performance, clearly indicating a band of parameter space yielding far better misclassification rates than the incoherent estimator achieves.  The middle left panel shows a few slices of coherent estimator's performance; each color is a different $m'$.  Clearly, many different values of $m'$ and $s'$ yield misclassification rates below $0.25$.  
+A connectome may be defined as the complete set of connections of the brain \cite{}.  MR connectomes utilize multi-modal Magnetic Resonance (MR) imaging to determine both the vertex and edge set for each individual \cite{}.  Inspired by the results on simulated data, we wondered whether this strategy worked on real data, in which the model was most certainly a poor description of the data.  Lacking strong priors on either the number of edges or star-vertices in the signal subgraph (or even whether a signal subgraph existed), we searched over a large space of hyper-parameters using cross-validated misclassification performance as our metric of success (Figure \ref{fig:data}).  With a relatively small number of incoherent edges,  $\approx 10$, the incoherent classifier achieves good performance, $\mh{L}_{inc}=0.27$, significantly better than the na\"{i}ve Bayes classifier, $\mh{L}_{nb}=0.39 \pm$ (p-value $< x$ using Z test), which is also significantly different from chance (p-value $< y$ using Z test; top left panel).  The coherent classifiers' performance further improves classification rate, with $\mh{L}_{coh}=0.18$ (top right and middle panels).  This improved performance upon using the coherent classifier suggests that signal subgraph is coherent. Using $m'$ and $s'$ from the best performing classifier, we can estimate the signal subgraph (bottom right).  The coherogram suggests that indeed, the signal is somewhat, but not strikingly coherent (bottom right).
 
 % subsection mr_connectome_classification (end)
 
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.8\linewidth]{../figs/BLSA0317_Count_Lhats_results.pdf}
-	\caption{MR connectome gender signal subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the ``best'' signal subgraph (for this inference task on these data) has $\mh{m}=12$ and $\mh{s}=400$.  As in the simulated data, we expect these estimates (and the particular edges in the signal subgraph) would change with more/different data. The top two panels depict the same as Figure 5.  The middle two depict misclassification rate (left) for a few different choices of $\mh{m}$ as a function of $s'$ and (right) a zoomed in depiction of the top right panel. The bottom left panel shows the estimated signal subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal subgraph for these data is not particularly coherent.}
+		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_Count_Lhats_results.pdf}
+	\caption{MR connectome gender signal subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the ``best'' signal subgraph (for this inference task on these data) has $\mh{m}=12$ and $\mh{s}=360$.  As in the simulated data, we expect these estimates (and the particular edges in the signal subgraph) would change with more/different data. The top two panels depict the same as Figure 5.  The middle two depict misclassification rate (left) for a few different choices of $m'$ as a function of $s'$ and (right) a zoomed in depiction of the top right panel. The bottom left panel shows the estimated signal subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal subgraph for these data is neither particularly coherent or incoherent.}
 	\label{fig:data}
-\end{figure*}
+\end{figure}
 
+\subsection{Model Checking} % (fold)
+\label{sub:model_checking}
+
+We then wondered to what extent can we believe that the estimated signal subgraph is in fact the true signal subgraph.  We address this question in two ways: (i) synthetic data analysis and (ii) assumption checking.  
+
+For the synthetic data analysis, we generated some synthetic data as follows.  First, estimate the signal subgraph, $\mhc{S}_{coh}$ from the full data, using $\mh{m}$ and $\mh{s}$ from the coherent classifiers' performance.  Then, for every edge not in $\mhc{S}_{coh}$, let $p_{uv|0}=p_{uv|1}=\mh{p}_{uv}$, where $\mh{p}_{uv}$ is the estimated edge probability averaging over all samples.  For all edges in $\mhc{S}_{coh}$, let $p_{uv|y}=\mh{p}_{uv|y}$.  Set the priors according to the data as well, $\pi=\mh{\pi}$.  
+
+Given the above model, we first sampled 49 training samples, keeping the prior probability correct, and estimate the inchoerent and coherent classifier performance on this single trial (Figure \ref{fig:synthetic}).  The performance of the classifiers on the synthetic data mirrors that of the real data, suggesting some model quality.  To assess what fraction of the edges in the estimated signal subgraph we could trust, even assuming the model was true, we then sampled up to 100 training samples (always using 100 test samples), and compute the missed-edge rate and misclassification rate as a function of the number of samples (bottom panels).  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the incoherent signal subgraph correcly identifies about $50\%$.  This suggests that even if the model were true (which it is not) we should only believe that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in peformance: after about 50 samples, performance dramatically increases.  This suggests that perhaps only a few more data points would be necessary to obtain near perfect classification accuracy.  
 
 \begin{figure*}[tb!]
 	\centering
-		\includegraphics[width=0.8\linewidth]{../figs/BLSA0317_Count_synthetic_results.pdf}
-	\caption{Model checking via synthetic data analysis is fundamental to understanding the performance of our estimators, and deciding how to improve them.  The top panels demonstrate that the simulated performance is better than the performance on real data, suggesting that some of the assumptions are inaccurate.  The middle panels suggest that if the model assumptions and parameter estimates were correct, than we would require approximately XXX samples before misclassification rate apparently converges (note that Bayes optimal performance is unknown in this data).}
+		\includegraphics[width=0.7\linewidth]{../figs/BLSA0317_Count_synthetic_Lhats.pdf}
+	\caption{Synthetic data analysis provides some intuition with model checking and improvement.  The top two panels show the incoherent (left) and coherent (right) misclassification rates as a function of the hyper-parameter choices.  These plots look quite similar to those from Figure \ref{fig:data}, which is suggestive of an adequate model.  The bottom panels show the missed-edge rate (left) and misclassification rate (right) as a function of number of training samples.  With about 50 training samples, approximately half of the edges identified by either classifier are true edges.  Moreover, more than 50 training samples seems to be sufficient for obtaining nearly perfect classification, suggesting perhaps only a few more subjects would be sufficient to yield much greater classification performance.}
 	\label{fig:synthetic}
 \end{figure*}
 
+Before jumping to such conclusions, however, we decided to at least do some preliminary model checking.  In particular, checking whether edges are independent is relatively easy.  Figure \ref{fig:cov} shows the covariance between all pairs of edges in the estimated signal subgraph from the real data.  For visualization purposes, we used a spectral clustering algorithm \cite{}, with hopes that it would more clearly highlight any significant covariations.  While several groups of edges seem to be highly negatively correlated, most edges appear to be relatively uncorrelated (p-value $< x$ using Z test).
+
+% subsection model_checking (end)
+
+
+
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/cov_BLSA0317_rates_rates.pdf}
-	\caption{The correlation matrix between all the edges in the coherent signal subgraph estimate. It should be clear that many of these edges, which were assumed independent, are in fact highly correlated.  This perhaps explains why the synthetic data analysis yielded improved estimates over the actual data: edges are not independent as assumed.  Moreover, this suggests that improved performance might be achieved by relaxing the independent edge assumption.}
+		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_coclustered_corr.pdf}
+	\caption{The correlation matrix between all the edges in the coherent signal subgraph estimate. Edges are organized by co-clustering to highlight any similarities.  Most edges are uncorrelated, although a visible fraction of them are negatively correlated with one another.  This suggests that improved performance might be achieved by relaxing the independent edge assumption. This covariance matrix is ??? signifcantly difference from the null hypothesis.}
 	\label{fig:cov}
 \end{figure}
 
@@ -392,34 +404,20 @@ A connectome may be defined as the complete set of connections of the brain \cit
 \section{Discussion} % (fold)
 \label{sec:discussion}
 
-sometimes one wins B/V by doing Ess estimation:
+This work makes the following contributions. First, it introduces a novel graph/class model that admits rigorous statistical investigation.  Moreover, it presents two algorithms for estimating the signal subgraph: the first using only vertex label information, the second also utilizing graph structure.  The resulting estimators have desirable asymptotic and finite sample properties, including consistency and robustness to various model misspecifications.  Third, simulated data analysis indicate that neither approach dominates over the other; rather, which approach to use is a function of both the model and the amount of data.  Fourth, these classifiers are applied to a connectome data set, and we demonstrate significantly better performance over a benchmark na\"{i}ve Bayes classifier.  Fifth, synthetic data analysis suggests that while we can use the signal subgraph estimators to improve classification performance, we should not expect that the edges they find will be the true signal edges, even when the model is correct.  Finally, the synthetic data analysis suggests that we could expect a drastic performance boost by only a few additional data samples. 
 
-gender data: $L_chance > L_NB > L_inc > L_coh > L_semi > L_* >= 0$
+Collectively, the above analyses suggest that instead of investing more time on improving the classifier, one could ``simply'' collect a few more samples. That said, we would be re-miss if we did not suggest a few possible improvements to this work.  First, the numerical results suggest a number of lemmas might be provable.  For instance, perhaps the misclassification rate is a monotonic function of the missed-edge rate.  Second, although it seemed that the edges were not terribly dependent, one could possibly project the graphs into a lower-dimensional subspace and classify in that domain.  While losing some interpretability, projecting the result back into the high-dimensional space might recover some interpretability.  This projection could be implemented by supposing a conditionally independent edge model \cite{}.  Alternately, one could use (Bayesian) model-averaging to combine estimated signal subgraphs instead of picking one.  Finally, all this work assumed binary edges and labeled vertices.  Both of these assumptions could be relaxed. 
 
+We hope the proposed approaches will yield many applications.  To that end, all the data and code used in this work is available from the author's website, jovo.me.  
 
-\subsection{Contributions} % (fold)
-\label{sub:contributions}
-
-$F_GY$, algs, advice, data
-
-% subsection contributions (end)
-
-
-\subsection{Next Steps} % (fold)
-\label{sub:next_steps}
-
-semi-coh, priors, proofs, relax independence (a) cond'l ind (b) m-est, model selection (short shrift), model avg (lacks interp)
-
-% subsection next_steps (end)
-
-\subsection{Related Work} % (fold)
-\label{sub:related_work}
-
-LASSO/ENET, low-rank+sparse, other graph classification approaches (invariants, embedding, kernels) \cite{PCP10}
-
-% subsection related_work (end)
-
-% section discussion (end)
+% \subsection{Related Work} % (fold)
+% \label{sub:related_work}
+% 
+% LASSO/ENET, low-rank+sparse, other graph classification approaches (invariants, embedding, kernels) \cite{PCP10}
+% 
+% % subsection related_work (end)
+% 
+% % section discussion (end)
 
 
 % \appendices
@@ -456,21 +454,25 @@ Biography text here.
 \end{IEEEbiography}
 
 % if you will not have a photo at all:
-\begin{IEEEbiographynophoto}{John Doe}
+\begin{IEEEbiography}{William R. Gray}
 Biography text here.
-\end{IEEEbiographynophoto}
+\end{IEEEbiography}
 
 % insert where needed to balance the two columns on the last page with
 % biographies
 %\newpage
 
-\begin{IEEEbiographynophoto}{Jane Doe}
+\begin{IEEEbiography}{R. Jacob Vogelstein}
 Biography text here.
-\end{IEEEbiographynophoto}
+\end{IEEEbiography}
+
+\begin{IEEEbiography}{Carey E. Priebe}
+Buddha in training.
+\end{IEEEbiography}
 
 % Can be used to pull up biographies so that the bottom of the last one
 % is flush with the other column.
-%\enlargethispage{-5in}
+% \enlargethispage{-5in}
 
 \end{document}
 
