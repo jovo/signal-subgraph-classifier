@@ -1,32 +1,53 @@
 %% load real data
 clear, clc
-datatype='count';
+datatype='synthetic';
 
-if strcmp(datatype,'FA')
-    load('../../data/BLSA_0317_FAMtx');
-    fname='BLSA0317_FA_Lhats';
-    t=0.4;
-else
+if strcmp(datatype,'synthetic')
+    load('../../data/BLSA0317_Count_Lhats');
+    fname='BLSA0317_Count_synthetic';
+
+    mean0=mean(As(:,:,constants.y0),3);
+    mean1=mean(As(:,:,constants.y1),3);
+    
+    totalmean=mean(As,3);
+    E0=totalmean;
+    E0(coherent)=mean0(coherent);
+    
+    E1=totalmean;
+    E1(coherent)=mean1(coherent);
+    
+    s=constants.s;
+    s0=constants.s0;
+    s1=constants.s1;
+    y0=constants.y0;
+    y1=constants.y1;
+    
+    As = nan(V,V,s);
+    As(:,:,y0)=repmat(E0,[1 1 s0]) > rand(V,V,s0);
+    As(:,:,y1)=repmat(E0,[1 1 s1]) > rand(V,V,s1);
+    
+elseif strcmp(datatype,'real')
     load('~/Research/data/MRI/BLSA/BLSA_0317/BLSA_0317_countMtx');
     fname='BLSA0317_Count_Lhats';
     t=200;
+    siz=size(AdjMats);
+    n=siz(3);           % # experiments
+    V=siz(1);           % # vertices
+       
+    As=0*AdjMats;       % threshold
+    for i=1:n
+        A=AdjMats(:,:,i);
+        A(A<t)=0;
+        A(A>=t)=1;
+        As(:,:,i)=tril(A,-1);
+    end
+
 end
 
 
-siz=size(AdjMats);
-n=siz(3);           % # experiments
-V=siz(1);           % # vertices
 
-
-As=0*AdjMats;       % threshold
-for i=1:n
-    A=AdjMats(:,:,i);
-    A(A<t)=0;
-    A(A>=t)=1;
-    As(:,:,i)=tril(A,-1);
-end
-
-savestuff=0;
+savestuff=1;
+if savestuff==1, save(['../../data/' fname]); end
 
 %% alg stuff
 i=0;
@@ -37,7 +58,7 @@ alg(i).edge_list=find(tril(ones(V)-diag(ones(V,1)),-1));
 
 i=i+1;
 alg(i).name='incoherent';
-alg(i).edge_list=1:choose(V,2)/2; %round(logspace(1,log10(choose(V,2)/2),100));
+alg(i).edge_list=1:nchoosek(V,2)/2; %round(logspace(1,log10(nchoosek(V,2)/2),100));
 
 i=i+1;
 alg(i).name='coherent';

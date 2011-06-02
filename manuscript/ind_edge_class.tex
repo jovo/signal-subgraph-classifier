@@ -324,43 +324,56 @@ To better characterize the relative performance of the two signal subgraph estim
 The above numerical results suggest that the coherent estimator outperforms the incoherent estimator.  However, that result is a function of both the model, $\mc{M}_V$ (which includes the number of vertices), and the number of samples $n$.  %Unfortunately, analytical results computing the finite sample efficiencies of each estimator are beyond our means, as is an exhaustive treatment.  Nonetheless, 
 Figure \ref{fig:RE} explicitly shows that the relative performance of an estimator for a particular model changes as a function of the number of samples.  More specifically, for small $n$, the incoherent estimator yields a better performance, as indicated by by relative rate and relative efficiency being above one.  However, with more samples, when the signal subgraph is coherent, the coherent estimator will eventually outperforming the incoherent one.  At infinite samples, since both estimators are consistent, they will yield identical results: the truth.  
 
-% we can vary $V$ and $n$, to ascertain the efficiency of the two estimators as a function of those two hyper-parameters.  Figure \ref{fig:RE} shows just such a result.  
-
-% Given the two above estimators for the signal subgraph, a natural question is: which estimator is more efficient for a given model.  Unfortunately, the efficiency is a function of not just the model, but also the distribution and the number of samples.  Thus, we ask which estimator is more efficient for a given $\{\bth, V, n\}$ tuple.  Note that while the dependency on $V$ is redundant, in that $\bth$ is a function of $V$, we note it here to emphasize its importance in terms of relative efficiencies.  While relative efficiencies are difficult to compute analytically, below, we show a number of numerical results.
-
-
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/RE_V30_s5_p10_q20.pdf}
-	\caption{The relative performance of the coherent and incoherent estimators is a function not just of the model, but also the number of samples.  Specifically, for the model $\mc{M}_{30}(1,5;0.5,0.1,0.2)$, we compute the missed-edge rates for both the incoherent estimator (gray line) and the coherent estimator (black line).  The top panel shows that for small sample size the incoherent estimator achieves a better (lower) missed-edge rate than the coherent estimator. However, the incoherent estimator's convergence rate is slower, therefore, the coherent estimator catches up and outperforms the incoherent estimator; until both eventually converge at the truth.  The middle and bottom panels show the relative rate and efficiency curves for this model. Note that they dip below unity, and then converge back up to unity, as they must because both estimators are consistent. }
-	\label{fig:RE}
-\end{figure}
-
 Thus, to choose which estimator will likely achieve best, knowledge of the model, $\mc{M}_V(m,s;\pi,p,q)$, is insufficient; rather, both the model and the number of samples must be known a priori.  
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/coherent_image_V70_s20_p10_q30_nTr200_nTe500.pdf}
-	\caption{ When constraints on the number of edges ($s$) or star-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\mh{s}$ and $\mh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the same model as in Figure 4, using 200 training samples and 500 test samples.  The left panel depicts performance of the incoherent estimator by varying the number of edges from 1 to 1000. Note that in this simulation, while $s^*=8$, $\mh{s}_{inc}=23$.  This ``conservatism'' is typical and appropriate in many model selection situations (see text for details).  The right panel shows $\mh{L}_{coh}$ as a function of both $m'$ and $s'$.  For this simulation, $\mh{m}=1$ and $\mh{s}=24$.}
+		\includegraphics[width=0.8\linewidth]{../figs/RE_V30_s5_p10_q20.pdf}
+	\caption{The relative performance of the coherent and incoherent estimators is a function not just of the model, but also the number of samples.  Specifically, for the model $\mc{M}_{30}(1,5;0.5,0.1,0.2)$, we compute the missed-edge rates for both the incoherent estimator (gray line) and the coherent estimator (black line).  The top panel shows that for small sample size the incoherent estimator achieves a better (lower) missed-edge rate than the coherent estimator. However, the incoherent estimator's convergence rate is slower, therefore, the coherent estimator catches up and outperforms the incoherent estimator; until both eventually converge at the truth.  The middle and bottom panels show the relative rate and efficiency curves for this model. Note that they dip below unity, and then converge back up to unity, as they must because both estimators are consistent. }
+	\label{fig:RE}
+\end{figure}
+
+
+\subsection{Estimating the hyper-parameters} % (fold)
+\label{sub:estimating_the_hyper_parameters}
+
+In the above analyses the hyper-parameters, both the number of edges $s$ and star-vertices $m$, were known.  In practice while one might have a preliminary guess of the range of these hyper-parameters, they will at times be unknown.  We can therefore use a cross-validation technique to search over the space of all reasonable combinations of $s$ and $m$, and choose the best performing combination.  Figure \ref{fig:coherent} shows one such simulation and depicts several key figures.  The top panel shows the misclassification rate as a function of the \emph{log} of the size of the signal subgraph, $s$.  Although the true size is $s=20$, the best performing estimate is $\mh{s}=23$. This is a relatively standard result in model selection: the best performer will include a few extra dimensions because adding a few uninformative ones is less costly than missing a few informative ones \cite{}.  This intuition is further reified by the U-shape of the misclassification curve on a log scale: including many non-signal edges is less detrimental than excluding a few signal edges.
+
+The bottom panel shows the performance by varying both $m$ and $s$, which has a ``banded'' like structure, indicating that the performance is relatively robust to small changes in $m$.  Moreover, the best performing pair here is $\mh{m}=1$ and $\mh{s}=24$, suggesting that $n$ was sufficiently large to correctly find the true star-vertex, and further corroborating the ``better safe than sorry'' attitude to selecting the signal vertices. 
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.8\linewidth]{../figs/coherent_image_V70_s20_p10_q30_nTr200_nTe500.pdf}
+	\caption{ When constraints on the number of edges ($s$) or star-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\mh{s}$ and $\mh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the same model as in Figure 4, using 200 training samples and 500 test samples, with $m=1$ and $s=20$.  The top panel depicts misclassification rate of the incoherent estimator as a function of the number of edges on a log scale. Note that in this simulation, while $s=20< \mh{s}_{inc}=23$.  This ``conservatism'' is typical and appropriate in many model selection situations.  The bottom panel shows $\mh{L}_{coh}$ as a function of both $m'$ and $s'$.  For this simulation, $\mh{m}=1$ and $\mh{s}=24$, further corroborating the conservative stance on model selection. Note that $L_{chance} \geq \mh{L}_{nb} \geq \mh{L}_{inc} \geq \mh{L}_{coh} \geq L_*$ as one would hope for this coherent simulation.}
 	\label{fig:coherent}
 \end{figure}
 
+
+% subsection estimating_the_hyper_parameters (end)
+
+\subsection{MR Connectome Classification} % (fold)
+\label{sub:mr_connectome_classification}
+
+A connectome may be defined as the complete set of connections of the brain \cite{}.  MR connectomes utilize multi-modal Magnetic Resonance (MR) imaging to determine both the vertex and edge set for each individual \cite{}.  Inspired by the results on simulated data, we wondered whether this strategy worked on real data, in which the model was most certainly a poor description of the data.  Lacking strong priors on either the number of edges or star-vertices in the signal subgraph (or even whether a signal subgraph existed), we searched over a large space of hyper-parameters using cross-validated misclassification performance as our metric of success.  Figure \ref{fig:data} shows the results.  The top left panel shows that with a relatively small number of edges, around 10, we achieve the best performance using the incoherent signal subgraph estimator, $\mh{L}_{inc}=0.27$, and much better performance than the na\"{i}ve Bayes classifier, $\mh{L}_{nb}=0.39$.  The top right panel shows the coherent signal subgraph estimators performance, clearly indicating a band of parameter space yielding far better misclassification rates than the incoherent estimator achieves.  The middle left panel shows a few slices of coherent estimator's performance; each color is a different $m'$.  Clearly, many different values of $m'$ and $s'$ yield misclassification rates below $0.25$.  
+
+% subsection mr_connectome_classification (end)
+
+
 \begin{figure*}[htbp]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_Count_Lhats.pdf}
+		\includegraphics[width=0.8\linewidth]{../figs/BLSA0317_Count_Lhats_results.pdf}
 	\caption{MR connectome gender signal subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the ``best'' signal subgraph (for this inference task on these data) has $\mh{m}=12$ and $\mh{s}=400$.  As in the simulated data, we expect these estimates (and the particular edges in the signal subgraph) would change with more/different data. The top two panels depict the same as Figure 5.  The middle two depict misclassification rate (left) for a few different choices of $\mh{m}$ as a function of $s'$ and (right) a zoomed in depiction of the top right panel. The bottom left panel shows the estimated signal subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal subgraph for these data is not particularly coherent.}
 	\label{fig:data}
 \end{figure*}
 
 
-\begin{figure*}[htbp]
+\begin{figure*}[tb!]
 	\centering
 		% \includegraphics[width=1.0\linewidth]{../figs/BLSA0317_Count_Lhats.pdf}
 	\caption{Model checking via synthetic data analysis is fundamental to understanding the performance of our estimators, and deciding how to improve them.  The top panels demonstrate that the simulated performance is better than the performance on real data, suggesting that some of the assumptions are inaccurate.  The middle panels suggest that if the model assumptions and parameter estimates were correct, than we would require approximately XXX samples before misclassification rate apparently converges (note that Bayes optimal performance is unknown in this data).}
 	\label{fig:synthetic}
 \end{figure*}
 
-\clearpage
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=1.0\linewidth]{../figs/cov_BLSA0317_rates_rates.pdf}

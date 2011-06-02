@@ -135,7 +135,7 @@ colormap('gray')
 
 annotation('textarrow',[0.67 0.58],0.61*[1 1],'color','w')
 
-text(600,14,['$\hat{L}_{coh}=$' num2str(min1)],'interp','latex','color','w')
+text(100,min(JJ),['$\hat{L}_{coh}=$' num2str(min1)],'interp','latex','color','k','fontsize',fs)
 
 set(h,'fontsize',fs)
 
