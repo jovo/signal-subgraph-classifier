@@ -8,3 +8,10 @@
 *.m~
 .gra*
 .DS_Store
+
+.*.bbl
+.*.fls
+.*.fmt
+.*.ini
+.*.tex
+.*.watcher_pid
