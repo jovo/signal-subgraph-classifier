@@ -60,7 +60,7 @@ k=2; % # of clusters
 [row_clust_idx, col_clust_idx,y_index,x_index]=SpectralCoClustering(corrSS,k);
 
 figure(k); clf; colormap(gray);
-imagesc(-corrSS(y_index,x_index));
+imagesc(corrSS(y_index,x_index));
 % set(gca,'FontSize',14,'FontWeight','bold');
 colorbar
 title('Correlation Matrix','fontsize',fs)
@@ -71,8 +71,67 @@ set(gca,'XTick',[100:100:400],'YTick',[100:100:400])
 
 
 if savestuff==1
-    print_fig(['../../figs/' fname],[4 2]*1.5)
+    print_fig(['../../figs/' fname],[2.3 2]*1.5)
 end
+
+%% generate synthetic data
+
+
+mean0=mean(As(:,:,constants.y0),3);
+mean1=mean(As(:,:,constants.y1),3);
+
+totalmean=mean(As,3);
+totalmean(totalmean==0)=1/(10*constants.s);
+totalmean(totalmean==1)=1-1/(10*constants.s);
+
+E0=totalmean;
+E0(coherent)=mean0(coherent);
+E0(E0==0)=1/(10*constants.s);
+E0(E0==1)=1-1/(10*constants.s);
+
+E1=totalmean;
+E1(coherent)=mean1(coherent);
+E1(E1==0)=1/(10*constants.s);
+E1(E1==1)=1-1/(10*constants.s);
+
+s=constants.s;
+s0=constants.s0;
+s1=constants.s1;
+y0=constants.y0;
+y1=constants.y1;
+
+As = nan(V,V,s);
+As(:,:,y0)=repmat(E0,[1 1 s0]) > rand(V,V,s0);
+As(:,:,y1)=repmat(E0,[1 1 s1]) > rand(V,V,s1);
+
+%% synthetic correlation matrix
+
+clear SS
+for i=1:constants.s
+    ass=As(:,:,i);
+    SS(:,i)=ass(coherent);
+end
+SS0=find(SS==0);
+SS1=find(SS==1);
+SS(SS0)=rand(size(SS0))*0.01;
+SS(SS1)=rand(size(SS1))*0.01+0.99;
+
+corr_syn=corr(SS');
+
+%% cluster synthetic matrix
+
+k=2; % # of clusters
+[row_clust_idx, col_clust_idx,y_index,x_index]=SpectralCoClustering(corr_syn,k);
+
+figure(k); clf; colormap(gray);
+imagesc(corr_syn(y_index,x_index));
+colorbar
+
+
+%% kstest to compare the two
+
+[h pval_ks] = kstest2(corrSS(:),corr_syn(:))
+
 
 %%
 
