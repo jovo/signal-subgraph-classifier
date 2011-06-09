@@ -199,7 +199,17 @@ The class-conditional likelihood parameters, $p_{uv|y}$, are relatively simple. 
 \begin{align}
 \mh{p}_{uv|y}^{MLE} = \frac{1}{n_y} \sum_{i | y_i = y} a_{uv}^{(i)},
 \end{align}
-where $\sum_{i | y_i=y}$ indicates the sum is over all data samples from class y. Unfortunately, the MLE has relatively poor finite sample properties.  In particular, if the data contains no examples of an edge in a particular class, then the MLE will be zero.  If the unclassified graph exhibits that edge, then the probability of it being from that class is zero, which is undesirable. We therefore consider an estimator with better finite sample performance, XXX 
+where $\sum_{i | y_i=y}$ indicates the sum is over all data samples from class y. Unfortunately, the MLE has relatively poor finite sample properties.  In particular, if the data contains no examples of an edge in a particular class, then the MLE will be zero.  If the unclassified graph exhibits that edge, then the probability of it being from that class is zero, which is undesirable. We therefore consider an estimator with better finite sample performance:
+\begin{align}
+\mh{p}_{uv|y} = 
+\begin{cases}
+\eta_n & \text{if } \max_i a_{uv}^{(i)}=0 \\
+1- \eta_n & \text{if } \min_i a_{uv}^{(i)}=1 \\
+\mh{p}_{uv|y}^{MLE} & \text{otherwise}
+\end{cases}
+\end{align}
+where we let $\eta_n=1/(10n)$.  The above estimator converges asymptotically to $\mh{p}^{MLE}_{uv|y}$, and therefore shares the MLE's asymptotical properties.  Moreover, the above estimator is an L-estimator of $p_{uv|y}$, and therefore shares the robustness properties of L-estimators \cite{Huber1981}
+
 % the maximum a posteriori (MAP) estimator (other choices, such as an ML$_q$ estimator, might be better \cite{Ferrari2010}).  The MAP estimator for a Bernoulli random variable requires specifying a prior.  Because the beta distribution is the conjugate prior to the Bernoulli distribution, it is a convenient choice: 
 % \begin{align}
 % F[ p_{uv|y} | \alpha, \beta] &= \text{Beta}(p_{uv|y}; \alpha,\beta)
@@ -395,7 +405,7 @@ A connectome may be defined as the complete set of connections of the brain \cit
 	\label{fig:data}
 \end{figure}
 
-\subsection{Model Checking} % (fold)
+\subsection{Model Evaluation} % (fold)
 \label{sub:model_checking}
 
 Although the above coherent classifier estimated a signal subgraph, we wondered to what extent can we believe that it is the true signal subgraph.  We address this question in two ways:  (i) synthetic data analysis and (ii) assumption checking.  
@@ -406,14 +416,15 @@ Although the above coherent classifier estimated a signal subgraph, we wondered 
 % subsubsection synthetic_data_analysis (end)
 For the synthetic data analysis, we generated some synthetic data as follows.  Given the above estimated signal subgraph, for every edge not in $\mhc{S}_{n}$, let $p_{uv|0}=p_{uv|1}=\mh{p}_{uv}$, where $\mh{p}_{uv}$ is the estimated edge probability averaging over all samples.  For all edges in $\mhc{S}_{n}$, let $p_{uv|y}=\mh{p}_{uv|y}$.  Set the priors according to the data as well: $\pi=\mh{\pi}$.  
 
-Given this synthetic data model, we first sampled 49 training samples, 25 from class 0 and 24 from class 1, and estimated the incoherent and coherent classifier performance on this single trial (Figure \ref{fig:synthetic}, top panels).  The performance of the classifiers on the synthetic data qualitatively mirrors that of the real data, suggesting some model goodness-of-fit.  To assess what fraction of the edges in the estimated signal subgraph we could trust, even assuming the model was true, we then sampled up to 100 training samples (and 100 test samples), and computed the missed-edge rate (bottom left) and misclassification rate (bottom right) as a function of the number of samples.  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the coherent signal subgraph estimator correctly identifies about $50\%$.  This suggests that even if the model were true (which it is not) we should only believe that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in peformance: after about 50 samples, performance dramatically increases.  This suggests that perhaps only a few more data points would be necessary to obtain near perfect classification accuracy.  
-
 \begin{figure*}[tb!]
 	\centering
 		\includegraphics[width=0.7\linewidth]{../figs/BLSA0317_Count_synthetic_Lhats.pdf}
 	\caption{Synthetic data analysis provides some intuition with model checking and improvement.  The top two panels show the incoherent (left) and coherent (right) misclassification rates as a function of the hyper-parameter choices.  These plots look quite similar to those from Figure \ref{fig:data}, which is suggestive of an adequate model.  The bottom panels show the missed-edge rate (left) and misclassification rate (right) as a function of number of training samples.  With about 50 training samples, approximately half of the edges identified by either classifier are true edges.  Moreover, more than 50 training samples seems to be sufficient for obtaining nearly perfect classification, suggesting perhaps only a few more subjects would be sufficient to yield much greater classification performance.}
 	\label{fig:synthetic}
 \end{figure*}
+
+Given this synthetic data model, we first sampled 49 training samples, 25 from class 0 and 24 from class 1, and estimated the incoherent and coherent classifier performance on this single trial (Figure \ref{fig:synthetic}, top panels).  The performance of the classifiers on the synthetic data qualitatively mirrors that of the real data, suggesting some model goodness-of-fit.  To assess what fraction of the edges in the estimated signal subgraph we could trust, even assuming the model was true, we then sampled up to 100 training samples (and 100 test samples), and computed the missed-edge rate (bottom left) and misclassification rate (bottom right) as a function of the number of samples.  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the coherent signal subgraph estimator correctly identifies about $50\%$.  This suggests that even if the model were true (which it is not) we should only believe that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in peformance: after about 50 samples, performance dramatically increases.  This suggests that perhaps only a few more data points would be necessary to obtain near perfect classification accuracy.  
+
 
 \subsubsection{Model checking} % (fold)
 \label{ssub:model_checking}
@@ -495,9 +506,7 @@ We hope the proposed approaches will yield many applications.  To that end, all 
 \bibliographystyle{IEEEtran}
 
 \begin{IEEEbiography}{Joshua T. Vogelstein}
-Things remaining to do.  
-(1) compute Lstar for simulations.  
-(2) significance of covariance matrix
+Joshua T. Vogelstein is a spritely young man, engorphed in a novel post-buddhist metaphor.
 
 \end{IEEEbiography}
 

@@ -53,6 +53,13 @@ C.~M. Stein, ``{Inadmissibility of the usual estimator of the mean of a
   1em plus 0.5em minus 0.4em\relax University of California Press, 1956, pp.
   197--206.
 
+\bibitem{Huber1981}
+\BIBentryALTinterwordspacing
+P.~J. Huber, \emph{{Robust Statistics}}, ser. Wiley Series in Probability and
+  Statistics.\hskip 1em plus 0.5em minus 0.4em\relax Wiley, 1981, vol.~82,
+  no.~3. [Online]. Available: \url{http://doi.wiley.com/10.1002/9780470434697}
+\BIBentrySTDinterwordspacing
+
 \bibitem{Fisher1971}
 \BIBentryALTinterwordspacing
 R.~A. Fisher, \emph{{The Design of Experiments}}.\hskip 1em plus 0.5em minus
