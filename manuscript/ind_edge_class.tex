@@ -78,10 +78,11 @@ Let $\GG: \Omega \mapsto \mc{G}$ be a graph-valued random variable with samples 
 A model defines the set of admissible distributions.  In the graph classification domain, we consider the model, $\mc{F}_{\GG,Y}$, which includes all joint distributions over graphs and classes under consideration: $\mc{F}_{\GG,Y}=\{F_{\GG, Y}[\cdot; \bth] : \bth \in \bTh\}$, where $\bth \in \bTh$ indexes each distribution.  Two ``standard'' approaches for tackling a classification problem are (i) the \emph{generative} approach and (ii) the \emph{discriminative} approach.  In a generative strategy, one decomposes the joint distribution into a product of a likelihood term and a prior term:  $F_{\GG,Y}=F_{\GG | Y}F_Y$.  In a discriminative strategy, one decomposes the joint distribution into a posterior term and a marginal term: $F_{\GG,Y}=F_{Y | \GG}F_{\GG}$.  We proceed using a hybrid generative-discriminative approach whereby we describe a generative model and place constraints on the discriminant boundary.
 
 First,  assume that each graph has the same set of labeled vertices, so that all the variability in the graphs is in the adjacency matrix, which implies that $F_{\GG,Y}=F_{A,Y}$. Second, assume edges are independent, that is: $F_{A,Y}=\prod_{u,v \in \mc{E}} F_{A_{uv},Y}$.  Now, consider the generative deconstruction, and let $F[A_{uv} | Y=y]=f_{uv|y}$ and $F_Y=\pi_Y$.  Third, assume the existence of a class-conditional difference, that is $f_{uv|0} \neq f_{uv|1}$ for some $(u,v) \in \mc{E}$, and denote the edges satisfying that condition  the \emph{signal subgraph}, $\mc{S}=\{(u,v) \in \mc{E}: f_{uv|0} \neq f_{uv|1}\}$.  Fourth, for concreteness, assume that the graphs are \emph{simple} graphs, that is, undirected, with binary edges, and lacking (self-) loops.  Thus, the likelihood of an edge between vertex $u$ and $v$ is given by a Bernoulli random variable with a scalar probability parameter:  $f_{uv|y}=\text{Bern}(A_{uv}; p_{uv|y})$. Together, these four assumptions imply the following model: 
-\begin{align}
-\mc{F}_{\GG,Y}=\{F_{\GG, Y}=\prod_{uv \in \mc{E}} \text{Bern}(A_{uv}; p_{uv|Y}) \pi_Y :  \bth \in \bTh\},
-\end{align}
-where $\bth$ is composed of the likelihood and prior terms. The likelihood parameter, $\mb{p}=\{p_{uv|y}\}_{uv \in \mc{E}, y \in \mc{Y}}$, is constrained in two ways.  First, each term must be between zero and one: $p_{uv|y} \in (0,1)$.  Second, for some non-empty subset of edges, $\mc{S}=\{(u,v) : (u,v) \in \mc{S}\} \subseteq \mc{E}$, it must be the case that $ p_{uv|i}\neq p_{uv|j}  \forall i \neq$.  Below, we will think of this second constraint on the likelihood parameter as a set-valued parameter. The prior terms, $\mb{\pi}=\{\pi_y\}$, must be greater than or equal to zero and sum to one: $\pi_y \geq 0, \sum_y \pi_y=1$.  Thus, given a specification of the class-conditional likelihood of each edge and class-prior, one completely defines a possible joint distribution over graphs and classes. Note, however, that the likelihood parameters for all edges not in the signal subgraph, $p_{uv|y}=p_{uv} \forall y \in \mc{Y}, (u,v) \notin \mc{S}$,  are \emph{nuisance} parameters; that is, they will not be used for classification.
+\begin{multline}
+\mc{F}_{\GG,Y}=\{F_{A, Y}[a,y; \bth]:   \bth \in \bTh\}, 
+\\ \text{such that } F_{A,Y}[a,y; \theta]  =\prod_{uv \in \mc{E}} \text{Bern}(a_{uv}; p_{uv|y}) \pi_y,
+\end{multline}
+where $\bth=\{\mb{p},\mb{\pi}\}$. The likelihood parameter, $\mb{p}=\{p_{uv|y}\}_{uv \in \mc{E}, y \in \mc{Y}}$, is constrained in two ways.  First, each term must be between zero and one: $p_{uv|y} \in (0,1)$.  Second, for some non-empty subset of edges, $\mc{S}=\{(u,v) : (u,v) \in \mc{S}\} \subseteq \mc{E}$, it must be the case that $ p_{uv|i}\neq p_{uv|j}  \forall i \neq j$.  Below, we will think of this second constraint on the likelihood parameter as a set-valued parameter. The prior terms, $\mb{\pi}=\{\pi_y\}$, must be greater than or equal to zero and sum to one: $\pi_y \geq 0, \sum_y \pi_y=1$.  Thus, given a specification of the class-conditional likelihood of each edge and class-prior, one completely defines a possible joint distribution over graphs and classes. Note, however, that the likelihood parameters for all edges not in the signal subgraph, $p_{uv|y}=p_{uv} \forall y \in \mc{Y}, (u,v) \notin \mc{S}$,  are \emph{nuisance} parameters; that is, they will not be used for classification.
 
 
 % subsection model (end)
@@ -91,31 +92,31 @@ where $\bth$ is composed of the likelihood and prior terms. The likelihood param
 
 
 
-Formally, we say that a graph classifier, $h \in \mc{H}$, is any function satisfying $h: \mc{G} \mapsto \mc{Y}$.  We desire to obtain the ``best'' possible classifier, $h_*$. To define best, we first define a loss function, $\ell_h: \mc{Y} \times \mc{Y} \mapsto \Real_+$, specifically the $0-1$ loss function:
+Formally, we say that a graph classifier, $h \in \mc{H}$, is any function satisfying $h: \mc{G} \mapsto \mc{Y}$.  We desire to obtain the ``best'' possible classifier, $h_*$. To define best, we first define a loss function, $\ell_h: \mc{G} \times \mc{Y} \mapsto \Real_+$, specifically the $0-1$ loss function:
 \begin{align}
-\ell_h(h(G),Y) \defeq \II \{h(G) \neq Y\}, %=\\ \int
+\ell_h(G,Y) \defeq \II \{h(G) \neq Y\}, %=\\ \int
 % _{g \in \mc{G}, y\in \mc{Y}} 
 %F[h(g) \neq y] F[g,y] dgdy.
 \end{align}
 where $\II\{\cdot\}$ is the identity function, equaling one whenever its argument is true, and zero otherwise.  Further, let risk, $R: \mc{F} \times \mc{H} \mapsto \Real_+$ be the expected loss under the true distribution:
 \begin{align}
-R(F,h) \defeq \EE_F[\ell_h(h(G),Y)].
+R(F,h) \defeq \EE_F[\ell_h(G,Y)].
 \end{align}
 We define the best (optimal) classifier for a given distribution $F$ as the one that minimizes risk.
 %(under model $\mc{F}$ and loss-function $\ell$) as the classifier with minimal expected loss: $h_*=\argmin_{h \in \mc{H}} \EE_F [\ell (F,Y)] \forall F \in \mc{F}$.  Such a classifier is called \emph{Bayes optimal}, and the error associated with such a classifier is called \emph{Bayes error} or \emph{Bayes risk}.  
 It can be shown that the classifier that maximizes the class-conditional posterior, $F_{Y | \GG}$ is optimal \cite{Bickel2000}:
 \begin{align} \label{eq:map}
-h_*(g) &= \argmin_{h \in \mc{H}} \EE_F[\ell (F,Y)] = \argmax_{y \in \mc{Y}} F[y|g] 
-\nonumber \\ &= \argmax_{y \in \mc{Y}} F[g|y] F[y].
+h_*(G) &= \argmin_{h \in \mc{H}} \EE_F[\ell_h (G,Y)] = \argmax_{Y \in \mc{Y}} F[Y|G] 
+\nonumber \\ &= \argmax_{Y \in \mc{Y}} F[G|Y] F[Y].
 \end{align}
 Given the proposed model, Eq. \eqref{eq:map} can be further factorized using the above four assumptions:
 \begin{align}
-\argmax_{y \in \mc{Y}} F[g|y] F[y] 
+\argmax_{Y \in \mc{Y}} F[G|Y] F[Y] 
 % &= \argmax_{y \in \mc{Y}} F[a|y] F[y] 
 % \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{E}} f_{uv | y} \pi_y 
 % \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{S}} f_{uv | y} \pi_y 
 % \nonumber \\ 
-&= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{S}} \text{Bern}(a_{uv}; p_{uv|y}) \pi_y.
+&= \argmax_{Y \in \mc{Y}} \prod_{u,v \in \mc{S}} \text{Bern}(A_{uv}; p_{uv|y}) \pi_y.
 \end{align}
 Unfortunately Bayes optimal classifiers are typically unavailable. In such settings, it is therefore desirable to construct a classifier estimate from a set of \emph{training data}. Formally, let $\mc{T}_n$ denote the training corpus, assumed to be sampled exchangeably from the true but unknown distribution: $\mc{T}_n=\{(\GG_i,Y_i)\}_{i \in [n]} \overset{exch.}{\sim} F_{\GG, Y}$.  Given such a training corpus, and a new, as yet unclassified graph, $g$, an estimated classifier predicts the true (but unknown) class of $g$ by utilizing the training corpus: $\mh{h}_n: \mc{G} \times (\mc{G} \times \mc{Y})^n \mapsto \mc{Y}$.  When a model, $\mc{F}_{\GG,Y}$ is specified, a beloved approach is to use  a  \emph{Bayes plugin classifier}. Due to the above simplifying assumptions, the Bayes plugin classifier for this model is defined as follows.  First, estimate the  model parameters: $\bth=\{\mc{S}, \mb{p}, \mb{\pi}\}$. Second, plug those estimates into the above equation.  The result is a Bayes plugin graph classifier:
 \begin{align}
@@ -229,16 +230,31 @@ where $n_y=\sum_{i \in [n]} \II\{y_i = y\}$.
 \subsection{Evaluation Criteria} % (fold)
 \label{sub:evaluation_criteria}
 
-The properties of the MAP and ML estimators for the likelihood and prior terms, respectively, are well studied \cite{Bickel2000} and will therefore not be discussed in much detail.  We evaluate the classifier finite sample properties using either hold-out or leave-one-out misclassification performance, depending on whether the data is simulated or experimental.  Formally, given $C$ equally sized subsets of the data: $\{\mc{T}_{1}, \ldots, \mc{T}_{C}\}$, the \emph{cross-validated error} is:
+The properties of the MAP and ML estimators for the likelihood and prior terms, respectively, are well studied \cite{Bickel2000} and will therefore not be discussed in much detail.  
+
+
+\subsubsection{Classifier} % (fold)
+\label{ssub:classifier}
+
+% subsubsection classifier (end)
+We evaluate the classifier finite sample properties using either hold-out or leave-one-out misclassification performance, depending on whether the data is simulated or experimental, respectively.  Formally, given $C$ equally sized subsets of the data: $\{\mc{T}_{1}, \ldots, \mc{T}_{C}\}$, the \emph{cross-validated error} is:
 \begin{align} \label{eq:L2}
-	\mh{L}_{\mh{f}(\cdot; \mc{T}_n)} = \frac{1}{C}\sum_{c=1}^C \frac{1}{|\mc{T}_n \backslash \mc{T}_c|}\sum_{g \notin \mc{T}_c} \II\{\mh{f}(g; \mc{T}_{c}) \neq y\},
+	\mh{L}_{\mh{h}(\cdot; \mc{T}_n)} = \frac{1}{C}\sum_{c=1}^C \frac{1}{|\mc{T}_n \backslash \mc{T}_c|}\sum_{g \notin \mc{T}_c} \II\{\mh{h}(g; \mc{T}_{c}) \neq y\}.
 \end{align}
-
-
 % \subsubsection{Signal Subgraph Estimator Performance Criteria} % (fold)
 % \label{ssub:subsubsection_name3}
-
 % subsubsection subsubsection_name (end)
+Given this definition, let $L_{\mhb{\pi}}$ be the classifier using only the prior estimates, and let $L_*$ be the error for the Bayes optimal classifier.  
+
+To determine whether a classifier is significantly better than chance, we randomly permute the classes of each graph $n_{MC}$ times, and then estimate a na\"ive Bayes classifier using the permuted data, yielding an empirical distribution.  The p-value of a permutation test is the minimum fraction of Monte Carlo permutations that did better than the classifier of interest \cite{Fisher1971}.  
+
+To determine whether a pair of classifiers are significantly different, we compare the leave-one-out classification results using McNemar's test \cite{McNemar1947}
+
+
+\subsubsection{Signal Subgraph Estimators} % (fold)
+\label{ssub:signal_subgraph_estimators}
+
+% subsubsection signal_subgraph_estimators (end)
 
 To evaluate absolute performance of the signal subgraph estimators, we define here ``miss-edge rate'' as the fraction of true edges missed by the signal subgraph estimator:
 \begin{align}
@@ -246,6 +262,7 @@ R^x_n = \frac{1}{\mc{S}} \sum_{(u,v)\in \mc{S}}\II\{(u,v) \in \mhc{S}^x_n\}
 \end{align}
 
 Further, we estimate the \emph{relative rate} and \emph{relative efficiency} to evaluate the relative finite sample properties of a pair of consistent estimators. The relative rate is simply $(1-R^{inc}_n)/(1-R^{coh}_n)$.  Relative efficiency is relative number of samples for the coherent estimator to obtain the same rate as the incoherent estimator.
+
 
 % The signal subgraph estimators will be evaluated with regard to the five desiderata described above. Whenever we know how, we will prove those properties, otherwise, we will use numerical experiments to demonstrate them in the particular cases of interest, and then assume that they generalize.  A concept that we will use to compare signal subgraph estimators  will be their \emph{relative efficiency}, that is, the ratio of their efficiencies.  Formally, to compare two signal subgraph estimators, call the efficiency of signal subgraph estimator $x$ the expected value of the number of correctly identified edges: $\EE[\mhc{S}^x \cap \mc{S}]$.  The relative efficiency is therefore define as the ratio:
 % 
@@ -300,7 +317,7 @@ Fisher's exact test computes the probability of obtaining a table equal to or mo
 
 The implications of the above convergence properties are that any incoherent signal subgraph estimated using a consistent test-statistic is a consistent signal subgraph estimator.  Moreover, the incoherent signal subgraph estimator is robust to a variety of model misspecifications.  Specifically, as long as all the marginal probability of all the edges in the signal subgraph are different between the two classes, $p_{uv|1}\neq p_{uv|0}$, any consistent test-statistic will yield a consistent signal subgraph.  For example, when the signal subgraph is coherent, even if $m$ is unknown, the incoherent signal subgraph estimator will converge to the truth.
 
-Moreover, the coherent signal subgraph estimator uses the exact same test-statistics.  Thus, it shares the above consistency and robustness properties.  Estimating the coherent signal subgraph is more computationally time consuming. What is lost by computational time, however, is typically gained by finite sample efficiency whenever the model is coherent, as will be shown below.
+Moreover, the coherent signal subgraph estimator uses the same test-statistics.  Thus, it shares the above consistency and robustness properties.  Estimating the coherent signal subgraph is more computationally time consuming. What is lost by computational time, however, is typically gained by finite sample efficiency whenever the model is coherent, as will be shown below.
 
 
 \subsubsection{Bayes plugin classifier}
@@ -319,13 +336,13 @@ To better assess the finite sample properties of the signal subgraph estimators,
 From this figure, one might notice a few tendencies.  First, both the incoherent and coherent signal subgraph estimators are converging relatively quickly towards the true signal subgraph.  Second, while the coherent estimator struggles with relatively little data, it seems to converge more quickly than the incoherent estimator.  Third, the coherogram sharpens with additional samples, clearly showing that this model is strongly coherent after about only 50 samples.
 
 
-To better characterize the relative performance of the two signal subgraph estimators, Figure \ref{fig:homo} shows their performance as a function of the number of samples, $n$, for this model.  The top panel shows the mean and standard error of the missed-edge rate: the fraction of edges incorrectly identified.  For essentially all $n$'s, the coherent estimator (black line) performs better than the incoherent estimator (gray line).  This translates directly to improved classification performance (lower panel), where the plugin classifier using the coherent signal subgraph classifier (black line) has a better misclassification rate than the incoherent signal subgraph classifier (dark gray line) for essentially all $n$.  For comparison purposes, the na\"ive Bayes plugin classifier, that is, the classifier that assumes the whole graph is the signal subgraph, is also shown (light gray line).  Note that the performance of all the classifiers is bounded above by $L_{chance} = 0.5$ and below by $L_* = XXX$.  Moreover,  $\mh{L}_{NB} \geq \mh{L}_{INC} \geq \mh{L}_{COH}$ for essentially all $n$ here.
+To better characterize the relative performance of the two signal subgraph estimators, Figure \ref{fig:homo} shows their performance as a function of the number of samples, $n$, for this model.  The top panel shows the mean and standard error of the missed-edge rate: the fraction of edges incorrectly identified.  For essentially all $n$'s, the coherent estimator (black line) performs better than the incoherent estimator (gray line).  This translates directly to improved classification performance (lower panel), where the plugin classifier using the coherent signal subgraph classifier (black line) has a better misclassification rate than the incoherent signal subgraph classifier (dark gray line) for essentially all $n$.  For comparison purposes, the na\"ive Bayes plugin classifier, that is, the classifier that assumes the whole graph is the signal subgraph, is also shown (light gray line).  Note that the performance of all the classifiers is bounded above by $L_{\mhb{\pi}} = 0.5$ and below by $L_* = 0.13$.  Moreover,  $\mh{L}_{nb} \geq \mh{L}_{inc} \geq \mh{L}_{coh}$ for essentially all $n$ here.
 
 
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=1.0\linewidth]{../figs/homo_V70_s20_p10_q30_Lhats.pdf}
-	\caption{Performance statistics as a function of sample size demonstrate that the coherent signal subgraph estimator outperforms the incoherent signal subgraph estimator, in terms of both the signal subgraph identification and classification, for nearly all $n$, using the same model as in Figure \ref{fig:4x4}.  The top panel shows the missed-edge rate for each estimator as a function of the number of training samples, $n$.  The bottom panel shows the corresponding misclassification rate for the two estimators, as well as the na\"ive Bayes plugin classifier.  Performance of all estimators increases monotonically with $n$ for both criteria.  Error bars show standard error of the mean here and elsewhere (averaged over 20 trials; each trial used 100 samples for held-out data).}
+	\caption{Performance statistics as a function of sample size demonstrate that the coherent signal subgraph estimator outperforms the incoherent signal subgraph estimator, in terms of both the signal subgraph identification and classification, for nearly all $n$, using the same model as in Figure \ref{fig:4x4}.  The top panel shows the missed-edge rate for each estimator as a function of the number of training samples, $n$.  The bottom panel shows the corresponding misclassification rate for the two estimators, as well as the na\"ive Bayes plugin classifier.  Performance of all estimators increases (nearly) monotonically with $n$ for both criteria.  Error bars show standard error of the mean here and elsewhere (averaged over 20 trials; each trial used 100 samples for held-out data). Note that for most values of $n$, we have $L_{\mhb{\pi}} \geq \mh{L}_{nb} \geq \mh{L}_{inc} \geq \mh{L}_{coh} \geq L_*$.}
 	\label{fig:homo}
 \end{figure}
 
@@ -356,7 +373,7 @@ The bottom panel shows the performance by varying both $m$ and $s$, which has a 
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.8\linewidth]{../figs/coherent_image_V70_s20_p10_q30_nTr200_nTe500.pdf}
-	\caption{ When constraints on the number of edges ($s$) or star-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\mh{s}$ and $\mh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the same model as in Figure 4, using 200 training samples and 500 test samples, with $m=1$ and $s=20$.  The top panel depicts misclassification rate of the incoherent estimator as a function of the number of edges on a log scale. Note that in this simulation, while $s=20< \mh{s}_{inc}=23$.  This ``conservatism'' is typical and appropriate in many model selection situations.  The bottom panel shows $\mh{L}_{coh}$ as a function of both $m'$ and $s'$.  For this simulation, $\mh{m}=1$ and $\mh{s}=24$, further corroborating the conservative stance on model selection. Note that $L_{chance} \geq \mh{L}_{nb} \geq \mh{L}_{inc} \geq \mh{L}_{coh} \geq L_*$ as one would hope for this coherent simulation.}
+	\caption{ When constraints on the number of edges ($s$) or star-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\mh{s}$ and $\mh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the same model as in Figure 4, using 200 training samples and 500 test samples, with $m=1$ and $s=20$.  The top panel depicts misclassification rate of the incoherent estimator as a function of the number of edges on a log scale. Note that in this simulation, while $s=20< \mh{s}_{inc}=23$.  This ``conservatism'' is typical and appropriate in many model selection situations.  The bottom panel shows $\mh{L}_{coh}$ as a function of both $m'$ and $s'$.  For this simulation, $\mh{m}=1$ and $\mh{s}=24$, further corroborating the conservative stance on model selection. Note that $L_{\mb{\pi}} \geq \mh{L}_{nb} \geq \mh{L}_{inc} \geq \mh{L}_{coh} \geq L_*$ as one would hope for this coherent simulation.}
 	\label{fig:coherent}
 \end{figure}
 
@@ -366,7 +383,7 @@ The bottom panel shows the performance by varying both $m$ and $s$, which has a 
 \subsection{MR Connectome Classification} % (fold)
 \label{sub:mr_connectome_classification}
 
-A connectome may be defined as the complete set of connections of the brain \cite{Sporns2010}.  MR connectomes utilize multi-modal Magnetic Resonance (MR) imaging to determine both the vertex and edge set for each individual \cite{Hagmann2010}.  This section investigates the utility of the above described classifiers on data collected for the Baltimore Longitudinal Study on Aging, as described previously \cite{OHBM10}.  Briefly, 49 subjects (25 male, 24 female) underwent a DTI protocol, simple graphs with 70 vertices (each vertex corresponding to a neuroanatomical region as defined by \cite{Desikan2006}) were estimated using the MRCAP layout \cite{BMES10}.  Lacking strong priors on either the number of edges or star-vertices in the signal subgraph (or even whether a signal subgraph existed), we searched over a large space of hyper-parameters using cross-validated misclassification performance as our metric of success (Figure \ref{fig:data}).  The na\"ive Bayes classifier---which assumes the signal subgraph is the whole edge set, $\mhc{S}_{nb}=\mc{E}$---performs marginally better than chance: $\mh{L}_{nb}=0.39$ (p-value $\approx 0.05$ assessed by bootstrap).  With a relatively small number of incoherent edges---$\mh{s}_{inc}=10$---the incoherent classifier (top left panel) achieves $\mh{L}_{inc}=0.27$, significantly better than chance (p-value $<0.0007$), but not significantly better than the na\"ive Bayes classifier (using McNemar's test).  The coherent classifier achieved a minimum of $\mh{L}_{coh}=0.18$ (top right and middle panels), not significantly better than the incoherent classifier, but significantly better than both chance and the na\"ive Bayes classifier (p values $<10^{-5}$ and $<0.004$, respectively; note that no multiple hypothesis testing corrections were performed).  This improved performance upon using the coherent classifier suggests that signal subgraph is coherent. Using $\mh{m}_{coh}=12$ and $\mh{s}_{coh}=360$ from the best performing coherent classifier, we can estimate the signal subgraph (bottom right).  The coherogram suggests that indeed, the signal is somewhat, but not strikingly coherent (bottom right).
+A connectome may be defined as the complete set of connections of the brain \cite{Sporns2010}.  MR connectomes utilize multi-modal Magnetic Resonance (MR) imaging to determine both the vertex and edge set for each individual \cite{Hagmann2010}.  This section investigates the utility of the above described classifiers on data collected for the Baltimore Longitudinal Study on Aging, as described previously \cite{OHBM10}.  Briefly, 49 subjects (25 male, 24 female) underwent a DTI protocol, simple graphs with 70 vertices (each vertex corresponding to a neuroanatomical region as defined by \cite{Desikan2006}) were estimated using the MRCAP layout \cite{BMES10}.  Lacking strong priors on either the number of edges or star-vertices in the signal subgraph (or even whether a signal subgraph existed), we searched over a large space of hyper-parameters using cross-validated misclassification performance as our metric of success (Figure \ref{fig:data}).  The na\"ive Bayes classifier---which assumes the signal subgraph is the whole edge set, $\mhc{S}_{nb}=\mc{E}$---performs marginally better than chance: $\mh{L}_{nb}=0.39$ (p-value $\approx 0.05$ assessed by a permutation test).  With a relatively small number of incoherent edges---$\mh{s}_{inc}=10$---the incoherent classifier (top left panel) achieves $\mh{L}_{inc}=0.27$, significantly better than chance (p-value $<0.0007$), but not significantly better than the na\"ive Bayes classifier (using McNemar's test).  The coherent classifier achieved a minimum of $\mh{L}_{coh}=0.18$ (top right and middle panels), not significantly better than the incoherent classifier, but significantly better than both chance and the na\"ive Bayes classifier (p-values $<10^{-5}$ and $<0.004$, respectively; note that no multiple hypothesis testing corrections were performed).  This improved performance upon using the coherent classifier suggests that signal subgraph is coherent. Using $\mh{m}_{coh}=12$ and $\mh{s}_{coh}=360$ from the best performing coherent classifier, we can estimate the signal subgraph (bottom right).  The coherogram suggests that indeed, the signal is somewhat, but not strikingly coherent (bottom right).
 
 % subsection mr_connectome_classification (end)
 
@@ -374,26 +391,22 @@ A connectome may be defined as the complete set of connections of the brain \cit
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_Count_Lhats_results.pdf}
-	\caption{MR connectome gender signal subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the ``best'' signal subgraph (for this inference task on these data) has $\mh{m}=12$ and $\mh{s}=360$.  As in the simulated data, we expect these estimates (and the particular edges in the signal subgraph) would change with more/different data. The top two panels depict the same as Figure 5.  The middle two depict misclassification rate (left) for a few different choices of $m'$ as a function of $s'$ and (right) a zoomed in depiction of the top right panel. The bottom left panel shows the estimated signal subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal subgraph for these data is neither particularly coherent or incoherent.}
+	\caption{MR connectome gender signal subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the ``best'' incoherent signal subgraph (for this inference task on these data) has $\mh{s}_{inc}=10$ and yields a misclassification rate of $\mh{L}_{inc}=0.27$, whereas the best coherent signal subgraph has $\mh{m}_{coh}=12$ and $\mh{s}_{coh}=360$, achieving $\mh{L}_{coh}=0.18$.  The top two panels depict the same as Figure 5.  The middle two depict misclassification rate (left) for a few different choices of $m'$ as a function of $s'$ and (right) a zoomed in depiction of the top right panel. The bottom left panel shows the estimated signal subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal subgraph for these data is neither particularly coherent or incoherent.}
 	\label{fig:data}
 \end{figure}
 
 \subsection{Model Checking} % (fold)
 \label{sub:model_checking}
 
-Although the above coherent classifier estimated a signal subgraph, we wondered to what extent can we believe that it is the true signal subgraph.  We address this question in two ways:  (i) assumption checking and (ii) synthetic data analysis.  Checking whether edges are independent is relatively easy.  Figure \ref{fig:cov} shows the covariance between all pairs of edges in the estimated signal subgraph from the real data.  For visualization purposes, we used a spectral clustering algorithm \cite{Dhillon2001}, with hopes that it would more clearly highlight any significant covariations.  While several groups of edges seem to be highly negatively correlated, most edges appear to be relatively uncorrelated (p-value $< x$ using Z test).
+Although the above coherent classifier estimated a signal subgraph, we wondered to what extent can we believe that it is the true signal subgraph.  We address this question in two ways:  (i) synthetic data analysis and (ii) assumption checking.  
 
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_coclustered_corr.pdf}
-	\caption{The correlation matrix between all the edges in the coherent signal subgraph estimate. Edges are organized by co-clustering to highlight any similarities.  Most edges are uncorrelated, although a visible fraction of them are negatively correlated with one another.  This suggests that improved performance might be achieved by relaxing the independent edge assumption. This covariance matrix is ??? signifcantly difference from the null hypothesis.}
-	\label{fig:cov}
-\end{figure}
+\subsubsection{Synthetic data analysis} % (fold)
+\label{ssub:synthetic_data_analysis}
 
+% subsubsection synthetic_data_analysis (end)
+For the synthetic data analysis, we generated some synthetic data as follows.  Given the above estimated signal subgraph, for every edge not in $\mhc{S}_{n}$, let $p_{uv|0}=p_{uv|1}=\mh{p}_{uv}$, where $\mh{p}_{uv}$ is the estimated edge probability averaging over all samples.  For all edges in $\mhc{S}_{n}$, let $p_{uv|y}=\mh{p}_{uv|y}$.  Set the priors according to the data as well: $\pi=\mh{\pi}$.  
 
-For the synthetic data analysis, we generated some synthetic data as follows.  First, estimate the signal subgraph, $\mhc{S}_{n}$ from the full data, using $\mh{m}_{coh}$ and $\mh{s}_{coh}$.  Then, for every edge not in $\mhc{S}_{n}$, let $p_{uv|0}=p_{uv|1}=\mh{p}_{uv}$, where $\mh{p}_{uv}$ is the estimated edge probability averaging over all samples.  For all edges in $\mhc{S}_{n}$, let $p_{uv|y}=\mh{p}_{uv|y}$.  Set the priors according to the data as well, $\pi=\mh{\pi}$.  
-
-Given the above model, we first sampled 49 training samples, 25 from class 0 and 24 from class 1, and estimated the incoherent and coherent classifier performance on this single trial (Figure \ref{fig:synthetic}, top panels).  The performance of the classifiers on the synthetic data qualitatively mirrors that of the real data, suggesting some model goodness-of-fit.  To assess what fraction of the edges in the estimated signal subgraph we could trust, even assuming the model was true, we then sampled up to 100 training samples (and 100 test samples), and computed the missed-edge rate (bottom left) and misclassification rate (bottom right) as a function of the number of samples.  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the coherent signal subgraph estimator correctly identifies about $50\%$.  This suggests that even if the model were true (which it is not) we should only believe that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in peformance: after about 50 samples, performance dramatically increases.  This suggests that perhaps only a few more data points would be necessary to obtain near perfect classification accuracy.  
+Given this synthetic data model, we first sampled 49 training samples, 25 from class 0 and 24 from class 1, and estimated the incoherent and coherent classifier performance on this single trial (Figure \ref{fig:synthetic}, top panels).  The performance of the classifiers on the synthetic data qualitatively mirrors that of the real data, suggesting some model goodness-of-fit.  To assess what fraction of the edges in the estimated signal subgraph we could trust, even assuming the model was true, we then sampled up to 100 training samples (and 100 test samples), and computed the missed-edge rate (bottom left) and misclassification rate (bottom right) as a function of the number of samples.  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the coherent signal subgraph estimator correctly identifies about $50\%$.  This suggests that even if the model were true (which it is not) we should only believe that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in peformance: after about 50 samples, performance dramatically increases.  This suggests that perhaps only a few more data points would be necessary to obtain near perfect classification accuracy.  
 
 \begin{figure*}[tb!]
 	\centering
@@ -401,6 +414,24 @@ Given the above model, we first sampled 49 training samples, 25 from class 0 and
 	\caption{Synthetic data analysis provides some intuition with model checking and improvement.  The top two panels show the incoherent (left) and coherent (right) misclassification rates as a function of the hyper-parameter choices.  These plots look quite similar to those from Figure \ref{fig:data}, which is suggestive of an adequate model.  The bottom panels show the missed-edge rate (left) and misclassification rate (right) as a function of number of training samples.  With about 50 training samples, approximately half of the edges identified by either classifier are true edges.  Moreover, more than 50 training samples seems to be sufficient for obtaining nearly perfect classification, suggesting perhaps only a few more subjects would be sufficient to yield much greater classification performance.}
 	\label{fig:synthetic}
 \end{figure*}
+
+\subsubsection{Model checking} % (fold)
+\label{ssub:model_checking}
+
+% subsubsection model_checking (end)
+
+Checking whether edges are independent is relatively easy.  Figure \ref{fig:cov} shows the correlation coefficient between all pairs of edges in the estimated signal subgraph from the real data.  For visualization purposes, we used a spectral clustering algorithm \cite{Dhillon2001}, with hopes that it would more clearly highlight any significant correlations.  Several groups of edges seem to be highly  correlated.  To assess significance, we compare the distribution of correlation coefficients with the distribution of correlation coefficients obtained from the synthetic data analysis.  A two-sample Kolmogorov-Smirnov test shows that the two matrices are significantly different (p-value $\approx 0$), rejecting the null hypothesis that the edges in the real data are independent. 
+
+
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_coclustered_corr.pdf}
+	\caption{The correlation matrix between all the edges in the coherent signal subgraph estimate. Edges are organized by co-clustering to highlight any similarities.  Although most edges are uncorrelated, several groups of edges cluster, indicative of the fact that the edges are not independent (p-value of $\approx 0$ using a two-sample Kolmogorov-Smirnov test comparing the real and synthetic correlation matrices). }
+	\label{fig:cov}
+\end{figure}
+
+
 
 % subsection model_checking (end)
 
@@ -418,9 +449,9 @@ Given the above model, we first sampled 49 training samples, 25 from class 0 and
 \section{Discussion} % (fold)
 \label{sec:discussion}
 
-This work makes the following contributions. First, it introduces a novel graph/class model that admits rigorous statistical investigation.  Moreover, it presents two algorithms for estimating the signal subgraph: the first using only vertex label information, the second also utilizing graph structure.  The resulting estimators have desirable asymptotic and finite sample properties, including consistency and robustness to various model misspecifications.  Third, simulated data analysis indicate that neither approach dominates over the other; rather, which approach to use is a function of both the model and the amount of data.  Fourth, these classifiers are applied to a connectome data set; the coherent classifier  performs significantly better than both na\"ive Bayes and incoherent classifiers.  Fifth, model checking suggests that the independent edge assumption is not so bad.  Sixth, synthetic data analysis suggests that while we can use the signal subgraph estimators to improve classification performance, we should not expect that all the edges in the estimated signal subgraph will be the true signal edges, even when the model is correct.  Finally, the synthetic data analysis suggests that we could expect a drastic performance boost by only a few additional data samples. 
+This work makes the following contributions. First, it introduces a novel graph/class model that admits rigorous statistical investigation.  Moreover, it presents two approaches for estimating the signal subgraph: the first using only vertex label information, the second also utilizing graph structure.  The resulting estimators have desirable asymptotic and finite sample properties, including consistency and robustness to various model misspecifications.  Third, simulated data analysis indicate that neither approach dominates over the other; rather, which approach to use is a function of both the model and the amount of data.  Fourth, these classifiers are applied to a connectome data set; the coherent classifier  performs significantly better than both na\"ive Bayes and incoherent classifiers.  Fifth, synthetic data analysis suggests that while we can use the signal subgraph estimators to improve classification performance, we should not expect that all the edges in the estimated signal subgraph will be the true signal edges, even when the model is correct. Moreover, we could expect a drastic performance boost by only a few additional data samples.  Finally, model checking suggests that the independent edge assumption does not fit the data well.  
 
-Collectively, the above analyses suggest that instead of investing more time on improving the classifier, one could ``simply'' collect a few more samples. That said, we would be re-miss if we did not suggest a few possible improvements to this work.  First, the numerical results suggest a number of lemmas might be provable.  For instance, perhaps the misclassification rate is a monotonic function of the missed-edge rate.  Second, although it seemed that the edges were not terribly dependent, the coherent signal subgraph could be thought of as a kind of dependency \cite{Hoff02}.  Thid, one could use (Bayesian) model-averaging to combine estimated signal subgraphs instead of picking one.  Finally, all this work assumed binary edges and labeled vertices.  Both of these assumptions could be relaxed. 
+Collectively, the above analyses suggest a number of possible next steps.  First, one could collect more data.  Second, one could relax the independent edge assumption, for instance, by considering conditionally independent edges \cite{Hoff02}.  Third, a number of conjectures have arisen due to these results.   For instance, perhaps the misclassification rate is a monotonic function of the missed-edge rate.  Fourth, improved classification performance could be achieved by (Bayesian) model-averaging to combine estimated signal subgraphs instead of picking one.  Finally, all this work assumed binary edges and labeled vertices.  Both of these assumptions could be relaxed. 
 
 We hope the proposed approaches will yield many applications.  To that end, all the data and code used in this work is available from the author's website, \url{jovo.me}.  
 
@@ -471,17 +502,17 @@ Things remaining to do.
 \end{IEEEbiography}
 
 % if you will not have a photo at all:
-\begin{IEEEbiography}{William R. Gray}
-Biography text here.
-\end{IEEEbiography}
+\begin{IEEEbiographynophoto}{William R. Gray}
+William R. Gray graduated from Vanderbilt University in 2003 with a Bachelor’s degree in electrical engineering, and received his MS in electrical engineering in 2005 from the University of Southern California.  Currently, Will is a PhD student in electrical engineering at The Johns Hopkins University, where he is conducting research in the areas of connectivity, signal and image processing, and machine learning.  He is also a member of the technical staff at the Johns Hopkins University Applied Physics Laboratory, where he manages projects in the Biomedicine and Undersea Warfare business areas.  Will is a member of IEEE, Eta Kappa Nu, and Tau Beta Pi
+\end{IEEEbiographynophoto}
 
 % insert where needed to balance the two columns on the last page with
 % biographies
 %\newpage
 
-\begin{IEEEbiography}{R. Jacob Vogelstein}
-Biography text here.
-\end{IEEEbiography}
+\begin{IEEEbiographynophoto}{R. Jacob Vogelstein}
+R. Jacob Vogelstein received the Sc.B. degree in neuroengineering from Brown University, Providence, RI, and the Ph.D. degree in biomedical engineering from the Johns Hopkins University School of Medicine, Baltimore, MD.  He currently oversees the Applied Neuroscience programs at the Johns Hopkins University (JHU) Applied Physics Laboratory as an Assistant Program Manager, and has an appointment as an Assistant Research Professor at the JHU Whiting School of Engineering’s Department of Electrical and Computer Engineering. He has worked on neuroscience technology for over a decade, focusing primarily on neuromorphic systems and closed-loop brain–machine interfaces. His research has been featured in a number of prominent scientific and engineering journals including the IEEE Transactions on Neural Systems and Rehabilitation Engineering, the IEEE Transactions on Biomedical Circuits and Systems, and the IEEE Transactions on Neural Networks.  
+\end{IEEEbiographynophoto}
 
 \begin{IEEEbiography}{Carey E. Priebe}
 Buddha in training.

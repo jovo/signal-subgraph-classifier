@@ -77,7 +77,7 @@ end
 %%
 
 [coherogram Coherogram wset] = get_coherograms(As,ClassIDs);
-figure(2), clf
+figure(3), clf
 fs=12;
 imagesc(Coherogram(:,1:wcounter))
 colorbar

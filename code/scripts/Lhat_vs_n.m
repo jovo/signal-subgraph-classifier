@@ -99,73 +99,6 @@ for i=1:ncols
     
 end
 
-%% plot SigMat and coheregrams
-
-% wh = [.17 .18];
-% side = 0.07;
-% bottom=0.07;
-% rowpos=0.22;
-% colpos=0.19;
-% fs=6;
-%
-% for i=1:ncols
-%
-%
-%     h(1+(i-1)*nrows) = subplot('Position',[0*colpos+side (4-i)*rowpos+bottom wh]);
-%     imagesc(SigMat{i})
-%     axis('square')
-%     ylabel(['n=', num2str(ns(i))],'fontsize',fs)
-%     if i<ncols,
-%         set(gca,'Xtick',[],'YTick',[]),
-%     else
-%         xlabel('vertex','fontsize',fs)
-%         ylabel([{['n=', num2str(ns(i))]}; {'vertex'}],'fontsize',fs)
-%     end
-%     if i==1, title([{'significance'};  {'matrix'}],'fontsize',fs), end
-%
-%     h(2+(i-1)*nrows) = subplot('Position',[1*colpos+side (4-i)*rowpos+bottom wh]);
-%     ass=zeros(V); ass(incoherent{i})=1;
-%     imagesc(ass)
-%     axis('square')
-%     if i<ncols, set(gca,'Xtick',[],'YTick',[]),
-%     else set(gca,'Ytick',[]), xlabel('vertex','fontsize',fs)
-%     end
-%     if i==1, title([{'incoherent'}; {'estimate'}],'fontsize',fs), end
-%     ylabel(['# correct = ', num2str(numcorrect(incoherent{i},Ess))],'fontsize',fs)
-%
-%     h(3+(i-1)*nrows) = subplot('Position',[2*colpos+side (4-i)*rowpos+bottom wh]);
-%     ass=zeros(V); ass(coherent{i})=1;
-%     imagesc(ass)
-%     axis('square')
-%     if i<ncols, set(gca,'Xtick',[],'YTick',[]),
-%     else set(gca,'Ytick',[]), xlabel('vertex','fontsize',fs)
-%     end
-%     if i==1, title([{'coherent'}; {'estimate'}],'fontsize',fs), end
-%     ylabel(['# correct = ', num2str(numcorrect(coherent{i},Ess))],'fontsize',fs)
-%
-%     h(4+(i-1)*nrows) = subplot('Position',[3*colpos+side (4-i)*rowpos+bottom wh]);
-%     imagesc(coherogram{i}(:,1:cocount{i}))
-%     axis('square')
-%     set(gca,'Ytick',[])
-%     if i==1, title({'coherogram'},'fontsize',fs), end
-%     if i==ncols, xlabel('log threshold','fontsize',fs), end
-%     set(gca,'XTick',ceil(linspace(2,cocount{i},3)),'XTickLabel',...
-%         0.1*round(10*log10((wset{i}(ceil(linspace(2,cocount{i},3))))))),
-%
-%     h(5+(i-1)*nrows) = subplot('Position',[4*colpos+side (4-i)*rowpos+bottom wh]);
-%     imagesc(Coherogram{i}(:,1:cocount{i}))
-%     axis('square')
-%     set(gca,'Ytick',[])
-%     if i==1, title([{'cumulative'}; {'coherogram'}],'fontsize',fs), end
-%     if i==ncols, xlabel('log threshold','fontsize',fs), end
-%     set(gca,'XTick',ceil(linspace(2,cocount{i},3)),'XTickLabel',...
-%         0.1*round(10*log10((wset{i}(ceil(linspace(2,cocount{i},3))))))),
-%
-% end
-% colormap('gray')
-% for i=1:length(h), set(h(i),'fontsize',fs), end
-%
-% print_fig(['../figs/' fname '_coherogram'],[5 4])
 
 %% plot SigMat and coheregrams
 % load(['../data/' fname])
@@ -235,6 +168,28 @@ if savestuff==1
     print_fig(['../figs/' fname '_coherogram'],[5 4])
 end
 
+%% get Lstar
+
+ntst=1000;
+Atst = nan(V,V,ntst);
+Atst(:,:,1:2:ntst)=repmat(E0,[1 1 ntst/2]) > rand(V,V,ntst/2);
+Atst(:,:,2:2:ntst)=repmat(E1,[1 1 ntst/2]) > rand(V,V,ntst/2);
+ytrn=repmat([0 1],1,ntst/2);
+
+params.lnE0=log(E0);
+params.lnE1=log(E1);
+params.ln1E0=log(1-E0);
+params.ln1E1=log(1-E1);
+params.lnprior0=log(1/2);
+params.lnprior1=log(1/2);
+
+subspace=find(ones(V)-diag(ones(V,1)));
+
+bayes_incorrects=nan(ntst,1);
+for i=1:ntst
+    bayes_incorrects(i) = plugin_bern_classify(Atst(:,:,i),params,subspace,ytrn(i));
+end
+Lstar=mean(bayes_incorrects)
 
 %% generate data, classify, and get stats
 clear alg out Outtemp ns h
@@ -341,14 +296,6 @@ legend('coh','inc','nb'); %,'fontsize',fs,'Location','Best')
 set(gca,'YTick',[0.1:0.1:0.5])
 
 
-
-% for i=1:numel(h)
-%     op=get(h(i),'OuterPosition');
-%     op(4)=op(4)+op(2);
-%     op(2)=0;
-%     set(h(i),'OuterPosition',op)
-%     set(h(i),'fontsize',fs)
-% end
 
 if savestuff==1
     print_fig(['../../figs/' fname '_Lhats'],[3 3]*1.5)

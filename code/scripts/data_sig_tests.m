@@ -49,7 +49,7 @@ Out = plugin_classifier_cv_loop(As,ClassIDs,alg,'loo');
 
 %% compare algs with chance
 for i=1:3
-    pval_chance=1-length(find(Out(i).Lhat<=Lhat))/n_MC;
+    pval_chance(i)=1-length(find(Out(i).Lhat<=Lhat))/n_MC;
 end
 
 
@@ -74,4 +74,5 @@ c=double(Out(2).incorrects & ~squeeze(Out(3).incorrects)');
 
 p_inc_coh=myBinomTest(sum(b),sum(b+c),0.5,'Two')
 
+save('../../data/data_sig_tests')
 

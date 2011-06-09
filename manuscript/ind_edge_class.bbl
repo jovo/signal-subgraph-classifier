@@ -53,18 +53,19 @@ C.~M. Stein, ``{Inadmissibility of the usual estimator of the mean of a
   1em plus 0.5em minus 0.4em\relax University of California Press, 1956, pp.
   197--206.
 
-\bibitem{Ferrari2010}
+\bibitem{Fisher1971}
 \BIBentryALTinterwordspacing
-D.~Ferrari and Y.~Yang, ``{Maximum Lq-likelihood estimation},'' \emph{IEEE
-  Transactions on Nuclear Science}, vol.~57, no.~3, pp. 1077--1084, 2010.
-  [Online]. Available: \url{http://arxiv.org/abs/1002.4533}
+R.~A. Fisher, \emph{{The Design of Experiments}}.\hskip 1em plus 0.5em minus
+  0.4em\relax Macmillan Pub Co, 1971. [Online]. Available:
+  \url{http://www.amazon.com/Design-Experiments-Ronald-Fisher/dp/0028446909}
 \BIBentrySTDinterwordspacing
 
-\bibitem{Gelman2006}
+\bibitem{McNemar1947}
 \BIBentryALTinterwordspacing
-A.~Gelman, ``{Prior distributions for variance parameters in hierarchical
-  models},'' \emph{Bayesian Analysis}, 2006. [Online]. Available:
-  \url{http://www.citeulike.org/group/582/article/369450}
+Q.~McNemar, ``{Note on the sampling error of the difference between correlated
+  proportions or percentages},'' \emph{Psychometrika}, vol.~12, no.~2, pp.
+  153--157, Jun. 1947. [Online]. Available:
+  \url{http://www.springerlink.com/content/843g84t135765212/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Rice1995}
@@ -73,6 +74,14 @@ J.~A. Rice, \emph{{Mathematical statistics and data analysis}},
   O.~Barndorff-Nielsen, P.~J. Bickel, W.~S. Cleveland, and R.~M. Dudley,
   Eds.\hskip 1em plus 0.5em minus 0.4em\relax Duxbury Press, 1995. [Online].
   Available: \url{http://www.citeulike.org/user/tarjeiha/article/1691927}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Hand2001}
+\BIBentryALTinterwordspacing
+D.~J. Hand and K.~Yu, ``{Idiot's Bayes: Not So Stupid after All?}''
+  \emph{International Journal Statistical Review}, vol.~69, no.~3, pp.
+  385--398, Nov. 2001. [Online]. Available:
+  \url{http://www.jstor.org/pss/1403452}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Jain2000}

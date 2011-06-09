@@ -28,8 +28,8 @@ elseif strcmp(type,'robust')
    
 elseif strcmp(type,'map')
     % set prior to be flat
-    alpha = 1.01;
-    beta = 1.01;
+    alpha = 1.001;
+    beta = 1.001;
         
     P.alpha0    = alpha + sum0;
     P.alpha1    = alpha + sum1;
