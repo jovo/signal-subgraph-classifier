@@ -109,12 +109,12 @@ We define the best (optimal) classifier for a given distribution $F$ as the one 
 %(under model $\mc{F}$ and loss-function $\ell$) as the classifier with minimal expected loss: $h_*=\argmin_{h \in \mc{H}} \EE_F [\ell (F,Y)] \forall F \in \mc{F}$.  Such a classifier is called \emph{Bayes optimal}, and the error associated with such a classifier is called \emph{Bayes error} or \emph{Bayes risk}.  
 It can be shown that the classifier that maximizes the class-conditional posterior, $F_{Y | \GG}$ is optimal \cite{Bickel2000}:
 \begin{align} \label{eq:map}
-h_*(G) &= \argmin_{h \in \mc{H}} \EE_F[\ell_h (G,Y)] = \argmax_{Y \in \mc{Y}} F[Y|G] 
-\nonumber \\ &= \argmax_{Y \in \mc{Y}} F[G|Y] F[Y].
+h_*(G) &= \argmin_{h \in \mc{H}} \EE_F[\ell_h (G,Y)] = \argmax_{Y \in \mc{Y}} F_{Y|G} 
+\nonumber \\ &= \argmax_{Y \in \mc{Y}} F_{G|Y} F_Y.
 \end{align}
 Given the proposed model, Eq. \eqref{eq:map} can be further factorized using the above four assumptions:
 \begin{align}
-\argmax_{Y \in \mc{Y}} F[G|Y] F[Y] 
+\argmax_{Y \in \mc{Y}} F_{G|Y} F_Y 
 % &= \argmax_{y \in \mc{Y}} F[a|y] F[y] 
 % \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{E}} f_{uv | y} \pi_y 
 % \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{S}} f_{uv | y} \pi_y 
