@@ -99,7 +99,7 @@ set(gca,'XTick',[1 shat_inc 100 1000])
 
 % plot nb
 plot(xmax,Lhats{3},'.','color',0.5*[1 1 1],'markersize',ms)
-text(xmax/3,Lhats{3}*1.1,['$\hat{L}_{nb}=$' num2str(min2)],'interp','latex')
+text(xmax/3,Lhats{3}*1.1,['$\hat{L}_{nb}=$' num2str(Lhats{3})],'interp','latex')
 
 % plot Lhat_inc
 plot(shat_inc,min2,'.','color',0.5*[1 1 1],'markersize',ms)
@@ -115,7 +115,7 @@ text(s+4,Lstar,['$\hat{L}_{*}=$' num2str(Lstar)],'interp','latex')
 
 % plot L_chance
 plot(1,0.5,'.','color',0.5*[1 1 1],'markersize',ms)
-text(1.1,0.48,['$\hat{L}_{chance} \quad$  $=0.5$'],'interp','latex')
+text(1.1,0.48,['$\hat{L}_{\mathbf{\hat{\pi}}} \quad$  $=0.5$'],'interp','latex')
 
 
 h(2)=subplot(212);
@@ -139,8 +139,9 @@ text(100,min(JJ),['$\hat{L}_{coh}=$' num2str(min1)],'interp','latex','color','k'
 
 set(h,'fontsize',fs)
 
-print_fig(['../../figs/' fname],[4 6])
-
+if savestuff==1
+    print_fig(['../../figs/' fname],[4 6])
+end
 
 
 
