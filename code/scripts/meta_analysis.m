@@ -27,7 +27,7 @@ if strcmp(datatype,'synthetic')
     As(:,:,y1)=repmat(E0,[1 1 s1]) > rand(V,V,s1);
     
 elseif strcmp(datatype,'real')
-    load('~/Research/data/MRI/BLSA/BLSA_0317/BLSA_0317_countMtx');
+    load('../../data/BLSA_0317_countMtx');
     fname='BLSA0317_Count_Lhats';
     t=200;
     siz=size(AdjMats);
@@ -46,7 +46,7 @@ end
 
 
 
-savestuff=1;
+savestuff=0;
 if savestuff==1, save(['../../data/' fname]); end
 
 %% alg stuff
@@ -125,6 +125,7 @@ sa=0.5;
 fs=12;
 fs2=12;
 xmax=1000;
+ms=24;
 
 if isempty(strfind(fname,'synthetic'))
     nrows=3;
@@ -134,22 +135,36 @@ end
 
 
 % incoherent Lhats
-h(1)=subplot(nrows,2,1);
+h(1)=subplot(nrows,2,1); cla, hold all
 semilogx(Lhats{2},'color','k','linewidth',2)
 xlabel('log size of signal subgraph','fontsize',fs2)
 ylabel([{'misclassification rate'}],'fontsize',fs2)
 title(['incoherent estimator'],'fontsize',fs2)
-if isempty(strfind(fname,'synthetic'))
-    axis([1 1000 0 max(Lhats{2})])
-    set(gca,'YTick',[0 .25 .5],'XTick',[1 10 100 1000])
-else
-    axis([1 1001 0 1])
-    set(gca,'YTick',[0 .25 .5 .75 1],'XTick',[1 10 100 1000])
-end
+axis([1 1000 0 max(Lhats{2})])
+set(gca,'YTick',[0 .25 .5],'XTick',[1 10 100 1000])
 grid on
+set(gca,'XScale','log')
+
+% plot nb
+nbhat=round(Lhats{2}(end)*100)/100;
+plot(xmax,nbhat,'.','color',0.5*[1 1 1],'markersize',ms)
+text(xmax/5,nbhat*1.2,['$\hat{L}_{nb}=$' num2str(nbhat)],'interp','latex')
+
+% plot Lhat_inc
+[min2 shat_inc]=min(Lhats{2});
+plot(shat_inc,min2,'.','color',0.5*[1 1 1],'markersize',ms)
+text(shat_inc*1.05,min2*0.8,['$\hat{L}_{inc}=$' num2str(round(min2*100)/100)],'interp','latex')
+plot([shat_inc shat_inc],[0 min2],'--k')
+plot([1 shat_inc],[min2 min2],'--k')
+
+
+% plot L_chance
+plot(1,0.5,'.','color',0.5*[1 1 1],'markersize',ms)
+text(1.1,0.48,['$\hat{L}_{\mathbf{\hat{\pi}}} \quad$  $=0.5$'],'interp','latex')
+
 
 % coherent Lhats
-h(2)=subplot(nrows,2,2);
+h(2)=subplot(nrows,2,2); cla
 L3hat=Lhats{3};
 Lmax=max(L3hat(:));
 L3hat(isnan(L3hat))=Lmax;
@@ -157,14 +172,25 @@ imagesc(L3hat(:,1:1000)),
 
 if isempty(strfind(fname,'synthetic'))
     %     L3hat(L3hat>0.5)=0.5;
-    colorbar('YLim',[min(L3hat(:)) 0.5],'YTick',[min(L3hat(:)) 0.3:0.1:0.5],'YTickLabel',[0.13 0.3:0.1:0.5])
+    colorbar('YLim',[min(L3hat(:)) 0.5],'YTick',[min(L3hat(:)) 0.3:0.1:0.5],'YTickLabel',[round(min(L3hat(:))*100)/100 0.3:0.1:0.5])
 else
-    colorbar('YLim',[min(L3hat(:)) max(L3hat(:))],'YTick',[min(L3hat(:)) 0.3:0.2:0.9],'YTickLabel',[0.18 0.3:0.2:0.9])
+    colorbar('YLim',[min(L3hat(:)) max(L3hat(:))],'YTick',[round(min(L3hat(:))*100)/100 0.3:0.2:0.9],'YTickLabel',[min(L3hat(:)) 0.3:0.2:0.9])
 end
 xlabel('size of signal subgraph','fontsize',fs2)
-ylabel('# star-vertices','fontsize',fs2)
+ylabel('# signal-vertices','fontsize',fs2)
 title('coherent estimator','fontsize',fs)
 colormap('gray')
+
+goodones=find(Lhats{3}<(min(Lhats{3}(:))+1/(constants.s+1)));
+[I J]=ind2sub(size(L3hat),goodones);
+Iunique=unique(I);
+[foo bar]=min(Iunique);
+
+hold all;
+plot(J(bar),foo,'.','color',1*[1 1 1],'markersize',ms)
+text(J(bar),foo-5,['$\hat{L}_{coh}=$' num2str(round(min(L3hat(:))*100)/100)],'interp','latex','color',[0 0 0],'fontsize',fs)
+
+
 
 
 if isempty(strfind(fname,'synthetic'))
@@ -173,9 +199,6 @@ if isempty(strfind(fname,'synthetic'))
     h(3)=subplot(323);
     hold all
     
-    goodones=find(Lhats{3}<(min(Lhats{3}(:))+1/(n+1)));
-    [I J]=ind2sub(size(L3hat),goodones);
-    Iunique=unique(I);
     for i=Iunique
         semilogx(Lhats{3}(i,:)','linewidth',2)
     end
@@ -193,7 +216,7 @@ if isempty(strfind(fname,'synthetic'))
     h(4)=subplot(324);
     Lhatzoom=Lhats{3}(min(I):max(I),min(J):max(J));
     imagesc(Lhatzoom), colorbar
-    colorbar('YLim',[min(L3hat(:)) 0.5],'YTick',[min(L3hat(:)) 0.3:0.1:0.5],'YTickLabel',[0.13 0.3:0.1:0.5])
+    colorbar('YLim',[min(L3hat(:)) 0.5],'YTick',[min(L3hat(:)) 0.3:0.1:0.5],'YTickLabel',[round(min(L3hat(:))*100)/100 0.3:0.1:0.5])
     xtick=[400:100:600]; %min(J):100:max(J);
     ytick=(min(I):3:max(I));
     set(gca,'YTick',ytick-min(I),'YTickLabel',ytick)

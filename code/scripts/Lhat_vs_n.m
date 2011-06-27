@@ -101,7 +101,7 @@ end
 
 
 %% plot SigMat and coheregrams
-% load(['../data/' fname])
+% load(['../../data/' fname])
 
 figure(4), clf
 wh = [.21 .18];
@@ -127,7 +127,7 @@ for i=1:ncols
         xlabel('vertex','fontsize',fs)
         ylabel([{['n=', num2str(ns(i))]}; {'vertex'}],'fontsize',fs)
     end
-    if i==1, title([{'significance'};  {'matrix'}],'fontsize',fs), end
+    if i==1, title([{'negative log'};  {'significance matrix'}],'fontsize',fs), end
     
     h(2+(i-1)*nrows) = subplot('Position',[1*colpos+side (4-i)*rowpos+bottom wh]);
     ass=zeros(V); ass(incoherent{i})=1;
@@ -142,6 +142,7 @@ for i=1:ncols
     h(3+(i-1)*nrows) = subplot('Position',[2*colpos+side (4-i)*rowpos+bottom wh]);
     ass=zeros(V); ass(coherent{i})=1;
     imagesc(ass)
+    if isempty(coherent{i}), image(ass); end
     axis('square')
     if i<ncols, set(gca,'Xtick',[],'YTick',[]),
     else set(gca,'Ytick',[]), xlabel('vertex','fontsize',fs)
@@ -153,7 +154,7 @@ for i=1:ncols
     imagesc(Coherogram{i}(:,1:cocount{i}))
     axis('square')
     set(gca,'Ytick',[])
-    if i==1, title([{'cumulative'}; {'coherogram'}],'fontsize',fs), end
+    if i==1, title([{'coherogram'}],'fontsize',fs), end
     if i==ncols, xlabel('log significance','fontsize',fs), end
     if cocount{i}>2,
         set(gca,'XTick',ceil(linspace(2,cocount{i},3)),'XTickLabel',...
@@ -165,8 +166,10 @@ colormap('gray')
 for i=1:length(h), set(h(i),'fontsize',fs), end
 
 if savestuff==1
-    print_fig(['../figs/' fname '_coherogram'],[5 4])
+    print_fig(['../../figs/' fname '_coherogram'],[5 4])
 end
+
+
 
 %% get Lstar
 
