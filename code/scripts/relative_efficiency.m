@@ -6,12 +6,12 @@ V=30;
 
 % signal subgraph
 m=1;
-s=20;
+s=5;
 Ess = 2:s+1;
 
 % parameters
 p=0.1;
-q=0.3;
+q=0.2;
 
 % parameters
 E0=p*ones(V);
@@ -24,14 +24,14 @@ fname=['RE_V' num2str(V) '_s' num2str(s) '_p' num2str(round(p*100)) '_q' num2str
 clear h SigMat coherent incoherent coherogram Coherogram wset
 
 
-ns=[20 50 100:100:500 1000 2000];
+ns=[10 50 100:100:500 1000 2000];
 nTrials=200*ones(1,numel(ns));
 % nTrials(1)=100;
  
-% inc_cor = nan(length(ns),1);
-% coh_cor = inc_cor;
+inc_cor = nan(length(ns),1);
+coh_cor = inc_cor;
 
-for i=1%:length(ns)
+for i=1:length(ns)
     
     disp(['nTrials = ' num2str(ns(i))])
     
@@ -111,18 +111,17 @@ xticks=[3 8 9];
 set(gca,'XTick',ns(xticks))
 
 h(2)=subplot(312); hold all
-% errorbar(ns(q:end),RE_avg(q:end),RE_ste(q:end),'-','linewidth',2,'color','k')
-plot(ns(q:end),RE_avg(q:end),'-','linewidth',2,'color','k')
+errorbar(ns(q:end),RE_avg(q:end),RE_ste(q:end),'-','linewidth',2,'color','k')
 plot([0 max(ns)],[1 1],'--k')
 ylabel('relative rate','fontsize',fs)
 xlabel('# samples','fontsize',fs)
 axis('tight')
 set(gca,'XTick',ns(xticks))
 xlim([ns(1) max(ns(xticks))])
-axis([0 max(ns) 0.5 2])
+axis([0 max(ns) 0.8 2])
 
 h(3)=subplot(313); hold all
-plot(ns(2:end-1),re,'k','linewidth',2)
+plot(ns(2:end),re,'k','linewidth',2)
 plot([0 max(ns)],[1 1],'--k')
 ylabel(' relative efficiency','fontsize',fs)
 xlabel('# samples','fontsize',fs)
@@ -133,7 +132,7 @@ set(gca,'YTick',yticks,'YTickLabel',round(10*yticks)/10)
 set(gca,'YScale','log')
 ylim([min(re)-0.1 max(re)+0.1])
 xlim([0 2000])
-axis([0 max(ns) min(re) max(re)])
+axis([0 max(ns) 0.8 6])
 set(h,'fontsize',fs)
 
 
