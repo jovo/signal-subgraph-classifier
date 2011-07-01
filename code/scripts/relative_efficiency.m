@@ -2,16 +2,16 @@
 clear, clc
 
 % constants
-V=30;
+V=70;
 
 % signal subgraph
 m=1;
-s=5;
+s=20;
 Ess = 2:s+1;
 
 % parameters
 p=0.1;
-q=0.2;
+q=0.3;
 
 % parameters
 E0=p*ones(V);
