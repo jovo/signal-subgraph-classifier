@@ -53,19 +53,9 @@ C.~M. Stein, ``{Inadmissibility of the usual estimator of the mean of a
   1em plus 0.5em minus 0.4em\relax University of California Press, 1956, pp.
   197--206.
 
-\bibitem{Huber1981}
-\BIBentryALTinterwordspacing
-P.~J. Huber, \emph{{Robust Statistics}}, ser. Wiley Series in Probability and
-  Statistics.\hskip 1em plus 0.5em minus 0.4em\relax Wiley, 1981, vol.~82,
-  no.~3. [Online]. Available: \url{http://doi.wiley.com/10.1002/9780470434697}
-\BIBentrySTDinterwordspacing
-
-\bibitem{Fisher1971}
-\BIBentryALTinterwordspacing
-R.~A. Fisher, \emph{{The Design of Experiments}}.\hskip 1em plus 0.5em minus
-  0.4em\relax Macmillan Pub Co, 1971. [Online]. Available:
-  \url{http://www.amazon.com/Design-Experiments-Ronald-Fisher/dp/0028446909}
-\BIBentrySTDinterwordspacing
+\bibitem{Good2010}
+P.~I. Good, \emph{{Permutation Tests}}.\hskip 1em plus 0.5em minus 0.4em\relax
+  Springer, 2000.
 
 \bibitem{McNemar1947}
 \BIBentryALTinterwordspacing
@@ -75,12 +65,18 @@ Q.~McNemar, ``{Note on the sampling error of the difference between correlated
   \url{http://www.springerlink.com/content/843g84t135765212/}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Huber1981}
+\BIBentryALTinterwordspacing
+P.~J. Huber, \emph{{Robust Statistics}}, ser. Wiley Series in Probability and
+  Statistics.\hskip 1em plus 0.5em minus 0.4em\relax Wiley, 1981, vol.~82,
+  no.~3. [Online]. Available: \url{http://doi.wiley.com/10.1002/9780470434697}
+\BIBentrySTDinterwordspacing
+
 \bibitem{Rice1995}
 \BIBentryALTinterwordspacing
-J.~A. Rice, \emph{{Mathematical statistics and data analysis}},
-  O.~Barndorff-Nielsen, P.~J. Bickel, W.~S. Cleveland, and R.~M. Dudley,
-  Eds.\hskip 1em plus 0.5em minus 0.4em\relax Duxbury Press, 1995. [Online].
-  Available: \url{http://www.citeulike.org/user/tarjeiha/article/1691927}
+J.~A. Rice, \emph{{Mathematical statistics and data analysis}}.\hskip 1em plus
+  0.5em minus 0.4em\relax Duxbury Press, 1995. [Online]. Available:
+  \url{http://www.citeulike.org/user/tarjeiha/article/1691927}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Hand2001}
@@ -93,7 +89,7 @@ D.~J. Hand and K.~Yu, ``{Idiot's Bayes: Not So Stupid after All?}''
 
 \bibitem{Jain2000}
 \BIBentryALTinterwordspacing
-a.K. Jain and P.~Duin, ``{Statistical pattern recognition: a review},''
+A.~Jain and P.~Duin, ``{Statistical pattern recognition: a review},''
   \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence},
   vol.~22, no.~1, pp. 4--37, 2000. [Online]. Available:
   \url{http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=824819}

@@ -74,7 +74,8 @@ xi=[4:10:max(ns)]';
 cohi = interp1q(ns',coh_avg,xi);
 
 for i=1:length(ns)
-    re(i)=xi(find(cohi<inc_avg(i),1))/ns(i);
+    temp=xi(find(cohi<inc_avg(i),1))/ns(i);
+    if ~isempty(temp), re(i)=temp; else, re(i)=[]; end
 end
 
 %%
