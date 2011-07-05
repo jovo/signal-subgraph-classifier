@@ -24,7 +24,7 @@ fname=['RE_V' num2str(V) '_s' num2str(s) '_p' num2str(round(p*100)) '_q' num2str
 clear h SigMat coherent incoherent coherogram Coherogram wset
 
 
-ns=[10 50 100:100:500 1000 2000];
+ns=20; %[10 50 100:100:500 1000 2000];
 nTrials=200*ones(1,numel(ns));
 % nTrials(1)=100;
  
@@ -75,7 +75,7 @@ cohi = interp1q(ns',coh_avg,xi);
 
 for i=1:length(ns)
     temp=xi(find(cohi<inc_avg(i),1))/ns(i);
-    if ~isempty(temp), re(i)=temp; else, re(i)=[]; end
+    if ~isempty(temp), re(i)=temp; else, re(i)=1; end
 end
 
 %%
@@ -119,10 +119,10 @@ xlabel('# samples','fontsize',fs)
 axis('tight')
 set(gca,'XTick',ns(xticks))
 xlim([ns(1) max(ns(xticks))])
-axis([0 max(ns) 0.8 2])
+axis([0 max(ns) min(RE_avg-RE_ste') 2])
 
 h(3)=subplot(313); hold all
-plot(ns(2:end),re,'k','linewidth',2)
+plot(ns,re,'k','linewidth',2)
 plot([0 max(ns)],[1 1],'--k')
 ylabel(' relative efficiency','fontsize',fs)
 xlabel('# samples','fontsize',fs)
@@ -133,9 +133,9 @@ set(gca,'YTick',yticks,'YTickLabel',round(10*yticks)/10)
 set(gca,'YScale','log')
 ylim([min(re)-0.1 max(re)+0.1])
 xlim([0 2000])
-axis([0 max(ns) 0.8 6])
+% axis([0 max(ns) 0.8 6])
 set(h,'fontsize',fs)
-
+linkaxes(h,'x')
 
 %%
 print_fig(['../../figs/' fname],[2 4]*2)
