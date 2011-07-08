@@ -1,17 +1,14 @@
 function P = get_ind_edge_params(adjacency_matrices,constants,type)
 % this funtion gets the parameters necessary for independent edge algorithms
 
-if nargin==2, type='hack'; end
+if nargin==2, type='L-estimator'; end           % default to L-estimator
 
-
-
-% NOTE THAT THIS IS ENSURES WE DON'T GET ZEROS
 eta = 1/(10*constants.s);                        % to deal with 0's and 1's
 
 sum0 = sum(adjacency_matrices(:,:,constants.y0),3);
 sum1 = sum(adjacency_matrices(:,:,constants.y1),3);
 
-if strcmp(type,'hack')
+if strcmp(type,'L-estimator')
     % estimated class 0 edge probabilities
     P.E0            = sum0/constants.s0;
     P.E0(P.E0==0)   = eta;
@@ -27,7 +24,7 @@ elseif strcmp(type,'robust')
     P.E1=(sum1+eta)/(constants.s1+eta);
    
 elseif strcmp(type,'map')
-    % set prior to be flat
+    % set prior to be nearly flat
     alpha = 1.001;
     beta = 1.001;
         

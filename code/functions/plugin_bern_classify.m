@@ -14,13 +14,14 @@ function [incorrect yhat] = plugin_bern_classify(datum,params,subspace,ytrue)
 
 data_tmp=datum(subspace);
 
+% compute posteriors of the two classes
 post0=sum(data_tmp.*params.lnE0(subspace)+(1-data_tmp).*params.ln1E0(subspace))+params.lnprior0;
 post1=sum(data_tmp.*params.lnE1(subspace)+(1-data_tmp).*params.ln1E1(subspace))+params.lnprior1;
 
-[~, bar] = sort([post0, post1]); % find the bigger one
-yhat=bar(2)-1;
+[~, bar] = sort([post0, post1]);    % find the bigger one
+yhat=bar(2)-1;                      % yhat is the MAP
 
-if nargin==4, 
+if nargin==4,                       % if we know the truth, compare
     incorrect=yhat~=ytrue; 
 else
     incorrect=[];

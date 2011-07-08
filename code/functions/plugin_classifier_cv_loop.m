@@ -13,9 +13,10 @@ function [Out] = plugin_classifier_cv_loop(As,ys,alg,cv,Atst,ytst)
 %
 % OUTPUTS:
 %   Out:        structure with the following fields (one per algorithm)
-%   Lhat:       average misclassification rates
-%   incorrects: whether the classifier got the answer correct
-%   other fields specific to each algoritm
+%       Lhat:       average misclassification rates
+%       incorrects: whether the classifier got the answer correct
+%       subspace:   the set of features used to classify
+%       name:       name of subspace finder
 
 constants = get_constants(As,ys);
 if nargin==3, cv=1; end
@@ -87,15 +88,16 @@ if strcmp(cv,'loo')    % get signal subgraph using training data, then classify 
         
         if inc==1 % iterate over s
             a=inc_id;
-            edge_list=alg(inc_id).edge_list;
+            edge_list=alg(a).edge_list;
             for s=1:length(edge_list), if mod(s,100)==0, disp(['# edges: ' num2str(edge_list(s))]); end
-                Out(inc_id).subspace{s,i} = incoherent_estimator(SigMat,edge_list(s));
-                Out(inc_id).incorrects(s,i) = plugin_bern_classify(Atst,phat,Out(inc_id).subspace{s,i},ys(i));
+                Out(a).subspace{s,i} = incoherent_estimator(SigMat,edge_list(s));
+                Out(a).incorrects(s,i) = plugin_bern_classify(Atst,phat,Out(a).subspace{s,i},ys(i));
             end
         end
         
         if nb==1 % naive bayes
-            Out(nb_id).incorrects(i) = plugin_bern_classify(Atst,phat,alg(nb_id).edge_list,ys(i));
+            a=nb_id;
+            Out(a).incorrects(i) = plugin_bern_classify(Atst,phat,alg(a).edge_list,ys(i));
         end            
         
     end
@@ -144,23 +146,24 @@ elseif strcmp(cv,'InSample') % learn signal subgraph from full data
     
     if inc==1 % iterate over s
         a=inc_id;
-        for s=1:length(alg(inc_id).edge_list), if mod(s,100)==0, disp(['# edges: ' num2str(alg(inc_id).edge_list(s))]); end
+        for s=1:length(alg(a).edge_list), if mod(s,100)==0, disp(['# edges: ' num2str(alg(a).edge_list(s))]); end
             
-            Out(inc_id).subspace{s} = incoherent_estimator(SigMat,alg(inc_id).edge_list(s));
+            Out(a).subspace{s} = incoherent_estimator(SigMat,alg(a).edge_list(s));
             for i=1:constants.s % i indexes which graph we are leaving out
                 [Atrn Gtrn Atst] = crossvalprep4(As,constants,[],i); % seperate data into training and testing sets
                 phat    = get_ind_edge_params(Atrn,Gtrn);
-                Out(inc_id).incorrects(s,i) = plugin_bern_classify(Atst,phat,Out(inc_id).subspace{s},ys(i));
+                Out(a).incorrects(s,i) = plugin_bern_classify(Atst,phat,Out(a).subspace{s},ys(i));
             end
         end
         
     end
     
     if nb==1
+        a=nb_id;
         for i=1:constants.s % i indexes which graph we are leaving out
             [Atrn Gtrn Atst] = crossvalprep4(As,constants,[],i); % seperate data into training and testing sets
             phat    = get_ind_edge_params(Atrn,Gtrn);
-            Out(nb_id).incorrects(i) = plugin_bern_classify(Atst,phat,alg(nb_id).edge_list,ys(i));
+            Out(a).incorrects(i) = plugin_bern_classify(Atst,phat,alg(a).edge_list,ys(i));
         end
     end
     
@@ -207,19 +210,20 @@ elseif strcmp(cv,'HoldOut'), % get signal subgraph from training data, test on h
     
     if inc==1 % iterate over s
         a=inc_id;
-        for s=1:length(alg(inc_id).edge_list), if mod(s,100)==0, disp(['# edges: ' num2str(alg(inc_id).edge_list(s))]); end
+        for s=1:length(alg(a).edge_list), if mod(s,100)==0, disp(['# edges: ' num2str(alg(a).edge_list(s))]); end
             
-            Out(inc_id).subspace{s} = incoherent_estimator(SigMat,alg(inc_id).edge_list(s));
+            Out(a).subspace{s} = incoherent_estimator(SigMat,alg(a).edge_list(s));
             for i=1:length(ytst) % i indexes which test graph
-                Out(inc_id).incorrects(s,i) = plugin_bern_classify(Atst(:,:,i),phat,Out(inc_id).subspace{s},ytst(i));
+                Out(a).incorrects(s,i) = plugin_bern_classify(Atst(:,:,i),phat,Out(a).subspace{s},ytst(i));
             end % i
             
         end % s
     end % inc
     
     if nb==1 % naive bayes
+        a=nb_id;
         for i=1:length(ytst) % i indexes which test graph
-            Out(nb_id).incorrects(i) = plugin_bern_classify(Atst(:,:,i),phat,alg(nb_id).edge_list,ytst(i));
+            Out(a).incorrects(i) = plugin_bern_classify(Atst(:,:,i),phat,alg(a).edge_list,ytst(i));
         end % i
     end % nb
     

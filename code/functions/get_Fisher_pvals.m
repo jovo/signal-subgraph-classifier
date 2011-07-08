@@ -13,6 +13,7 @@ else
     d=siz(1);
 end
 
+pval=nan(d,1);
 for i=1:d
     ss0=sum(A0(i,:));
     x(1,1)=ss0;
