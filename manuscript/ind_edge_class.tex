@@ -73,16 +73,22 @@ Let $\GG: \Omega \mapsto \mc{G}$ be a graph-valued random variable with samples 
 \subsection{Model} % (fold)
 \label{sub:model}
 
-A model defines the set of distributions under consideration.  In the graph classification domain, we consider the model, $\mc{F}_{\GG,Y}$, which includes all joint distributions over graphs and classes under consideration: $\mc{F}_{\GG,Y}=\{F_{\GG, Y}[\cdot; \bth] : \bth \in \bTh\}$, where $\bth \in \bTh$ indexes each distribution.  Two ``standard'' approaches for tackling a classification problem are (i) the \emph{generative} approach and (ii) the \emph{discriminative} approach.  In a generative strategy, one decomposes the joint distribution into a product of a likelihood term and a prior term:  $F_{\GG,Y}=F_{\GG | Y}F_Y$.  In a discriminative strategy, one decomposes the joint distribution into a posterior term and a marginal term: $F_{\GG,Y}=F_{Y | \GG}F_{\GG}$.  We proceed using a hybrid generative-discriminative approach whereby we describe a generative model and place constraints on the discriminant boundary.
+A model defines the set of distributions under consideration.  In the graph classification domain, we consider the model, $\mc{F}_{\GG,Y}$, which includes all joint distributions over graphs and classes under consideration: $\mc{F}_{\GG,Y}=\{F_{\GG, Y}(\cdot; \bth) : \bth \in \bTh\}$, where $\bth \in \bTh$ indexes each distribution.  Two ``standard'' approaches for tackling a classification problem are (i) the \emph{generative} approach and (ii) the \emph{discriminative} approach.  In a generative strategy, one decomposes the joint distribution into a product of a likelihood term and a prior term:  $F_{\GG,Y}=F_{\GG | Y}F_Y$.  In a discriminative strategy, one decomposes the joint distribution into a posterior term and a marginal term: $F_{\GG,Y}=F_{Y | \GG}F_{\GG}$.  We proceed using a hybrid generative-discriminative approach whereby we describe a generative model and place constraints on the discriminant boundary.
 
-First,  assume that each graph has the same set of labeled vertices, so that all the variability in the graphs is in the adjacency matrix, which implies that $F_{\GG,Y}=F_{A,Y}$. Second, assume edges are independent, that is: $F_{A,Y}=\prod_{u,v \in \mc{E}} F_{A_{uv},Y}$.  Now, consider the generative decomposition, and let $F[A_{uv} | Y=y]=f_{uv|y}$ and $F_Y=\pi_Y$.  Third, assume the existence of a class-conditional difference, that is $f_{uv|0} \neq f_{uv|1}$ for some $(u,v) \in \mc{E}$, and denote the edges satisfying this condition  the \emph{signal subgraph}, $\mc{S}=\{(u,v) \in \mc{E}: f_{uv|0} \neq f_{uv|1}\}$.  Fourth, for concreteness, assume that the graphs are \emph{simple} graphs, that is, undirected, with binary edges, and lacking (self-) loops.  Thus, the likelihood of an edge between vertex $u$ and $v$ is given by a Bernoulli random variable with a scalar probability parameter:  $f_{uv|y}=\text{Bern}(A_{uv}; p_{uv|y})$. Together, these four assumptions imply the following model: 
+First,  assume that each graph has the same set of labeled vertices, so that all the variability in the graphs is in the adjacency matrix, which implies that $F_{\GG,Y}=F_{A,Y}$. Second, assume edges are independent, that is: $F_{A,Y}=\prod_{u,v \in \mc{E}} F_{A_{uv},Y}$.  Now, consider the generative decomposition, and let $F_{uv|y}=F(A_{uv} | Y=y)$ and $\pi_y=F_{Y=y}$.  Third, assume the existence of a class-conditional difference, that is $F_{uv|0} \neq F_{uv|1}$ for some $(u,v) \in \mc{E}$, and denote the edges satisfying this condition  the \emph{signal subgraph}, $\mc{S}=\{(u,v) \in \mc{E}: F_{uv|0} \neq F_{uv|1}\}$.  Fourth, for concreteness, assume that the graphs are \emph{simple} graphs, that is, undirected, with binary edges, and lacking (self-) loops.  Thus, the likelihood of an edge between vertex $u$ and $v$ is given by a Bernoulli random variable with a scalar probability parameter:  $F_{uv|y}=\text{Bern}(A_{uv}; p_{uv|y})$. Together, these four assumptions imply the following model: 
+\begin{equation}
+\mc{F}_{\GG,Y}=\{F_{A, Y}(a,y; \bth) \quad \forall a\in\mc{A},y\in\mc{Y}: \bth \in \bTh\},
+\end{equation} 
+such that
 \begin{multline}
-\mc{F}_{\GG,Y}=\{F_{A, Y}[a,y; \bth]:   \bth \in \bTh\}, 
-\text{such that } \\ f_{A,Y}[a,y; \theta]  =\prod_{uv \in \mc{E} \backslash \mc{S}} \text{Bern}(a_{uv}; p_{uv|y}) \\ \times \prod_{uv \in \mc{S}} \text{Bern}(a_{uv}; p_{uv|y})  \pi_y,
+F_{A,Y}(a,y; \theta) =  \prod_{uv \in \mc{S}} \text{Bern}(a_{uv}; p_{uv|y})  \pi_y 
+\\ \times \prod_{uv \in \mc{E} \backslash \mc{S}} \text{Bern}(a_{uv}; p_{uv}),
 \end{multline}
-where $\bth=\{\mb{p},\mb{\pi},\mc{S}\}$. The likelihood parameter, $\mb{p}=\{p_{uv|y}\}_{uv \in \mc{E}, y \in \mc{Y}}$, is constrained such that each term must be between zero and one: $p_{uv|y} \in (0,1)$.  The prior parameter, $\mb{\pi}=\{\pi_y\}$, must be greater than or equal to zero and sum to one: $\pi_y \geq 0, \sum_y \pi_y=1$.  The signal subgraph parameter is a non-empty subset of the set of possible edges, $\mc{S} \subseteq \mc{E}$ and $\mc{S} \neq \emptyset$.
+where $\bth=\{\mb{p},\mb{\pi},\mc{S}\}$. The likelihood parameter is constrained such that each element must be between zero and one: $\mb{p}\in (0,1)^{V\times V \times |\mc{Y}|}$.  The prior parameter, $\mb{\pi}=(\pi_1, \ldots, \pi_{|\mc{Y}|})$, must have elements greater than or equal to zero and sum to one: $\pi_y \geq 0, \sum_y \pi_y=1$.  The signal subgraph parameter is a non-empty subset of the set of possible edges, $\mc{S} \subseteq \mc{E}$ and $\mc{S} \neq \emptyset$.
 
-Note that given a specification of the class-conditional likelihood of each edge and class-prior, one completely defines a possible joint distribution over graphs and classes; the signal subgraph is implicit in that parameterization. However, the likelihood parameters for all edges not in the signal subgraph, $p_{uv|y}=p_{uv} \forall y \in \mc{Y}, (u,v) \notin \mc{S}$,  are \emph{nuisance} parameters; that is, they contain no class-conditional signal.  Note that when computing a relative posterior class estimate, these nuisance parameters cancel in the ratio.
+We consider up to two additional constraints on $\mc{S}$.  First, the size of the signal subgraph may be constrained such that $|\mc{S}| \leq s$. Second, the minimum number of vertices onto which each edge is incident is constrained such that $\mc{S}=\{(u,v): u \in \mc{M} \cup v \in \mc{M}\}$, where $\mc{M}$ is a set of \emph{signal vertices} with $|\mc{M}|\leq m$. 
+
+Note that given a specification of the class-conditional likelihood of each edge and class-prior, one completely defines a possible joint distribution over graphs and classes; the signal subgraph is implicit in that parameterization. However, the likelihood parameters for all edges not in the signal subgraph, $p_{uv|y}=p_{uv} \, \forall \, y \in \mc{Y}, (u,v) \notin \mc{S}$,  are \emph{nuisance} parameters; that is, they contain no class-conditional signal.  Note that when computing a relative posterior class estimate, these nuisance parameters cancel in the ratio.
 
 
 
@@ -107,21 +113,22 @@ We define the best (optimal) classifier for a given distribution $F$ as the one 
 %(under model $\mc{F}$ and loss-function $\ell$) as the classifier with minimal expected loss: $h_*=\argmin_{h \in \mc{H}} \EE_F [\ell (F,Y)] \forall F \in \mc{F}$.  Such a classifier is called \emph{Bayes optimal}, and the error associated with such a classifier is called \emph{Bayes error} or \emph{Bayes risk}.  
 It can be shown that the classifier that maximizes the class-conditional posterior, $F_{Y | \GG}$ is optimal \cite{Bickel2000}:
 \begin{align} \label{eq:map}
-h_*(G) &= \argmin_{h \in \mc{H}} \EE_F[\ell_h (G,Y)] = \argmax_{Y \in \mc{Y}} F_{Y|G} 
-\nonumber \\ &= \argmax_{Y \in \mc{Y}} F_{G|Y} F_Y.
+h_*(G) &= \argmin_{h \in \mc{H}} \EE_F[\ell_h (G,Y)] %= \argmax_{Y \in \mc{Y}} F_{Y|G} 
+\nonumber \\ &= \argmax_{y \in \mc{Y}} F_{G|Y=y} F_{Y=y}.
 \end{align}
 Given the proposed model, Eq. \eqref{eq:map} can be further factorized using the above four assumptions:
 \begin{align}
-\argmax_{Y \in \mc{Y}} F_{G|Y} F_Y 
+h_*(G)
+% \argmax_{Y \in \mc{Y}} F_{G|Y} F_Y 
 % &= \argmax_{y \in \mc{Y}} F[a|y] F[y] 
-% \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{E}} f_{uv | y} \pi_y 
-% \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{S}} f_{uv | y} \pi_y 
+% \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{E}} F_{uv | y} \pi_y 
+% \nonumber \\ &= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{S}} F_{uv | y} \pi_y 
 % \nonumber \\ 
-&= \argmax_{Y \in \mc{Y}} \prod_{u,v \in \mc{S}} \text{Bern}(A_{uv}; p_{uv|y}) \pi_y.
+&= \argmax_{y \in \mc{Y}} \prod_{u,v \in \mc{S}} \text{Bern}(A_{uv}; p_{uv|y}) \pi_y.
 \end{align}
-Unfortunately Bayes optimal classifiers are typically unavailable. In such settings, it is therefore desirable to construct a classifier estimate from a set of \emph{training data}. Formally, let $\mc{T}_n$ denote the training corpus, assumed to be sampled exchangeably from the true but unknown distribution: $\mc{T}_n=\{(\GG_i,Y_i)\}_{i \in [n]} \overset{exch.}{\sim} F_{\GG, Y}$.  Given such a training corpus, and an unclassified graph, $g$, an estimated classifier predicts the true (but unknown) class of $g$ by utilizing the training corpus: $\mh{h}_n: \mc{G} \times (\mc{G} \times \mc{Y})^n \mapsto \mc{Y}$.  When a model, $\mc{F}_{\GG,Y}$ is specified, a beloved approach is to use a  \emph{Bayes plugin classifier}. Due to the above simplifying assumptions, the Bayes plugin classifier for this model is defined as follows.  First, estimate the  model parameters: $\bth=\{\mc{S}, \mb{p}, \mb{\pi}\}$. Second, plug those estimates into the above equation.  The result is a Bayes plugin graph classifier:
+Unfortunately Bayes optimal classifiers are typically unavailable. In such settings, it is therefore desirable to induce a classifier estimate from a set of \emph{training data}. Formally, let $\mc{T}_n= \{(\GG_i,Y_i)\}_{i \in [n]}$ denote the training corpus, where each graph-class pair is sampled exchangeably from the true but unknown distribution: $(\GG_i,Y_i) \overset{exch.}{\sim} F_{\GG, Y}$.  Given such a training corpus, and an unclassified graph, $g$, an induced classifier predicts the true (but unknown) class of $g$ by utilizing the training corpus: $\mt{h}: \mc{G} \times (\mc{G} \times \mc{Y})^n \mapsto \mc{Y}$.  When a model $\mc{F}_{\GG,Y}$ is specified, a beloved approach is to use a  \emph{Bayes plugin classifier}. Due to the above simplifying assumptions, the Bayes plugin classifier for this model is defined as follows.  First, estimate the  model parameters: $\bth=\{\mc{S}, \mb{p}, \mb{\pi}\}$. Second, plug those estimates into the above equation.  The result is a Bayes plugin graph classifier:
 \begin{align}
-\mh{h}_n(g) \defeq  \argmax_{y \in \mc{Y}} \prod_{u,v \in \mhc{S}}
+\mt{h}(g; \mc{T}_n) \defeq  \argmax_{y \in \mc{Y}} \prod_{u,v \in \mhc{S}}
 \mh{p}_{uv|y}^{a_{uv}}(1-\mh{p}_{uv|y})^{(1-a_{uv})} \mh{\pi}_y,
 \end{align}
 where the Bernoulli probability is explicit. To implement such a classifier estimate, we specify estimators for $\mc{S}$, $\mb{\pi}$ and $\mb{p}$.
@@ -174,20 +181,20 @@ We therefore consider several alternatives.
 
 
 
-Before proceeding, recall that each edge is independent, which means that whether or not each edge is in the signal subgraph could be evaluated on its own (although not necessarily advisable, consider the Stein estimator \cite{Stein1956}).  Formally, consider a hypothesis test for each edge.  The null hypothesis is that the class-conditional edge distributions are the same, so $H_0: f_{uv|0}=f_{uv|1}$ for all $(u,v) \in \mc{S}$.  The composite alternative hypothesis is that they differ, $H_A: f_{uv|0} \neq f_{uv|1}$ for all $(u,v) \in \mc{S}$.  Given such hypothesis tests, one can construct test statistics using the data: $T \defeq T_{uv}^{(n)}: \mc{T}_n \mapsto \Real_+$.  We reject the null in favor of the alternative whenever the value of the test-statistic is greater than some critical-value: $T(\mc{T}_n)>c$.  We can therefore construct a \emph{significance matrix}: $\mb{T} \defeq T_{uv}^{(n)}$, which is the sufficient statistic for the signal subgraph estimators. %the significance of the difference for each edge between the classes.  
+Before proceeding, recall that each edge is independent, which means that whether or not each edge is in the signal subgraph could be evaluated on its own (although not necessarily advisable, consider the Stein estimator \cite{Stein1956}).  Formally, consider a hypothesis test for each edge.  The null hypothesis is that the class-conditional edge distributions are the same, so $H_0: F_{uv|0}=F_{uv|1}$ for all $(u,v) \in \mc{S}$.  The composite alternative hypothesis is that they differ, $H_A: F_{uv|0} \neq F_{uv|1}$ for all $(u,v) \in \mc{S}$.  Given such hypothesis tests, one can construct test statistics using the data: $T \defeq T_{uv}^{(n)}: \mc{T}_n \mapsto \Real_+$.  We reject the null in favor of the alternative whenever the value of the test-statistic is greater than some critical-value: $T(\mc{T}_n)>c$.  We can therefore construct a \emph{significance matrix}: $\mb{T} \defeq T_{uv}^{(n)}$, which is the sufficient statistic for the signal subgraph estimators. %the significance of the difference for each edge between the classes.  
 
 \paragraph{\emph{Incoherent Signal Subgraph Estimators}} % (fold)
 \label{par:paragraph_name}
 
 
-Assume the size of the signal subgraph, $|\mc{E}|=s$, is known.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$, where $d_V$ is the number of distinct edges in a graph with $V$ vertices; also super-exponential (see Figure \ref{fig:numgraphs}, middle panel). Thus searching them all is currently computationally intractable.  When $s$ is given and the independent edge assumption is ``good'', one can choose the critical value \emph{a posteriori} to ensure that only $s$ edges are rejected, $c = \min_{c'}!$ such that $\sum_{(u,v) \in \mc{S}} \II \{T_{uv}^{(n)} < c'\} \geq s$.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test-statistics.  Formally, let $T_{(1)} < T_{(2)} < \cdots < T_{(d_V)}$ indicated the \emph{ordered} test statistics (dropping the superscript indicating the number of samples for brevity).  Then, the \emph{incoherent signal subgraph estimator} is given by $\mhc{S}^{inc}_n$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.  %Importantly, this strategy utilizes the vertex labels, as averaging across graphs assumes that vertex $E_{uv}$ in one graph is the same as vertex $E_{uv}$ in another graph.  So, while this approach uses vertex labels, it completely ignores graph structure.
+Assume the size of the signal subgraph, $|\mc{E}|=s$, is known.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$, where $d_V$ is the number of possible distinct edges in a graph with $V$ vertices; also super-exponential (see Figure \ref{fig:numgraphs}, middle panel). Thus searching them all is currently computationally intractable.  When $s$ is given and the independent edge assumption is ``good'', one can choose the critical value \emph{a posteriori} to ensure that only $s$ edges are rejected, $c = \min_{c'}!$ such that $\sum_{(u,v) \in \mc{S}} \II \{T_{uv}^{(n)} < c'\} \geq s$.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test-statistics.  Formally, let $T_{(1)} < T_{(2)} < \cdots < T_{(d_V)}$ indicated the \emph{ordered} test statistics (dropping the superscript indicating the number of samples for brevity).  Then, the \emph{incoherent signal subgraph estimator} is given by $\mhc{S}^{inc}_n$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.  %Importantly, this strategy utilizes the vertex labels, as averaging across graphs assumes that vertex $E_{uv}$ in one graph is the same as vertex $E_{uv}$ in another graph.  So, while this approach uses vertex labels, it completely ignores graph structure.
 % paragraph paragraph_name (end)
 
 \paragraph{\emph{Coherent Signal Subgraph Estimators}}
 
 In addition to the size of the signal subgraph, also assume that each of the edges in the signal subgraph are incident to one of $m$ special vertices called \emph{signal hubs}. While this assumption further constrains the candidate sets of edges, the number of feasible sets still scales super exponentially (see Figure \ref{fig:numgraphs}, right panel).  Instead, we again take a greedy approach.  
 
-First, compute the significance of each edge, as above, yielding ordered test-statistics, and rank edges by significance with respect to each vertex,  $E_{k,(1)} \leq E_{k,(2)} \leq \ldots \leq E_{k,(n-1)}$ for all $k \in \mc{V}$.  Second, recursively increase the critical value, $c$. With each iteration, assign each vertex a ``score'' equal to the number of edges incident to that vertex more significant than the critical value, $w_{v;c}=\sum_{u \in [V]} \II\{T_{i,u} < c\}$.  If there exists $m$ vertices whose scores sum to greater than or equal the size of the signal subgraph, $s$, then stop iterating.  That is, find $c=\min_{c'} !$ such that $\sum_{i} w_{v;c'}\geq s$.  Call the collection of $s$ most significant edges from within that subset the \emph{coherent signal subgraph estimate}, $\mhc{S}^{coh}_n$. %This approach uses both vertex labels and graph structure.
+First, compute the significance of each edge, as above, yielding ordered test-statistics, and rank edges by significance with respect to each vertex,  $E_{k,(1)} \leq E_{k,(2)} \leq \ldots \leq E_{k,(n-1)}$ for all $k \in \mc{V}$.  Second, recursively increase the critical value, $c$. With each iteration, assign each vertex a ``score'' equal to the number of edges incident to that vertex more significant than the critical value, $w_{v;c}=\sum_{u \in [V]} \II\{T_{v,u} > c\}$.  If there exists $m$ vertices whose scores sum to greater than or equal the size of the signal subgraph, $s$, then stop iterating.  That is, find $c=\min_{c'} !$ such that $\sum_{i} w_{v;c'}\geq s$.  Call the collection of $s$ most significant edges from within that subset the \emph{coherent signal subgraph estimate}, $\mhc{S}^{coh}_n$. %This approach uses both vertex labels and graph structure.
 
 \paragraph{\emph{Coherograms}}
 
@@ -239,10 +246,17 @@ where $n_y=\sum_{i \in [n]} \II\{y_i = y\}$.
 % subsection prior_estimators (end)
 
 
-\subsection{Evaluation Criteria} % (fold)
+\subsection{Finite Sample Evaluation Criteria} % (fold)
 \label{sub:evaluation_criteria}
 
-The properties of the MAP and ML estimators for the likelihood and prior terms, respectively, are well studied \cite{Bickel2000} and will therefore not be discussed in much detail.  
+
+\subsubsection{Likelihoods and priors} % (fold)
+\label{ssub:likelihoods_and_priors}
+
+The likelihood and prior estimators will be evaluated with respect to robustness to model misspecifications, finite samples, efficiency, and complexity.
+
+% subsubsection likelihoods_and_priors (end)
+
 
 
 \subsubsection{Classifier} % (fold)
@@ -251,7 +265,7 @@ The properties of the MAP and ML estimators for the likelihood and prior terms, 
 % subsubsection classifier (end)
 We evaluate the classifier finite sample properties using either hold-out or leave-one-out misclassification performance, depending on whether the data is simulated or experimental, respectively.  Formally, given $C$ equally sized subsets of the data: $\{\mc{T}_{1}, \ldots, \mc{T}_{C}\}$, the \emph{cross-validated error} is:
 \begin{align} \label{eq:L2}
-	\mh{L}_{\mh{h}(\cdot; \mc{T}_n)} = \frac{1}{C}\sum_{c=1}^C \frac{1}{|\mc{T}_n \backslash \mc{T}_c|}\sum_{g \notin \mc{T}_c} \II\{\mh{h}(g; \mc{T}_{c}) \neq y\}.
+	\mh{L}_{\mt{h}(\cdot; \mc{T}_n)} = \frac{1}{C}\sum_{c=1}^C \frac{1}{|\mc{T}_n \backslash \mc{T}_c|}\sum_{g \notin \mc{T}_c} \II\{\mt{h}(g; \mc{T}_{c}) \neq y\}.
 \end{align}
 % \subsubsection{Signal Subgraph Estimator Performance Criteria} % (fold)
 % \label{ssub:subsubsection_name3}
@@ -305,7 +319,7 @@ The likelihood estimators, Eq. \eqref{eq:lik}, are a kind of L-estimator, which 
 
 
 % MAP estimators are known to be consistent and efficient, both for finite samples and asymptotically, under certain special cases.  Specifically, letting $d_V=\binom{V}{2}$ (the number of edges in a simple graph as a function of the number of vertices, $V$), and assuming $n \conv \infty$ and $V$ is fixed,  we know that: $\mh{p}_{uv|y}^{MAP} \conv p_{uv|y}$ \cite{Rice1995}. The MAP estimator remains consistent when $V \conv \infty$ as long as $d_V/V \conv 0$ \cite{Bickel2000}.  
-As an aside, both prior and likelihood estimates are trivial to compute, as closed-form analytic solutions are available for both.  %And the estimators are quite interpretable: the likelihood parameters are the just probability of observing each edge, and the prior parameters are just the probability of observing each class.
+Both prior and likelihood estimates are trivial to compute, as closed-form analytic solutions are available for both.  %And the estimators are quite interpretable: the likelihood parameters are the just probability of observing each edge, and the prior parameters are just the probability of observing each class.
 
 \subsubsection{Signal Subgraph Estimators} % (fold)
 \label{ssub:subsubsection_name5}
@@ -339,7 +353,7 @@ Moreover, the coherent signal subgraph estimator uses the same test-statistics. 
 
 \subsubsection{Bayes plugin classifier}
 
-A Bayes plugin classifier is a consistent classifier whenever the estimates that are plugged in are consistent \cite{Bickel2000}.  Because the likelihood, prior, and signal subgraph estimates are all consistent, the Bayes plugin classifier is therefore consistent as well.  Moreover, it is well-known that a na\"ive Bayes classifier often exhibits impressive finite sample performance due to it winning the bias-variance trade-off relative to other classifiers \cite{Hand2001}.  In other words, even when edge are highly dependent, because marginal probability estimates are more efficient than joint probability estimates, an independent edge based classifier will often outperform a classifier based on dependencies.
+A Bayes plugin classifier is a consistent classifier whenever the estimates that are plugged in are consistent \cite{Bickel2000}.  Because the likelihood, prior, and signal subgraph estimates are all consistent, the Bayes plugin classifier is also consistent.  Moreover, na\"ive Bayes classifiers often exhibit impressive finite sample performance due to their winning the bias-variance trade-off relative to other classifiers \cite{Hand2001}.  In other words, even when edge are highly dependent, because marginal probability estimates are more efficient than joint probability estimates, an independent edge based classifier will often outperform a classifier based on dependencies.
 
 
 % subsection estimator_properties (end)
