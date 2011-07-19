@@ -125,7 +125,9 @@ for i=1:ncols
         set(gca,'Xtick',[],'YTick',[]),
     else
         xlabel('vertex','fontsize',fs)
-        ylabel([{['n=', num2str(ns(i))]}; {'vertex'}],'fontsize',fs)
+%         ylabel([{['n=', num2str(ns(i))]}; {'vertex'}],'fontsize',fs)
+        ylabel([{['n=', num2str(ns(i))]}],'fontsize',fs)
+        set(gca,'YTick',[]),
     end
     if i==1, title([{'negative log'};  {'significance matrix'}],'fontsize',fs), end
     
@@ -208,7 +210,7 @@ alg(3).name='naive bayes';
 alg(3).edge_list=find(ones(V)-diag(ones(V,1)));
 
 nAlgs=numel(alg);
-nTrials=20;
+nTrials=100;
 ns=[10:10:50 100:50:300];
 
 

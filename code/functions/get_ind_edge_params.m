@@ -48,9 +48,9 @@ P.ln1E1 = log(1-P.E1);
 
 % log-priors
 pi0=constants.s0/constants.s;
-if pi0==0, pi0=eta; elseif pi0=1, pi0=1-eta; end
+if pi0==0, pi0=eta; elseif pi0==1, pi0=1-eta; end
 pi1=constants.s1/constants.s;
-if pi1==0, pi1=eta; elseif pi1=1, pi1=1-eta; end
+if pi1==0, pi1=eta; elseif pi1==1, pi1=1-eta; end
 
 P.lnprior0 = log(pi0);
 P.lnprior1 = log(pi1);

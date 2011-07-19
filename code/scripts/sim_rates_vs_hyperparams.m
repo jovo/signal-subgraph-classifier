@@ -74,9 +74,32 @@ end
 
 save(['../../data/' fname])
 
+
+%%
+ntst=5000;
+Atst = nan(V,V,ntst);
+Atst(:,:,1:2:ntst)=repmat(E0,[1 1 ntst/2]) > rand(V,V,ntst/2);
+Atst(:,:,2:2:ntst)=repmat(E1,[1 1 ntst/2]) > rand(V,V,ntst/2);
+ytrn=repmat([0 1],1,ntst/2);
+
+params.lnE0=log(E0);
+params.lnE1=log(E1);
+params.ln1E0=log(1-E0);
+params.ln1E1=log(1-E1);
+params.lnprior0=log(1/2);
+params.lnprior1=log(1/2);
+
+subspace=find(ones(V)-diag(ones(V,1)));
+
+bayes_incorrects=nan(ntst,1);
+for i=1:ntst
+    bayes_incorrects(i) = plugin_bern_classify(Atst(:,:,i),params,subspace,ytrn(i));
+end
+Lstar=mean(bayes_incorrects);
+
 %% plot rates
 
-% load(['../../data/' fname])
+% load(['../../data/results/' fname])
 clear h
 figure(1), clf
 
@@ -91,7 +114,7 @@ semilogx(Lhats{2},'color','k','linewidth',2)
 min2=min(Lhats{2});
 shat_inc=find(Lhats{2}==min2);
 set(gca,'XScale','log'),
-xlabel('log size of signal subgraph','fontsize',fs)
+xlabel('log assumed # of signal edges','fontsize',fs)
 ylabel('misclassification rate','fontsize',fs)
 title('incoherent estimator','fontsize',fs)
 axis([1 xmax 0 0.5])
@@ -103,15 +126,14 @@ text(xmax/3,Lhats{3}*1.1,['$\hat{L}_{nb}=$' num2str(Lhats{3})],'interp','latex')
 
 % plot Lhat_inc
 plot(shat_inc,min2,'.','color',0.5*[1 1 1],'markersize',ms)
-text(shat_inc*1.05,min2*0.9,['$\hat{L}_{inc}=$' num2str(min2)],'interp','latex')
+text(shat_inc*1.05,min2*0.9,['$\hat{L}_{inc}=$' num2str(round(min2*100)/100)],'interp','latex')
 plot([shat_inc shat_inc],[0 min2],'--k')
 plot([1 shat_inc],[min2 min2],'--k')
 
 % plot Lstar
-Lstar=0.1;
 % semilogx([1 length(Lhats{2})],[Lstar Lstar],'--k')
 plot(s,Lstar,'.','color',0.5*[1 1 1],'markersize',ms)
-text(s+4,Lstar,['$\hat{L}_{*}=$' num2str(Lstar)],'interp','latex')
+text(s+4,Lstar,['$\hat{L}_{*}=$' num2str(round(Lstar*100)/100)],'interp','latex')
 
 % plot L_chance
 plot(1,0.5,'.','color',0.5*[1 1 1],'markersize',ms)
@@ -127,8 +149,8 @@ coh_inds=find(Lhats{1}==min1);
 miny=min(Lhats{1}(:));
 maxy=max(Lhats{1}(:));
 colorbar('YTick',[.1:.1:.5])
-xlabel('size of signal subgraph','fontsize',fs)
-ylabel('number of star-vertices','fontsize',fs)
+xlabel('assumed # of signal edges','fontsize',fs)
+ylabel('assumed # of signal vertices','fontsize',fs)
 tit=['coherent estimator'];
 title(tit,'interp','none','fontsize',fs)
 colormap('gray')
@@ -142,6 +164,5 @@ set(h,'fontsize',fs)
 if savestuff==1
     print_fig(['../../figs/' fname],[4 6])
 end
-
 
 

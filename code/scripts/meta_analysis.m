@@ -3,7 +3,7 @@ clear, clc
 datatype='synthetic';
 
 if strcmp(datatype,'synthetic')
-    load('../../data/BLSA0317_Count_Lhats');
+    load('../../data/results/BLSA0317_Count_Lhats');
     fname='BLSA0317_Count_synthetic';
     
     mean0=mean(As(:,:,constants.y0),3);
@@ -27,7 +27,7 @@ if strcmp(datatype,'synthetic')
     As(:,:,y1)=repmat(E0,[1 1 s1]) > rand(V,V,s1);
     
 elseif strcmp(datatype,'real')
-    load('../../data/BLSA_0317_countMtx');
+    load('../../data/base/BLSA_0317_countMtx');
     fname='BLSA0317_Count_Lhats';
     t=200;
     siz=size(AdjMats);
@@ -115,7 +115,7 @@ end
 
 
 % fname='BLSA0317_Count_Lhats';
-% load(['../../data/' fname])
+% load(['../../data/results/' fname])
 
 clear h
 figure(1), clf
@@ -137,7 +137,7 @@ end
 % incoherent Lhats
 h(1)=subplot(nrows,2,1); cla, hold all
 semilogx(Lhats{2},'color','k','linewidth',2)
-xlabel('log size of signal subgraph','fontsize',fs2)
+xlabel('log assumed # of signal edges','fontsize',fs2)
 ylabel([{'misclassification rate'}],'fontsize',fs2)
 title(['incoherent estimator'],'fontsize',fs2)
 axis([1 1000 0 max(Lhats{2})])
@@ -176,8 +176,8 @@ if isempty(strfind(fname,'synthetic'))
 else
     colorbar('YLim',[min(L3hat(:)) max(L3hat(:))],'YTick',[round(min(L3hat(:))*100)/100 0.3:0.2:0.9],'YTickLabel',[min(L3hat(:)) 0.3:0.2:0.9])
 end
-xlabel('size of signal subgraph','fontsize',fs2)
-ylabel('# signal-vertices','fontsize',fs2)
+xlabel('assumed # of signal edges','fontsize',fs2)
+ylabel([{'assumed # of'}; {'signal vertices'}],'fontsize',fs2)
 title('coherent estimator','fontsize',fs)
 colormap('gray')
 
@@ -199,18 +199,25 @@ if isempty(strfind(fname,'synthetic'))
     h(3)=subplot(323);
     hold all
     
-    for i=Iunique
-        semilogx(Lhats{3}(i,:)','linewidth',2)
+    for i=Iunique(1)
+        semilogx(Lhats{3}(i,:)','linewidth',2,'color','k')
     end
     axis([1 1000 0 max(max(Lhats{3}(Iunique,:)))])
     set(gca,'YTick',[0 0.16 .25 .5])
     
     
     set(gca,'XScale','log')
-    xlabel('log size of signal subgraph','fontsize',fs2)
+    xlabel('log assumed # of signal edges','fontsize',fs2)
     ylabel([{'misclassification rate'}],'fontsize',fs2)
-    title(['some coherent estimators'],'fontsize',fs)
+    title(['assumed m=12 coherent estimator'],'fontsize',fs)
     grid on
+
+    % plot L_coh
+    min3=round(min(Lhats{3}(:))*100)/100;
+    plot(J(1),min3,'.','color',0.5*[1 1 1],'markersize',ms)
+    text(J(1)*0.5,min3*0.7,['$\hat{L}_{coh}= $' num2str(min3)],'interp','latex')
+    
+    
     
     % zoomed coherent Lhats
     h(4)=subplot(324);
@@ -222,8 +229,8 @@ if isempty(strfind(fname,'synthetic'))
     set(gca,'YTick',ytick-min(I),'YTickLabel',ytick)
     set(gca,'XTick',xtick-min(J),'XTickLabel',xtick)
     
-    xlabel('size of signal subgraph','fontsize',fs2)
-    ylabel('# star-vertices','fontsize',fs2)
+    xlabel('assumed # signal edges','fontsize',fs2)
+    ylabel([{'assumed # of'}; {'signal vertices'}],'fontsize',fs2)
     title('zoomed in coherent estimator','fontsize',fs)
     
     % signal subgraph

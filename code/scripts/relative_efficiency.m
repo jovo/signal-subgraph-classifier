@@ -24,7 +24,7 @@ fname=['RE_V' num2str(V) '_s' num2str(s) '_p' num2str(round(p*100)) '_q' num2str
 clear h SigMat coherent incoherent coherogram Coherogram wset
 
 
-ns=20; %[10 50 100:100:500 1000 2000];
+ns=[10 20 30 40 50 100:100:500 1000 2000];
 nTrials=200*ones(1,numel(ns));
 % nTrials(1)=100;
  
@@ -79,13 +79,15 @@ for i=1:length(ns)
 end
 
 %%
-save(['../../data/' fname])
-
+savestuff=0;
+if savestuff==1
+    save(['../../data/' fname])
+end
 
 
 %% get stats
 
-% load(['../../data/' fname])
+% load(['../../data/results/' fname])
 
 q=find(isfinite(RE_avg), 1 );
 
@@ -115,14 +117,14 @@ h(2)=subplot(312); hold all
 errorbar(ns(q:end),RE_avg(q:end),RE_ste(q:end),'-','linewidth',2,'color','k')
 plot([0 max(ns)],[1 1],'--k')
 ylabel('relative rate','fontsize',fs)
-xlabel('# samples','fontsize',fs)
+xlabel('# training samples','fontsize',fs)
 axis('tight')
 set(gca,'XTick',ns(xticks))
 xlim([ns(1) max(ns(xticks))])
 axis([0 max(ns) min(RE_avg-RE_ste') 2])
 
 h(3)=subplot(313); hold all
-plot(ns,re,'k','linewidth',2)
+plot(ns(2:end),re,'k','linewidth',2)
 plot([0 max(ns)],[1 1],'--k')
 ylabel(' relative efficiency','fontsize',fs)
 xlabel('# samples','fontsize',fs)
@@ -138,5 +140,6 @@ set(h,'fontsize',fs)
 linkaxes(h,'x')
 
 %%
-print_fig(['../../figs/' fname],[2 4]*2)
-
+if savestuff==1
+    print_fig(['../../figs/' fname],[2 2.5]*2)
+end

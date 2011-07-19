@@ -1,5 +1,5 @@
 clear, clc
-load('../../data/BLSA0317_Count_Lhats');
+load('../../data/results/BLSA0317_Count_Lhats');
 
 mean0=mean(As(:,:,constants.y0),3);
 mean1=mean(As(:,:,constants.y1),3);
