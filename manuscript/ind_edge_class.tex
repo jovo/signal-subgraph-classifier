@@ -41,7 +41,9 @@ E-mail: joshuav@jhu.edu
 \IEEEcompsoctitleabstractindextext{%
 \begin{abstract}
 %\boldmath
-In this manuscript, we consider the following ``graph classification'' question: given a collection of graphs and associated classes, how can we predict the class of a newly observed graph?  To address this question we propose a statistical model for graph/class pairs.  Given this model, we devise a set of estimators to identify the class-conditional signal, referred to here as the ``signal subgraph.'' We define the signal subgraph as the set of edges that are probabilistically different between the classes. The estimators admit classifiers which are asymptotically optimal and efficient. The classifiers differ by their assumption about the ``coherency'' of the signal subgraph; that is, to what extent do the edges ``stick together'' around a common subset of vertices. Via simulation, the best estimator is shown to be not just a function of the coherency of the model, but also the number of training samples.  These estimators are employed on an interesting neuroscience question: can we classify ``connectomes'' according to sex (a connectome is the complete set of connections between neural units in a brain)?  The answer is yes, and significantly better than a na\"ive strategy.  Synthetic data analysis demonstrates that even when model is correct, given the relatively small number of training samples, the estimated signal subgraph should be taken with a grain of salt.  We conclude by discussing several possible extensions.
+This manuscript considers the following ``graph classification'' question: given a collection of graphs and associated classes, how can one predict the class of a newly observed graph?  To address this question we propose a statistical model for graph/class pairs.  This model naturally leads to a set of estimators to identify the class-conditional signal, or ``signal subgraph,'' defined as the collection of edges that are probabilistically different between the classes. The estimators admit classifiers which are asymptotically optimal and efficient, but differ by their assumption about the ``coherency'' of the signal subgraph (coherency is the extent to which the edges ``stick together'' around a common subset of vertices). Via simulation, the best estimator is shown to be not just a function of the coherency of the model, but also the number of training samples.  These estimators are employed to address a contemporary neuroscience question: can we classify ``connectomes'' (brain-graphs) according to sex?  The answer is yes, and significantly better than a na\"ive strategy.  Synthetic data analysis demonstrates that even when the model is correct, given the relatively small number of training samples, the estimated signal subgraph should be taken with a grain of salt.  
+%Moreover, the coherent classifier outperforms several benchmark classifiers, even though the model assumptions are demonstrated to be relatively inaccurate. 
+We conclude by discussing several possible extensions.
 \end{abstract}
 
 % Note that keywords are not normally used for peer review papers.
@@ -310,6 +312,16 @@ Further, we estimate the \emph{relative rate} and \emph{relative efficiency} to 
 % subsection estimators (end)
 
 
+% \subsection{Benchmark Classifiers} % (fold)
+% \label{sub:benchmark_classifiers}
+% 
+% 
+% 
+% A graph invariant is any function who's output is invariant to vertex labels, that is, the output is the same for all permutations \cite{VP11unlabeled, Priebe11}.  A variety of invariants have been investigated with regard to their performance on a related graph inference task \cite{PCP11}.  We compute 
+% 
+% 
+% % subsection benchmark_classifiers (end)
+
 
 \section{Estimator Properties} % (fold)
 \label{sec:results}
@@ -473,7 +485,7 @@ For the synthetic data analysis, we generated data as follows.  Given the above 
 	\label{fig:synthetic}
 \end{figure*}
 
-Given this synthetic data model, we first sampled 49 data samples, 25 from class 0 and 24 from class 1, and estimated the incoherent and coherent classifier performance on a single synthetic experiment (Figure \ref{fig:synthetic}, top panels).  The performance of the classifiers on the synthetic data qualitatively mirrors that of the real data, suggesting some degree of model appropriateness.  To assess what fraction of the edges in the estimated signal subgraph were reliable, even assuming a true model, we then sampled up to 100 training samples (and 100 test samples), and computed the missed-edge rate (bottom left) and misclassification rate (bottom right) as a function of the number of samples.  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the coherent signal subgraph estimator correctly identifies about $50\%$.  This suggests that even if the model were true (which it is not) we should believe only that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in performance: after about 50 samples, performance dramatically improves.  This suggests that perhaps only a few more data points would be necessary to obtain greatly improved classification accuracy.  
+Given this synthetic data model, we first sampled 49 data samples, 25 from class 0 and 24 from class 1, and estimated the incoherent and coherent classifier performance on a single synthetic experiment (Figure \ref{fig:synthetic}, top panels).  The performance of the classifiers on the synthetic data qualitatively mirrors that of the real data, suggesting some degree of model appropriateness.  To assess what fraction of the edges in the estimated signal subgraph were reliable, even assuming a true model, we then sampled up to 100 training samples (and 100 test samples), and computed the missed-edge rate (bottom left) and misclassification rate (bottom right) as a function of the number of samples.  Given approximately 50 samples, the incoherent signal subgraph estimator correctly identifies about $40\%$ of the edges, whereas the coherent signal subgraph estimator correctly identifies about $50\%$.  This suggests that even if the model were true (we think not) we should believe only that about half the edges in the estimated signal subgraph are in the actual signal subgraph.  Moreover, both missed-edge rate and misclassification rate exhibit a step-like function in performance: after about 50 samples, performance dramatically improves.  This suggests that perhaps only a few more data points would be necessary to obtain greatly improved classification accuracy.  
 
 
 \subsubsection{Model checking} % (fold)
@@ -483,7 +495,15 @@ Given this synthetic data model, we first sampled 49 data samples, 25 from class
 
 The assumption of independence between edges is (i) very useful for algorithms and analysis, and (ii) almost certainly nonsense for real connectome data.  Checking whether edges are independent is relatively easy.  Figure \ref{fig:cov} shows the correlation coefficient between all pairs of edges in the estimated signal subgraph from the neurobiological data.  We used a spectral clustering algorithm \cite{Dhillon2001} to  more clearly highlight any significant correlations.  Several groups of edges seem to be highly correlated.  To assess significance, we compare the distribution of correlation coefficients with the distribution of correlation coefficients obtained from the synthetic data analysis.  A two-sample Kolmogorov-Smirnov test shows that the two matrices are significantly different (p-value $\approx 0$), rejecting the null hypothesis that the edges in the real data are independent. This analysis further corroborates that making independence assumptions can be fruitful even when the data are dependent \cite{Hand2001}.
 
-
+% \subsubsection{Performance Benchmarks} % (fold)
+% \label{ssub:performance_benchmarks}
+% 
+% The coherent classifier has several desirable properties, including asymptotic optimally, computational tractability and interpretability.  Yet, a key determining factor in utilizing any classifier in practice is performance on actual datasets relative to other options.  Thus, we compare the performance of this classifier with a number of benchmark classifiers on this task (described in Section \ref{sec:benchmarks}). Specifically, in addition to the na\"ive Bayes and incoherent classifiers, we consider the performance of several others.  First, we consider a $k_n$ nearest neighbor (kNN) classifier, which has the desirable property of universal consistency \cite{VP11super, Stone1977}.  Second, we consider \emph{graph invariant} Bayes classifiers.
+% 
+% 
+% 
+% 
+% % subsubsection performance_benchmarks (end)
 
 
 
