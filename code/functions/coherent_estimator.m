@@ -1,4 +1,4 @@
-function [coherent wcounter] = coherent_estimator(SigMat,num_stars,num_edges)
+function [coherent wset wcounter] = coherent_estimator(SigMat,num_stars,num_edges)
 % estimates the coherent signal subgraph from
 % INPUTS:
 %   SigMat:     matrix of significance of differences
@@ -11,7 +11,7 @@ function [coherent wcounter] = coherent_estimator(SigMat,num_stars,num_edges)
 
 %% code
 wset=unique([0; sort(SigMat(:))]);
-wset(wset>1-1e-3)=[];
+% wset(wset>1-1e-3)=[];
 wcounter = 1;
 [V ~] = size(SigMat); 
 

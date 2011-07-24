@@ -101,7 +101,7 @@ end
 
 
 %% plot SigMat and coheregrams
-% load(['../../data/' fname])
+% load(['../../data/results/' fname])
 
 figure(4), clf
 wh = [.21 .18];
