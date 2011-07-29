@@ -28,12 +28,27 @@ while wconv==0
     if sum(vscore(1:num_stars))>=num_edges
         
         blank=0*SigMat+1;
-        nstars=min(length(find(vscore>0)),num_stars);
-        blank(vstars(1:nstars),:) = SigMat(vstars(1:nstars),:);
-        blank(:,vstars(1:nstars))= SigMat(:,vstars(1:nstars));
-        [~, indsp] = sort(blank(:));
+        num_candidate_stars=length(find(vscore>0));
+        if num_candidate_stars>num_stars
+            worst_candidates=find(vscore==vscore(num_stars));
+            best_candidates=find(vscore<vscore(num_stars));
+            worst_ind=randperm(length(worst_candidates));
+            worst_n=length(num_stars)-length(best_candidates);
+            vhat_stars=[best_candidates worst_candidates(worst_ind(1:worst_n))];            
+        else 
+            vhat_stars=vstars(1:nstars);
+        end
+        blank(vhat_stars,:) = SigMat(vhat_stars,:);
+        blank(:,vhat_stars)= SigMat(:,vhat_stars);
+        [foo, indsp] = sort(blank(:));
         
-        coherent=indsp(1:num_edges);
+        if foo(num_edges)==foo(num_edges+1)
+            
+           
+        else
+            coherent=indsp(1:num_edges);
+        end
+        
         wconv=1;
     else
         wcounter=wcounter+1;
