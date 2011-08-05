@@ -1,0 +1,9 @@
+Dear Editors:
+
+Both statistical pattern recognition and graph theory are bourgeoning, but relatively little work has combined the two.  We attempt to bridge this gap with our contribution, "Graph Classification using Signal Subgraphs: Applications in Statistical Connectomics." The primary aim of this manuscript is to develop a rigorous statistical framework derived to natively operate on graph-valued random variables, in contrast with most existing pattern recognition approaches that presume the data are in finite dimension Euclidean space.  We consider perhaps the simplest possible exploitation task in this domain: two-class classification.  Our proposed graph/class model admits consistent classifiers that demonstrably improves "graph naive" strategies.  Specifically, we introduce the notion of a "signal subgraph", the set of edges that probabilistically differ between the two classes.  This leads to a pair of classifiers, an incoherent and a coherent classifier, each designed under different assumptions regarding the "coherency" of the signal subgraph (that is, the minimum number of vertices onto which are signal edges are incident).  In addition to our asymptotic and simulated results, as a proof of principal, we apply our algorithms to an increasingly important problem in contemporary neuroscience: connectome classification (a connectome is loosely defined as a brain-graph).  Indeed, performance of the coherent classifier is a statistically significant improvement over other strategies.  We are optimistic that this framework will yield both many fruitful applications, as well as many theoretical generalizations.  
+
+
+Thank you for your consideration,
+Dr. Joshua T. Vogelstein
+Dr. R. Jacob Vogelstein
+Dr. Carey E. Priebe
