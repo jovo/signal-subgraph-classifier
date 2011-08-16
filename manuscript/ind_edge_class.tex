@@ -413,14 +413,25 @@ Before proceeding, recall that each edge is independent; thus, one can evaluate 
 \label{par:paragraph_name}
 
 
-Assume the size of the signal subgraph, $|\mc{E}|=s$, is known.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$; also super-exponential (see Figure \ref{fig:numgraphs}, middle panel). Thus searching them all is currently computationally intractable.  When $s$ is given and the independent edge assumption is ``good'', one can choose the critical value \emph{a posteriori} to ensure that only $s$ edges are rejected, $c = \min_{c'}!$ such that $\sum_{(u,v) \in \mc{E}} \II \{T_{uv}^{(n)} < c'\} \geq s$.  Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test statistics.  Formally, let $T_{(1)} < T_{(2)} < \cdots < T_{(d_V)}$ indicate the \emph{ordered} test statistics (dropping the superscript indicating the number of samples for brevity).  Then, the \emph{incoherent signal subgraph estimator} is given by $\mhc{S}^{inc}_n$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.  %Importantly, this strategy utilizes the vertex labels, as averaging across graphs assumes that vertex $E_{uv}$ in one graph is the same as vertex $E_{uv}$ in another graph.  So, while this approach uses vertex labels, it completely ignores graph structure.
+Assume the size of the signal subgraph, $|\mc{E}|=s$, is known.  The number of subgraphs with $s$ edges on $V$ vertices is given by $\binom{d_V}{s}$; also super-exponential (see Figure \ref{fig:numgraphs}, middle panel). Thus searching them all is currently computationally intractable.  When $s$ is given, under the  independent edge assumption, one can choose the critical value \emph{a posteriori} to ensure that only $s$ edges are rejected:
+\begin{align}
+	&\text{minimize } c \nonumber \\ &\text{subject to } \sum_{(u,v) \in \mc{E}} \II \{T_{uv}^{(n)} < c\} \geq s.
+\end{align}
+% $c = \min_{c'}!$ such that $\sum_{(u,v) \in \mc{E}} \II \{T_{uv}^{(n)} < c'\} \geq s$.  
+Therefore, an estimate of the signal subgraph is the collection of $s$ edges with minimal test statistics.  Formally, let $T_{(1)} < T_{(2)} < \cdots < T_{(d_V)}$ indicate the \emph{ordered} test statistics (dropping the superscript indicating the number of samples for brevity).  Then, the \emph{incoherent signal subgraph estimator} is given by $\mhc{S}^{inc}_n$=$\{a_{(1)}, \ldots, a_{(s)}\}$, where $a_{(u)}$ indicates the $u^{th}$ edge ordered by significance of its test statistic, $T_{(u)}$.  %Importantly, this strategy utilizes the vertex labels, as averaging across graphs assumes that vertex $E_{uv}$ in one graph is the same as vertex $E_{uv}$ in another graph.  So, while this approach uses vertex labels, it completely ignores graph structure.
 % paragraph paragraph_name (end)
 
 \paragraph{\emph{Coherent Signal Subgraph Estimators}}
 
 In addition to the size of the signal subgraph, also assume that each of the edges in the signal subgraph are incident to one of $m$ special vertices called \emph{signal vertices}. While this assumption further constrains the candidate sets of edges, the number of feasible sets still scales super exponentially (see Figure \ref{fig:numgraphs}, right panel).  Therefore, we again take a greedy approach.  
 
-First, compute the significance of each edge, as above, yielding ordered test statistics, and rank edges by significance with respect to each vertex,  $E_{k,(1)} \leq E_{k,(2)} \leq \ldots \leq E_{k,(n-1)}$ for all $k \in \mc{V}$.  Second, recursively increase the critical value, $c$. With each iteration, assign each vertex a score equal to the number of edges incident to that vertex more significant than the critical value, $w_{v;c}=\sum_{u \in [V]} \II\{T_{v,u} > c\}$.  If there exists $m$ vertices whose scores sum to greater than or equal the size of the signal subgraph, $s$, then stop iterating.  That is, find $c=\min_{c'} !$ such that $\sum_{i} w_{v;c'}\geq s$.  Call the collection of $s$ most significant edges from within that subset the \emph{coherent signal subgraph estimate}, $\mhc{S}^{coh}_n$. %This approach uses both vertex labels and graph structure.
+First, compute the significance of each edge, as above, yielding ordered test statistics, and rank edges by significance with respect to each vertex,  $E_{k,(1)} \leq E_{k,(2)} \leq \ldots \leq E_{k,(n-1)}$ for all $k \in \mc{V}$.  Second, recursively increase the critical value, $c$. With each iteration, assign each vertex a score equal to the number of edges incident to that vertex more significant than the critical value, $w_{v;c}=\sum_{u \in [V]} \II\{T_{v,u} > c\}$.  If there exists $m$ vertices whose scores sum to greater than or equal the size of the signal subgraph, $s$, then stop iterating.  That is,
+\begin{align}
+	&\text{minimize } c \nonumber \\
+	&\text{subject to } \sum_{v} w_{v;c}\geq s.
+\end{align}
+ % find $c=\min_{c'} !$ such that $\sum_{i} w_{v;c'}\geq s$.  
+Call the collection of $s$ most significant edges from within that subset the \emph{coherent signal subgraph estimate}, $\mhc{S}^{coh}_n$. %This approach uses both vertex labels and graph structure.
 
 \paragraph{\emph{Coherograms}}
 
