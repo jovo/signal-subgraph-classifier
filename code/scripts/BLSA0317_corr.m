@@ -1,5 +1,5 @@
 clear, clc
-load('../../data/BLSA0317_Count_Lhats');
+load('../../data/results/BLSA0317_Count_Lhats');
 
 siz=size(AdjMats);
 n=siz(3);           % # experiments
@@ -46,11 +46,12 @@ fs=12;
 imagesc(corrSS), colorbar
 axis('square')
 title('Correlation Matrix','fontsize',fs)
-ylabel('vertex','fontsize',fs)
-xlabel('vertex','fontsize',fs)
+ylabel('edge','fontsize',fs)
+xlabel('edge','fontsize',fs)
 set(gca,'fontsize',fs)
+colormap('gray')
 
-% print_fig(['../figs/' fname],[6 2]*1.5)
+print_fig(['../../figs/' fname],[2 2]*3)
 
 %%
 fname='BLSA0317_coclustered_corr';

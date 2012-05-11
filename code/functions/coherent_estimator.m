@@ -42,12 +42,8 @@ while wconv==0
         blank(:,vhat_stars)= SigMat(:,vhat_stars);
         [foo, indsp] = sort(blank(:));
         
-        if foo(num_edges)==foo(num_edges+1)
-            
-           
-        else
-            coherent=indsp(1:num_edges);
-        end
+        % keep all edges that are as significant as those that are counting
+        coherent=indsp(1:find(foo>foo(num_edges),1));        
         
         wconv=1;
     else

@@ -1,0 +1,202 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red26\green72\blue186;}
+\margl1440\margr1440\vieww13420\viewh13960\viewkind0
+\deftab2080
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\sa1660\pardirnatural
+
+\f0\fs26 \cf2 RE: TPAMI-2011-08-0537, "Graph Classification using Signal Subgraphs: Applications in Statistical Connectomics"\
+\pard\pardeftab720
+\cf2 Manuscript Type: Regular\
+\
+Dear Dr. Joshua Vogelstein,\
+\
+We have completed the review process of the above referenced paper for the IEEE Transactions on Pattern Analysis and Machine Intelligence and recommend that your paper undergo a Major Revision.\
+\
+Enclosed are your reviews. If you should choose to revise your paper, please prepare a separate document describing how each of the reviewers' comments are responded to in your revision and send it to us by 07-Aug-2012.\
+\
+To revise your manuscript, log into {\field{\*\fldinst{HYPERLINK "https://mc.manuscriptcentral.com/tpami-cs"}}{\fldrslt \cf3 \ul \ulc3 https://mc.manuscriptcentral.com/tpami-cs}} \'a0and enter your Author Center, where you will find your manuscript title listed under "Manuscripts with Decisions." Under "Actions," click on "Create a Revision." Your manuscript number has been appended to denote a revision.\
+\
+Once the revised manuscript is prepared, you can upload it and submit it through your Author Center.\
+\
+When submitting your revised manuscript, you will be able to respond to the comments made by the reviewer(s) in the space provided. You can use this space to document any changes you make to the original manuscript. In order to expedite the processing of the revised manuscript, please be as specific as possible in your response to the reviewer(s)\'92 questions and comments. You may also upload your responses as separate files for review along with your revision. If you choose to do this, please choose \'93Summary of Changes\'94 as the file designation.\
+\
+IMPORTANT: Your original files are available to you when you upload your revised manuscript. Please delete any redundant files before completing the submission.\
+\
+When the submission process is complete, you will receive an automated confirmation email immediately. If you did not receive that email, your submission is not yet complete.\
+\
+I will contact you should we have any concerns or questions regarding your revision. Otherwise, your revision will be forwarded to the assigned Associate Editor with a request to begin the second round of reviews.\
+\
+Please be mindful when making your revisions that you still need to maintain the size limitations for papers submitted to TPAMI. Our manuscript types and submission length guidelines (including the main text, the abstract, index terms, illustrations and references) are found at,\
+\
+\pard\pardeftab720
+{\field{\*\fldinst{HYPERLINK "http://www.computer.org/portal/web/peerreviewjournals/author#manuscript"}}{\fldrslt \cf3 \ul \ulc3 http://www.computer.org/portal/web/peerreviewjournals/author#manuscript}}\
+\
+Please note that double column will translate more readily into the final publication format. \'a0Our peer review double column templates can be found at,\
+\
+\pard\pardeftab720
+{\field{\*\fldinst{HYPERLINK "http://www.computer.org/portal/web/peerreviewjournals/author#templates"}}{\fldrslt \cf3 \ul \ulc3 http://www.computer.org/portal/web/peerreviewjournals/author#templates}}\
+\
+Text in any color other than black is not acceptable. Your revised paper must include the following:\
+\
+- Abstract\
+- Index terms\
+- Author affiliation information\
+- Main text\
+- References\
+- Figure captions\
+- Table titles\
+- Brief biography of each author\
+(biographies are not required for concise papers or comments papers)\
+\
+Because this is a revision, we request that you add your author bios and photos at this time. This will help ease the transition to pre-prints if your paper is accepted. (Please note that all materials - including references, bios, photos, etc. - must fit within the 14-page limit imposed by the Submission Guidelines.)\
+\
+Please do not hesitate in contacting us should you have any questions about our process or are experiencing technical difficulties. You can reach me at {\field{\*\fldinst{HYPERLINK "mailto:tpami@computer.org"}}{\fldrslt \cf3 \ul \ulc3 tpami@computer.org}}.\
+\
+Thank you for your contribution to TPAMI, and we look forward to receiving your revised manuscript.\
+\
+Thank you,\
+\
+Tara Delaney, Administrator on behalf of Prof. Ramin Zabih, EIC\
+IEEE Transactions on Pattern Analysis and Machine Intelligence\
+\pard\pardeftab720
+{\field{\*\fldinst{HYPERLINK "mailto:tpami@computer.org"}}{\fldrslt \cf3 \ul \ulc3 tpami@computer.org}}\
+\
+\
+**************\
+Editor Comments\
+\
+Editor\
+Comments to the Author:\
+Dear Authors,\
+\
+Thank you for your submission entitled "Graph Classification using\
+Signal Subgraphs: Applications in Statistical Connectomics". The\
+manuscript has been reviewed by two independent referees who\
+recommended it be submitted for a second review after major\
+revisions. The work needed is described in detail by the two\
+reviewers. The first reviewer finds that there must be additional\
+comparisons to "less interpretable" models such as l1-penalized\
+logistic regression, using cross-validation to estimate\
+hyper-parameters, and some other explanatory details. The second\
+reviewer finds that more empirical evidence for the model is\
+necessary, as are comparisons to ground-truth/state-of-the-art, more\
+technical clarifications and improved readability. The journal would\
+be happy to reconsider the article following a major revision that\
+addresses all the reviewers' comments and requests.\
+\
+Regards,\
+\
+IEEE Transactions on Pattern Analysis and Machine Intelligence\
+\
+********************\
+\
+Reviewer Comments\
+\
+Reviewer: 1\
+\
+Recommendation: Author Should Prepare A Minor Revision\
+\
+Comments:\
+- The authors rule out many potential methods for this problem based on the disered criteria of "intepretability". However, they conclude by noting a weakness of their method (based on simulated data) is the unreliability of intepreting the results with respect to specific edges. Therefore, there is arguably an inconsistency between what is promised and what has been achieved. Moreover, from a general point of view, it would greatly enhance the value of the paper if comparison to some "less intepretable" methods were offered; in general, one might imagine practitioners making some trade-off between performance and interpretability, and there is an opportunity here to offer valuable data to aid in that decision. It would be useful to know how the method proposed in the paper compares to some standard baseline other than Naive Bayes, such as those mentioned in the third paragraph in the introduction. \'a0Another simple baseline would be logistic regression, using edge/no-edge between vertices as the features, with L1 regularization on the weights, which should be quite similar to the incoherent estimator.\
+\
+JOVO: \
+-- run logistic regression with L1 penalty\
+-- run graph invariant classifier\
+\
+\
+- The hyper-parameter section is unclear, and therefore the experimental results are unconvincing. Specifically, on the non-synthetic experiment for classification of sex based on MR connectome, cross-validated misclassification was used to judge performance. \'a0(By the way, it is only mentioned in the abstract and Figure 6 caption that the task is actually gender classification; this could be made more clear in the text.) \'a0 These numbers only reflect performance when the hyper-parameters are set optimally for the data being tested, therefore it's not surprising that the more complex models did better. \'a0To compute how well the model would perform when the hyper-parameters are not known, they must be set on some held-out data, and then applied to the test data.\
+\
+JOVO:\
+-- add hyper parameter selection section of methods, explaining the number of steps we need to take, etc.\
+-- use on a bigger data set with enough data for held-out and validation\
+\
+- In the top panel of Figure 4, for small numbers of training samples, the coherent estimator has a larger miss rate than the incoherent estimator, thus it is stated that to pick the right estimator, the number of samples must be known. \'a0However, how many samples were used to generate the plot? \'a0Is there a confidence interval, and is the difference between estimators when the number of training samples is small statistically significant?\
+\
+JOVO:\
+-- show/discuss errorbars in fig 4\
+\
+\
+- In most applications, obtaining subgraph information (connectivity) about specific vertices is easier than obtainining information about all vertices. Can this procedure be used to provide a principled method to estimate important vertices and then focus additional data acquisition selectively to maximize information regarding some class identity?\
+\
+JOVO:\
+-- mention Bock paper in discussion and relate to current work.\
+\
+- It would be helpful if the authors could comment more on the issue of assuming the vertices are labeled. In many important applications, vertices will not be labeled and a vertex matching procedure will have to be performed. Is this truly a distinct problem, or would it make more sense in such a situation to think of both matching & classification being performed simultaneously?\
+\
+JOVO:\
+-- mention QAP and shuffled papers in discussion\
+\
+Additional Questions:\
+1. Which category describes this manuscript?: Research/Technology\
+\
+2. How relevant is this manuscript to the readers of this periodical? If you answer Not very relevant or Irrelevant please explain your rating under Public Comments below.: Relevant\
+\
+1. Please evaluate the significance of the manuscript\'92s research contribution.: Good\
+\
+2. \'a0Please explain how this manuscript advances this field of research and/or contributes something new to the literature. : The authors tackle the problem of distinguishing graphs from one another in a data-driven setting: they assume access to some finite training set which provides examples of graphs from different classes, and then estimate variables that are used to predict the class of novel graphs. The contribution is a new model for performing this type of task that combines some statistical approaches with various notions of vertex and edge dependency in the graph. The method is very straightforward, but the extensive analysis of the methods properties and behavior of real and synthesized data make this a potentially useful contribution.\
+\
+3. Is the manuscript technically sound? In the Public Comments section, please provide detailed explanations to support your assessment: Appears to be - but didn't check completely\
+\
+4. How thorough is the experimental validation (where appropriate)? Please discuss any shortcomings in the Public Comments section.: Lacking in some respects; some cases of interest not tested\
+\
+1. Are the title, abstract, and keywords appropriate? If not, please comment in the Public Comments section.: Yes\
+\
+2. \'a0Does the manuscript contain sufficient and appropriate references? \'a0Please comment and include additional suggested references in the Public Comments section.: References are sufficient and appropriate\
+\
+3. \'a0Does the introduction state the objectives of the manuscript in terms that encourage the reader to read on? If not, please explain your answer in the Public Comments section.: Could be improved\
+\
+4. \'a0How would you rate the organization of the manuscript? Is it focused? Please elaborate with suggestions for reorganization in the Public Comments section.: Satisfactory\
+\
+5. Please rate the readability of the manuscript. Explain your rating under Public Comments below. : Readable - but requires some effort to understand\
+\
+6. How is the length of the manuscript? \'a0If changes are suggested, please make explicit recommendations in the Public Comments section.: About right\
+\
+7. Should the supplemental material be included? (Click on the Supplementary Files icon to view files): Does not apply, no supplementary files included\
+\
+8. If yes to 7, should it be accepted: After revisions. \'a0Please include explanation under Public Comments below.\
+\
+Please rate the manuscript overall. Explain your choice.: Good\
+\
+\
+Reviewer: 2\
+\
+Recommendation: Author Should Prepare A Major Revision For A Second Review\
+\
+Comments:\
+The paper proposed an interesting and novel Bayesian model for graph classification. The main contribution is the introduction of class-conditional edge probabilities for a subset of edges. Applications are shown for correlation graphs from MR brain images.\
+\
+While the method is interesting, the paper is flawed in two major ways: The writing is unnecessarily obtuse and hard to follow, and the experimental validation of the method is insufficient. Both of these flaws make it hard to judge the correctness of the method and need to be addressed in the course of a major revision. The paper is also lacking a prior work section, which the authors need to provide and put their work into the proper context.\
+\
+Much more details and several required changes for the major revision are discussed in the attached file.\
+\
+Additional Questions:\
+1. Which category describes this manuscript?: Research/Technology\
+\
+2. How relevant is this manuscript to the readers of this periodical? If you answer Not very relevant or Irrelevant please explain your rating under Public Comments below.: Relevant\
+\
+1. Please evaluate the significance of the manuscript\'92s research contribution.: Good\
+\
+2. \'a0Please explain how this manuscript advances this field of research and/or contributes something new to the literature. : The manuscript proposes a new probabilistic model for graph classification in which only a subset of edges is class-dependent. This subset is constrained to have specific properties which are motivated by the application: estimating correlation matrices from MR brain images.\
+\
+3. Is the manuscript technically sound? In the Public Comments section, please provide detailed explanations to support your assessment: Appears to be - but didn't check completely\
+\
+4. How thorough is the experimental validation (where appropriate)? Please discuss any shortcomings in the Public Comments section.: Insufficient; clearly inferior to state of the art, or necessary tests are absent\
+\
+1. Are the title, abstract, and keywords appropriate? If not, please comment in the Public Comments section.: Yes\
+\
+2. \'a0Does the manuscript contain sufficient and appropriate references? \'a0Please comment and include additional suggested references in the Public Comments section.: Important references are missing; more references are needed\
+\
+3. \'a0Does the introduction state the objectives of the manuscript in terms that encourage the reader to read on? If not, please explain your answer in the Public Comments section.: Could be improved\
+\
+4. \'a0How would you rate the organization of the manuscript? Is it focused? Please elaborate with suggestions for reorganization in the Public Comments section.: Could be improved\
+\
+5. Please rate the readability of the manuscript. Explain your rating under Public Comments below. : Difficult to read and understand\
+\
+6. How is the length of the manuscript? \'a0If changes are suggested, please make explicit recommendations in the Public Comments section.: About right\
+\
+7. Should the supplemental material be included? (Click on the Supplementary Files icon to view files): Does not apply, no supplementary files included\
+\
+8. If yes to 7, should it be accepted: After revisions. \'a0Please include explanation under Public Comments below.\
+\
+Please rate the manuscript overall. Explain your choice.: Fair}
