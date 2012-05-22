@@ -24,27 +24,82 @@
 \bibitem{Bunke2011}
 \BIBentryALTinterwordspacing
 H.~Bunke and K.~Riesen, ``{Towards the Unification of Structural and
-  Statistical Pattern Recognition},'' \emph{Pattern Recognition Letters}, vol.
-  in press, 2011. [Online]. Available:
+  Statistical Pattern Recognition},'' \emph{Pattern Recognition Letters},
+  vol.~33, pp. 811--825, 2011. [Online]. Available:
   \url{http://www.sciencedirect.com/science/article/pii/S0167865511001309}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Hagmann2010}
 \BIBentryALTinterwordspacing
 P.~Hagmann, L.~Cammoun, X.~Gigandet, S.~Gerhard, P.~{Ellen Grant}, V.~Wedeen,
-  R.~Meuli, J.~P. Thiran, C.~J. Honey, and O.~Sporns, ``{MR connectomics:
-  Principles and challenges},'' \emph{J Neurosci Methods}, vol. 194, no.~1, pp.
-  34--45, 2010. [Online]. Available:
-  \url{http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve\&db=PubMed\&dopt=Citation\&list\_uids=20096730}
+  R.~Meuli, J.-P. Thiran, C.~J. Honey, and O.~Sporns, ``{MR connectomics:
+  Principles and challenges.}'' \emph{Journal of neuroscience methods}, Jan.
+  2010. [Online]. Available: \url{http://www.ncbi.nlm.nih.gov/pubmed/20096730}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Kudo2005}
+T.~Kudo, ``{An Application of Boosting to Graph Classification},''
+  \emph{Science}.
+
+\bibitem{Ketkar2009}
+\BIBentryALTinterwordspacing
+N.~S. Ketkar, L.~B. Holder, and D.~J. Cook, ``{Empirical comparison of graph
+  classification algorithms},'' \emph{2009 IEEE Symposium on Computational
+  Intelligence and Data Mining}, pp. 259--266, Mar. 2009. [Online]. Available:
+  \url{http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=4938658}
+\BIBentrySTDinterwordspacing
+
+\bibitem{North2007}
+\BIBentryALTinterwordspacing
+G.~North, \emph{{Invertebrate Neurobiology}}.\hskip 1em plus 0.5em minus
+  0.4em\relax CSHL Press, 2007. [Online]. Available:
+  \url{http://books.google.com/books?id=6-il0L4vATAC\&pgis=1}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Shepherd2007}
+\BIBentryALTinterwordspacing
+J.~D. Shepherd and R.~L. Huganir, ``{The cell biology of synaptic plasticity:
+  AMPA receptor trafficking.}'' \emph{Annual review of cell and developmental
+  biology}, vol.~23, pp. 613--43, Jan. 2007. [Online]. Available:
+  \url{http://www.ncbi.nlm.nih.gov/pubmed/17506699}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Nolte2002}
+\BIBentryALTinterwordspacing
+J.~Nolte, \emph{{The Human Brain: An Introduction to Its Functional
+  Anatomy}}.\hskip 1em plus 0.5em minus 0.4em\relax Mosby, 2002. [Online].
+  Available:
+  \url{http://www.amazon.com/The-Human-Brain-Introduction-Functional/dp/0323013201}
+\BIBentrySTDinterwordspacing
+
+\bibitem{LichtmanSanes08}
+\BIBentryALTinterwordspacing
+J.~W. Lichtman, J.~Livet, and J.~R. Sanes, ``{A technicolour approach to the
+  connectome.}'' \emph{Nat Rev Neurosci}, vol.~9, no.~6, pp. 417--422, Jun.
+  2008. [Online]. Available: \url{http://dx.doi.org/10.1038/nrn2391}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Bassett2009}
+\BIBentryALTinterwordspacing
+D.~S. Bassett and E.~T. Bullmore, ``{Human brain networks in health and
+  disease},'' \emph{Current Opinion in Neurology}, vol.~22, no.~4, pp.
+  340--347, 2009. [Online]. Available:
+  \url{http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=2902726\&tool=pmcentrez\&rendertype=abstract}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Lasserre2006}
+\BIBentryALTinterwordspacing
+J.~Lasserre, C.~Bishop, and T.~Minka, ``{Principled Hybrids of Generative and
+  Discriminative Models},'' \emph{2006 IEEE Computer Society Conference on
+  Computer Vision and Pattern Recognition - Volume 1 (CVPR'06)}, vol.~1, no.~6,
+  pp. 87--94, 2006. [Online]. Available:
+  \url{http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=1640745}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Bickel2000}
-\BIBentryALTinterwordspacing
 P.~J. Bickel and K.~A. Doksum, \emph{{Mathematical Statistics: Basic Ideas and
   Selected Topics, Vol I (2nd Edition)}}.\hskip 1em plus 0.5em minus
-  0.4em\relax Prentice Hall, 2000. [Online]. Available:
-  \url{http://www.amazon.com/Mathematical-Statistics-Basic-Selected-Topics/dp/013850363X}
-\BIBentrySTDinterwordspacing
+  0.4em\relax Prentice Hall, 2000, vol.~1, no. 366.
 
 \bibitem{Stein1956}
 C.~M. Stein, ``{Inadmissibility of the usual estimator of the mean of a
@@ -54,7 +109,7 @@ C.~M. Stein, ``{Inadmissibility of the usual estimator of the mean of a
   197--206.
 
 \bibitem{Good2010}
-P.~I. Good, \emph{{Permutation Tests}}.\hskip 1em plus 0.5em minus 0.4em\relax
+P.~I. Good, ``{Permutation Tests}.''\hskip 1em plus 0.5em minus 0.4em\relax
   Springer, 2000.
 
 \bibitem{McNemar1947}
@@ -89,9 +144,9 @@ D.~J. Hand and K.~Yu, ``{Idiot's Bayes: Not So Stupid after All?}''
 
 \bibitem{Jain2000}
 \BIBentryALTinterwordspacing
-A.~Jain and P.~Duin, ``{Statistical pattern recognition: a review},''
-  \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  vol.~22, no.~1, pp. 4--37, 2000. [Online]. Available:
+A.~K. Jain, R.~P.~W. Duin, J.~Mao, and S.~Member, ``{Statistical pattern
+  recognition: a review},'' \emph{IEEE Transactions on Pattern Analysis and
+  Machine Intelligence}, vol.~22, no.~1, pp. 4--37, 2000. [Online]. Available:
   \url{http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=824819}
 \BIBentrySTDinterwordspacing
 
@@ -108,17 +163,7 @@ J.~T. Vogelstein, W.~R. Gray, J.~L. Prince, L.~Ferrucci, S.~M. Resnick, C.~E.
   Inference on MR Connectome Data},'' \emph{Organization Human Brain Mapping},
   2010.
 
-\bibitem{Desikan2006}
-\BIBentryALTinterwordspacing
-R.~S. Desikan, F.~S\'{e}gonne, B.~Fischl, B.~T. Quinn, B.~C. Dickerson,
-  D.~Blacker, R.~L. Buckner, A.~M. Dale, R.~P. Maguire, B.~T. Hyman, M.~S.
-  Albert, and R.~J. Killiany, ``{An automated labeling system for subdividing
-  the human cerebral cortex on MRI scans into gyral based regions of
-  interest.}'' \emph{NeuroImage}, vol.~31, no.~3, pp. 968--80, Jul. 2006.
-  [Online]. Available: \url{http://www.ncbi.nlm.nih.gov/pubmed/16530430}
-\BIBentrySTDinterwordspacing
-
-\bibitem{BMES10}
+\bibitem{MRCAP11}
 W.~R. Gray, J.~A. Bogovic, J.~T. Vogelstein, B.~A. Landman, J.~L. Prince, and
   R.~J. Vogelstein, ``{Magnetic Resonance Connectome Automated Pipeline},''
   \emph{submitted}, 2010.

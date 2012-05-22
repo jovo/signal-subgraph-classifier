@@ -210,8 +210,8 @@ alg(3).name='naive bayes';
 alg(3).edge_list=find(ones(V)-diag(ones(V,1)));
 
 nAlgs=numel(alg);
-nTrials=100;
-ns=[10:10:50 100:50:300];
+nTrials=20;
+ns=[10:10:50, 100:50:300];
 
 
 for i=1:length(ns)
@@ -282,17 +282,17 @@ fs=12;
 
 %
 h(1)=subplot(211); hold all
-errorbar(ns,keeps(1).misedge_rate,keeps(1).misedge_ste,'k','linewidth',2)
-errorbar(ns,keeps(2).misedge_rate,keeps(2).misedge_ste,'color',gray1,'linewidth',2)
+errorbar(ns,keeps(1).misedge_rate(1:length(ns)),keeps(1).misedge_ste(1:length(ns)),'k','linewidth',2)
+errorbar(ns,keeps(2).misedge_rate(1:length(ns)),keeps(2).misedge_ste(1:length(ns)),'color',gray1,'linewidth',2)
 axis([0 ns(end) 0 1])
 % set(gca,'YTick',[2:2:s])
 xlabel('# training samples','fontsize',fs)
 ylabel('missed-edge rate','fontsize',fs)
 
 h(2)=subplot(212); hold all
-errorbar(ns,keeps(1).Lhat_avg,keeps(1).Lhat_ste,'k','linewidth',2)
-errorbar(ns,keeps(2).Lhat_avg,keeps(2).Lhat_ste,'color',gray1,'linewidth',2)
-errorbar(ns,keeps(3).Lhat_avg,keeps(3).Lhat_ste,'color',gray2,'linewidth',2)
+errorbar(ns,keeps(1).Lhat_avg(1:length(ns)),keeps(1).Lhat_ste(1:length(ns)),'k','linewidth',2)
+errorbar(ns,keeps(2).Lhat_avg(1:length(ns)),keeps(2).Lhat_ste(1:length(ns)),'color',gray1,'linewidth',2)
+errorbar(ns,keeps(3).Lhat_avg(1:length(ns)),keeps(3).Lhat_ste(1:length(ns)),'color',gray2,'linewidth',2)
 axis([0 ns(end) 0 0.5])
 xlabel('# training samples','fontsize',fs)
 ylabel('misclassification rate','fontsize',fs)

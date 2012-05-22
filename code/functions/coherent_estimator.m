@@ -43,7 +43,8 @@ while wconv==0
         [foo, indsp] = sort(blank(:));
         
         % keep all edges that are as significant as those that are counting
-        coherent=indsp(1:find(foo>foo(num_edges),1));        
+        %         coherent=indsp(1:find(foo>foo(num_edges),1));
+        coherent=indsp(1:num_edges);
         
         wconv=1;
     else
