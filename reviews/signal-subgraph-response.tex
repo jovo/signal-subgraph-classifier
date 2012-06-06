@@ -31,7 +31,7 @@ We thank both reviewers and the editor for their helpful and insightful comments
 	
 	Unfortunately, this desideratum is not achieved with such a small sample size and data distributed according to our synthetic data analysis.  We have highlighted this by adding the below line to \S 5.1.1:
 		
-	\tr{Despite  our stated desideratum of interpretability of the resulting classifier in terms of correctly identifying the signal edges and vertices, for data sampled from this assumed distribution, sample sizes of $<50$ seem to be insufficient.}
+	\tr{Despite  our stated desideratum of interpretability of the resulting classifier in terms of correctly identifying the signal-edges and vertices, for data sampled from this assumed distribution, sample sizes of $<50$ seem to be insufficient.}
 
 Indeed, with small sample sizes, subspace identification is a difficult problem, even under the true model. 
 
@@ -77,7 +77,7 @@ Indeed, with small sample sizes, subspace identification is a difficult problem,
 	
 		We have added ``\S 2.4.5 Hyper-Parameter Selection'' to clarify this issue.
 	
-	\tr{The signal subgraph estimators require specifying the number of signal edges $s$, as well as the number of signal vertices $m$ for the coherent classifier.  In both cases, the number of possible values of finite.  In particular, $s \in [d_V]$ and $m \in [V]$.  Thus, we implement cross-validation procedures, iterating over all possible settings of the hyper-parameters, to choose the hyper-parameters. For all simulated data, we compare hyper-parameter performance via a training and held-out set.  For the real data application, the sample size is unfortunately too low to justify a held-out corpus, we therefore utilize a leave-one-out cross-validation procedure.}    
+	\tr{The signal subgraph estimators require specifying the number of signal-edges $s$, as well as the number of signal-vertices $m$ for the coherent classifier.  In both cases, the number of possible values of finite.  In particular, $s \in [d_V]$ and $m \in [V]$.  Thus, we implement cross-validation procedures, iterating over all possible settings of the hyper-parameters, to choose the hyper-parameters. For all simulated data, we compare hyper-parameter performance via a training and held-out set.  For the real data application, the sample size is unfortunately too low to justify a held-out corpus, we therefore utilize a leave-one-out cross-validation procedure.}    
 	
 	\item \emph{(By the way, it is only mentioned in the abstract and Figure 6 caption that the task is actually gender classification; this could be made more clear in the text.)   }
 	

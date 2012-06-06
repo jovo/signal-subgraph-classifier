@@ -219,6 +219,29 @@ I.~S. Dhillon, ``{Co-clustering documents and words using bipartite spectral
   \url{http://portal.acm.org/citation.cfm?doid=502512.502550}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Devroye1997}
+\BIBentryALTinterwordspacing
+L.~Devroye, L.~Gy\"{o}rfi, G.~Lugosi, and L.~Gyorfi, \emph{{A Probabilistic
+  Theory of Pattern Recognition}}.\hskip 1em plus 0.5em minus 0.4em\relax New
+  York: Springer, 1996. [Online]. Available:
+  \url{http://www.amazon.ca/exec/obidos/redirect?tag=citeulike09-20\&amp;path=ASIN/0387946187}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Candes2009a}
+\BIBentryALTinterwordspacing
+E.~J. Candes, X.~Li, Y.~Ma, and J.~Wright, ``{Robust Principal Component
+  Analysis?}'' Dec. 2009. [Online]. Available:
+  \url{http://arxiv.org/abs/0912.3599}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Chandrasekaran2011}
+\BIBentryALTinterwordspacing
+V.~Chandrasekaran, S.~Sanghavi, P.~A. Parrilo, and A.~S. Willsky,
+  ``{Rank-Sparsity Incoherence for Matrix Decomposition},'' \emph{SIAM Journal
+  on Optimization}, vol.~21, no.~2, p. 572, Jun. 2011. [Online]. Available:
+  \url{http://arxiv.org/abs/0906.2220}
+\BIBentrySTDinterwordspacing
+
 \bibitem{Hoff02}
 P.~D. Hoff, A.~E. Raftery, and M.~S. Handcock, ``{Latent Space Approaches to
   Social Network Analysis},'' \emph{Journal of the American Statistical
@@ -260,10 +283,11 @@ D.~S. Lee and C.~E. Priebe, ``{Bayesian Vertex Nomination},'' \emph{submitted
 
 \bibitem{Bock2011}
 \BIBentryALTinterwordspacing
-C.~E. Priebe, J.~T. Vogelstein, and D.~D. Bock, ``{Optimizing the
-  quantity/quality trade-off in connectome inference},'' \emph{Communications
-  in Statistics Theory and Methods}, p.~7, 2011. [Online]. Available:
-  \url{http://arxiv.org/abs/1108.6271}
+D.~D. Bock, W.-C.~A. Lee, A.~M. Kerlin, M.~L. Andermann, A.~W. Wetzel,
+  S.~Yurgenson, E.~R. Soucy, H.~S. Kim, G.~Hood, and R.~C. Reid, ``{Network
+  anatomy and in vivo physiology of visual cortical neurons},'' \emph{Nature},
+  vol. 471, no. 7337, pp. 177--182, Mar. 2011. [Online]. Available:
+  \url{http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=3095821\&tool=pmcentrez\&rendertype=abstract}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}
