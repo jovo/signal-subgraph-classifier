@@ -25,8 +25,9 @@
 \BIBentryALTinterwordspacing
 H.~Bunke and K.~Riesen, ``{Towards the Unification of Structural and
   Statistical Pattern Recognition},'' \emph{Pattern Recognition Letters},
-  vol.~33, pp. 811--825, 2011. [Online]. Available:
-  \url{http://www.sciencedirect.com/science/article/pii/S0167865511001309}
+  vol.~33, no.~7, pp. 811--825, May 2011. [Online]. Available:
+  \url{http://www.sciencedirect.com/science/article/pii/S0167865511001309
+  http://linkinghub.elsevier.com/retrieve/pii/S0167865511001309}
 \BIBentrySTDinterwordspacing
 
 \bibitem{Hagmann2010}
@@ -45,6 +46,10 @@ D.~Donoho, M.~Elad, and V.~Temlyakov, ``{Stable recovery of sparse overcomplete
   Available:
   \url{http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=1564423}
 \BIBentrySTDinterwordspacing
+
+\bibitem{Candes2008}
+E.~J. Cand\`{e}s and M.~Wakin, ``{An introduction to compressive sampling},''
+  \emph{IEEE Signal Processing Magazine}, vol.~25, no.~2, pp. 21--30, 2008.
 
 \bibitem{Kudo2005}
 T.~Kudo, ``{An Application of Boosting to Graph Classification},''
@@ -173,9 +178,9 @@ B.~Y.~B. Efron, T.~Hastie, I.~Johnstone, and R.~Tibshirani, ``{LEAST ANGLE
 
 \bibitem{Jain2000}
 \BIBentryALTinterwordspacing
-A.~K. Jain, R.~P.~W. Duin, J.~Mao, and S.~Member, ``{Statistical pattern
-  recognition: a review},'' \emph{IEEE Transactions on Pattern Analysis and
-  Machine Intelligence}, vol.~22, no.~1, pp. 4--37, 2000. [Online]. Available:
+A.~K. Jain and P.~W. Duin, ``{Statistical pattern recognition: a review},''
+  \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  vol.~22, no.~1, pp. 4--37, 2000. [Online]. Available:
   \url{http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=824819}
 \BIBentrySTDinterwordspacing
 
@@ -199,10 +204,11 @@ W.~R. Gray, J.~A. Bogovic, J.~T. Vogelstein, B.~A. Landman, J.~L. Prince, and
 
 \bibitem{VP11_super}
 \BIBentryALTinterwordspacing
-J.~T. Vogelstein, R.~J. Vogelstein, and C.~E. Priebe, ``{Are mental properties
-  supervenient on brain properties?}'' \emph{Nature Scientific Reports}, vol.
-  in press, p.~11, 2011. [Online]. Available:
-  \url{http://arxiv.org/abs/0912.1672}
+C.~E.~P. {Joshua T. Vogelstein R. Jacob Vogelstein}, J.~T. Vogelstein, R.~J.
+  Vogelstein, and C.~E. Priebe, ``{Are mental properties supervenient on brain
+  properties?}'' \emph{Nature Scientific Reports}, no. 100, p.~11, 2011.
+  [Online]. Available: \url{http://arxiv.org/abs/0912.1672
+  http://www.citebase.org/abstract?id=oai:arXiv.org:0912.1672}
 \BIBentrySTDinterwordspacing
 
 \bibitem{PCR10}
@@ -227,12 +233,18 @@ L.~Devroye, L.~Gy\"{o}rfi, G.~Lugosi, and L.~Gyorfi, \emph{{A Probabilistic
   \url{http://www.amazon.ca/exec/obidos/redirect?tag=citeulike09-20\&amp;path=ASIN/0387946187}
 \BIBentrySTDinterwordspacing
 
-\bibitem{Candes2009a}
+\bibitem{Candes2009b}
 \BIBentryALTinterwordspacing
-E.~J. Candes, X.~Li, Y.~Ma, and J.~Wright, ``{Robust Principal Component
-  Analysis?}'' Dec. 2009. [Online]. Available:
-  \url{http://arxiv.org/abs/0912.3599}
+E.~J. Cand\`{e}s and B.~Recht, ``{Exact Matrix Completion via Convex
+  Optimization},'' \emph{Foundations of Computational Mathematics}, vol.~9,
+  no.~6, pp. 717--772, Apr. 2009. [Online]. Available:
+  \url{http://www.springerlink.com/index/10.1007/s10208-009-9045-5}
 \BIBentrySTDinterwordspacing
+
+\bibitem{Ding2011}
+X.~Ding, L.~He, and L.~Carin, ``{Bayesian Robust Principal Component
+  Analysis},'' \emph{Image (Rochester, N.Y.)}, vol.~20, no.~12, pp. 3419--3430,
+  2011.
 
 \bibitem{Chandrasekaran2011}
 \BIBentryALTinterwordspacing
@@ -243,9 +255,12 @@ V.~Chandrasekaran, S.~Sanghavi, P.~A. Parrilo, and A.~S. Willsky,
 \BIBentrySTDinterwordspacing
 
 \bibitem{Hoff02}
+\BIBentryALTinterwordspacing
 P.~D. Hoff, A.~E. Raftery, and M.~S. Handcock, ``{Latent Space Approaches to
   Social Network Analysis},'' \emph{Journal of the American Statistical
-  Association}, vol.~97, no. 460, pp. 1090--1098, 2002.
+  Association}, vol.~97, no. 460, pp. 1090--1098, Dec. 2002. [Online].
+  Available: \url{http://pubs.amstat.org/doi/abs/10.1198/016214502388618906}
+\BIBentrySTDinterwordspacing
 
 \bibitem{STFP}
 \BIBentryALTinterwordspacing
@@ -278,8 +293,8 @@ G.~A. Coppersmith and C.~E. Priebe, ``{Vertex Nomination via Content and
   Context},'' \emph{Technology}, pp. 1--21, 2012.
 
 \bibitem{BVN}
-D.~S. Lee and C.~E. Priebe, ``{Bayesian Vertex Nomination},'' \emph{submitted
-  for publication}, no.~i, 2012.
+D.~S. Lee and C.~E. Priebe, \emph{{Bayesian \{Vertex\} \{Nomination\}}}.\hskip
+  1em plus 0.5em minus 0.4em\relax submitted, 2012.
 
 \bibitem{Bock2011}
 \BIBentryALTinterwordspacing
