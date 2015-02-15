@@ -1,0 +1,89 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red26\green26\blue26;\red255\green255\blue255;
+}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid301\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid401\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid5}
+{\list\listtemplateid6\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid501\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid6}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}{\listoverride\listid6\listoverridecount0\ls6}}
+\margl1440\margr1440\vieww13420\viewh13960\viewkind0
+\deftab2080
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+
+\f0\fs26 \cf2 We thank this helpful referee for their continued comments.  We have responded to each specific comment below in italics. We hope these responses satisfy the editor.  Thank you in advance for considering this revision for publication.\
+\
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf2 {\listtext	\'95	}related work: While references were added to the text, there is no related work section that provides a brief discussion of this work. E.g., which classifiers were used, or which performance was achieved in previous work.\
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+\cf2 \
+
+\i We have significantly organized and appended to the discussion section.  In particular, the discussion now has three subsections: (6.1) Summary, (6.2) Related Work, and (6.3) Future Work.  Of particular note is the addition of the following sentence in (6.2) Related Work:\
+\
+"Most graph classification algorithms come from the ``structural pattern recognition'' school of thought, lacking an explicit statistical model and associated provable properties (see \\cite\{Bunke2011\} \\S2.1 and references therein for an excellent review)."\
+
+\i0 \
+
+\i We also discuss the various other classifiers moreso in (6.1) Summary, and highlight some related work in (6.3) Future Work.
+\i0 \
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\li720\fi-720\pardirnatural
+\ls2\ilvl0\cf2 {\listtext	\'95	}readability: While math can provide an elegant and efficient framework to describe a model, it just seems unnecessary to define over  symbols to arrive at the model in Eq (2).\
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+\cf2 \
+\pard\pardeftab720
+
+\i \cf3 \cb4 While we share your concern about overdoing the math symbology, in this case (due to the novelty of our approach) we think it wise to err on the side of completeness.\cf2 \cb1 \
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+
+\i0 \cf2 \
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\li720\fi-720\pardirnatural
+\ls3\ilvl0\cf2 {\listtext	\'95	}evaluation: Especially comparison to Lasso strengthened the paper, however, it would be desirable to also compare the results against state-of-the art methods developed for graph classification. For example, one that depends on unique vertex labels and one that depends on graph structure, to demonstrate the improvement gained by combining both aspects.\
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+\cf2 \
+
+\i In Section 5, we compare the performance of our algorithm to several competing algorithms on real data.  In particular, the naive Bayes and lasso only use label information.  On the other hand, the invariant-knn uses only structural information.  Only the graph-kNN algorithm, and our signal subgraph classifier, use both.  We have clarified the text to more clearly emphasis this very important point.  We added the following sentences in the discussion to highlight this point:\
+\
+"More specifically, the coherent classifier outperformed a pair of classifiers that use only vertex labels (the na\\"ive Bayes and Lasso classifiers) as well as a classifier that only uses structural information (the invariant-$k$NN classifier).  Only the signal subgraph classifier and graph-$k$NN classifier use \\emph\{both\} vertex labels and graph structure.  Since the graph-$k$NN classifier, however, is universally consistent, it has high variance and therefore takes much longer than the coherent classifier to converge to a good estimate."
+\i0 \
+\
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\li720\fi-720\pardirnatural
+\ls4\ilvl0\cf2 {\listtext	\'95	}p1, l37, left: The requirement for unique vertex labels and an equal number of vertices in each graph sounds at this place more severe than it is. It would be beneficial to add a comment on how severe the limitation is and if it could be overcome.\
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+\cf2 \
+
+\i Thank you, we do not want to suggest that this is a severe limitation. We have added the following sentence in the Introduction:\
+\
+"The methods developed herein, however, can straightforwardly be relaxed to more general settings."\
+
+\i0 \
+
+\i Moreover, in the Section 6.3 Future Work, we now refer to this particular relaxation:\
+\
+"First, collect more data.  Second, relax various assumptions, including the (i)  independent edge assumption by considering conditionally independent edges \\cite\{Hoff02,STFP,Fishkind2012\}, (ii) binary edge and 2-class assumptions, and (iii) uniquely labeled and identical vertices in each graph  assumptions." 
+\i0 \
+\
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\li720\fi-720\pardirnatural
+\ls5\ilvl0\cf2 {\listtext	\'95	}p1, l38, right: It would be informative to the reader to provide a short discussion of the related methods. At the moment the text does not even state that one of the references contains a comparison of different graph classification methods.\
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+\cf2 \
+
+\i We hope our revised discussion section sufficiently addresses this concern.\
+
+\i0 \
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\li720\fi-720\pardirnatural
+\ls6\ilvl0\cf2 {\listtext	\'95	}2.4.1 Desiderata: It is great to have the desiderata explicitly listed. Even better would be to explicitly address this list at the end of the article in a summary, to show to what extend the points are addressed.\
+\pard\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab2080\pardirnatural
+\cf2 \
+Thank you for this suggestion.  We have revised Section 6.1 Summary to refer back to the desiderata as indicated below:\
+
+\i \
+"The resulting estimators satisfy the five above mentioned desiderata (\\S \\ref\{sec:desiderata\}): (model) consistency, robust to model misspecifications, quadratic complexity, interpretability in terms of the vertices and edges, and state-of-the-art finite sample/empirical performance."
+\i0 \
+}

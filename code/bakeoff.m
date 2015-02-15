@@ -33,7 +33,7 @@ plot(kvec,Lhats.knn);
 
 %% invariants classify
 
-x = get_graph_invariants(As,[1:2, 4:7]);
+x = graph_invariants(As,[1:2, 4:7]);
 x0=x-repmat(mean(x'),n,1)';
 x1=x0./repmat(std(x0'),n,1)';
 labeledIDM = InterpointDistanceMatrix(x1);

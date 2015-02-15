@@ -1,0 +1,67 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,times,subfigure,fancyhdr}
+\usepackage[pdftex]{color}
+% \usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{textcomp}
+\usepackage{verbatim}
+% \usepackage{cite}
+\usepackage{times}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage{mdwlist}
+\usepackage{subfigure}
+\usepackage{sidecap}
+\usepackage{wrapfig}
+\usepackage{xspace}
+\usepackage{algorithm,algorithmic}
+\usepackage[pdftex]{graphicx}
+\usepackage{mcode}
+\usepackage[colorlinks=true,pagebackref,linkcolor=magenta]{hyperref}
+\usepackage[sort&compress,colon,square,numbers]{natbib}
+
+\input{../../../../other/latex/latex_commands.tex}
+
+\title{\vspace{-75pt}Proof Corrections - TPAMI-2011-08-0537-1}
+\date{} \author{}
+% \author{jovo, mauro}
+
+\begin{document}
+\maketitle
+\vspace{-50pt}
+The below list corresponds to redmarks contained in the associated scan of the pdf:
+
+\begin{enumerate}\itemsep0pt
+	\item $\overset{\text{exch.}}{\sim}$ not $\sim^{\text{exch.}}$, ie, ``exch.'' should be directly above $\sim$, here and elsewhere \label{1}
+	\item (a) $F_{\GG,Y}$, the $\GG$ looks funny, and not like the others exactly.  \\
+	(b) append $F=$ to $F_{\GG,Y}$ yielding $F=F_{\GG,Y}$. 
+	\item replace $\mc{E}$ with $|\mc{E}|$.
+	\item remove $F_{uv|y}(A_{uv})=$
+	\item see \ref{1}
+	\item remove ``to use''
+	\item replace ``estimate the model parameters $\bth=\{\mc{S},\mb{p},\mb{\pi}\}$'', with  ``obtain parameter estimates $\hbth=\{\mhc{S},\mhb{p},\mhb{\pi}\}$''
+	\item replace ``Consistent'' with ``Consistency''
+	\item replace ``Robust'' with ``Robustness''
+	\item replace ``Interpretable'' with ``Interpretability''
+	\item add ``we assume that'' between ``recall that'' and ``each edge''
+	\item ok, was printing issue on my printer, please ignore
+	\item replace line 3 with ``Let $c=w_c=0$'' and move the 6th line before the 4th line.  Please contact me if confused.
+	\item replace ``one builds'' with ``one can build''
+	\item replace ``simple'' with ``binary''
+	\item remove the ``s'' on ``contains''
+	\item add double quotes around the word ``chance'' and follow it with ``(defined as the performance by a na\"ive classifier)'', and add at the very end of the sentence, ``of chance misclassification performance''
+	\item remove ``all''
+	\item add a ``,'' between ``estimates'' and ``an''
+	\item remove $F_{\bth}=$
+	\item the correct citation for that reference is \cite{vogelstein2011shuffled}
+	\item add ``and the Center of Imaging Science'' after ``Institute for Data Intensive Science and Engineering'',  replace ``visiting assistant research professor'' with ``senior research scientist'' and ``Statistics'' with ``Statistical Science'' and add ``and is a member of the Duke Institute for Brain Sciences'' to the end of that sentence.
+	\item Change the name of the author ``William R. Gray'' to ``William Gray Roncal'' in the heading, affiliations, and bio sections.
+\end{enumerate}
+
+
+\bibliography{../../../../other/latex/library}
+\bibliographystyle{IEEEtran}
+
+
+\end{document}

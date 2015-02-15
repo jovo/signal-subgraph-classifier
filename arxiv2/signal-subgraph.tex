@@ -38,7 +38,7 @@
 \labelformat{equation}{\textup{(#1)}}
 % \usepackage[colorlinks=true,pagebackref,linkcolor=magenta]{hyperref}
 % \usepackage{hyperref}
-% \usepackage[sort&compress,colon,square,numbers]{natbib}
+\usepackage[sort&compress,colon,square,numbers]{natbib}
 
 
 \newcommand{\jv}{Joshua Vogelstein}
@@ -307,7 +307,7 @@ statistical inference, graph theory, network theory, structural pattern recognit
 
 \section{Introduction} \label{sec:intro}
 
-\IEEEPARstart{G}{raphs} are emerging as a prevalent form of data representation in fields ranging from optical character recognition and chemistry \cite{Bunke2011} to neuroscience \cite{Hagmann2010}.  While statistical inference techniques for vector-valued data are widespread, statistical tools for the analysis of graph-valued data are relatively rare \cite{Bunke2011}. In this work we consider the task of \emph{\tk{labeled} graph classification}: given a collection of labeled graphs and their corresponding class\tk{es}\comment{labels}, can we accurately infer the class\comment{label} for a new graph?  Note that we assume throughout that each vertex has a unique label, and that all graphs have the same number of vertices with the same vertex labels. The methods developed herein, however, can straightforwardly be relaxed to more general settings.
+\IEEEPARstart{G}{raphs} are emerging as a prevalent form of data representation in fields ranging from optical character recognition and chemistry \cite{Bunke2011} to neuroscience \cite{Hagmann2010}.  While statistical inference techniques for vector-valued data are widespread, statistical tools for the analysis of graph-valued data are relatively rare \cite{Bunke2011}. In this work we consider the task of \emph{\tk{labeled} graph classification}: given a collection of labeled graphs and their corresponding class\tk{es}\comment{labels}, can we accurately infer the class \comment{label} for a new graph?  \tk{Note that we assume throughout that each vertex has a unique label, and that all graphs have the same number of vertices with the same vertex labels.}
 
 We propose and analyze a joint graph/class model---sufficiently simple to characterize its asymptotic properties, and sufficiently rich to afford useful empirical applications.  This model admits a class-conditional signal encoded in a subset of edges, the \emph{signal-subgraph}. Finding the signal-subgraph amounts to providing an understanding of the differences between the two graph classes.  Moreover,
 \tk{borrowing a term from the compressive sensing literature \cite{Donoho2006, Candes2008}}, 
@@ -407,12 +407,11 @@ where the Bernoulli probability is explicit. To implement such a classifier esti
 \label{sub:estimators}
 
 
-\subsubsection{Desiderata} \label{sec:desiderata}
+\tk{\subsubsection{Desiderata}}
 
-% \comment{In this section we describe estimators for the above model.  An \emph{estimator} is a function that maps from the multiple-sample space to the parameter space: $\bhth_n: \Xi^n \to \bTh$. The output of this function is called the \emph{estimate}.  In the graph classification domain, for example, $\Xi=\mc{G} \times \mc{Y}$.  In a slight abuse of notation, we will also refer to the sequence of estimators, $\bhth_1,\bhth_2, \ldots$, as an estimator.}  
-We desire a \comment{(}sequence of\comment{)} estimators\tk{, $\bhth_1,\bhth_2, \ldots$,} that satisfy the following five desiderata, listed in no particular order:
+\comment{In this section we describe estimators for the above model.  An \emph{estimator} is a function that maps from the multiple-sample space to the parameter space: $\bhth_n: \Xi^n \to \bTh$. The output of this function is called the \emph{estimate}.  In the graph classification domain, for example, $\Xi=\mc{G} \times \mc{Y}$.  In a slight abuse of notation, we will also refer to the sequence of estimators, $\bhth_1,\bhth_2, \ldots$, as an estimator.}  We desire a \comment{(}sequence of\comment{)} estimators\tk{, $\bhth_1,\bhth_2, \ldots$,} that satisfy the following desiderata:
 
-\begin{enumerate}
+\begin{itemize}
 	\item \textbf{Consistent}: an estimator is consistent (in some specified sense) if its sequence converges in the limit to the true value: $\lim_{n \conv \infty} \bhth_n = \bth$.  %When the parameter is multidimensional, an estimator can be consistent as the number of samples $n$ goes to infinity (i) but the dimensionality is fixed at $d$, or (ii) the dimensionality also goes to infinity.  The estimate resulting from using a consistent estimator is called \emph{asymptotically unbiased}.
 	% \item \textbf{Efficient}: an estimator is efficient if its sequence converges to the %minimum variance: $\lim_{n\conv\infty} \text{Var}(\bhth_n) = \mc{I}_{\bth}^{-1}$.  %If one allows for infinite dimensional parameters, than it might be desirable to compute efficiency as both $n$ and $d$ approach infinity.  
 	% % An efficient estimator yields an estimate with 
@@ -420,9 +419,8 @@ We desire a \comment{(}sequence of\comment{)} estimators\tk{, $\bhth_1,\bhth_2, 
 	\item \textbf{Robust}: an estimator is robust if the resulting estimate is relatively insensitive to small model misspecifications.  Because the space of models is massive (uncountably infinite), it is intractable to consider all misspecifications, so we consider only a few of them, as described below.
 	\item \textbf{Quadratic complexity}: computational time complexity should be no more than quadratic in the number of vertices.
 	\item \textbf{Interpretable}: we desire that the parameters are interpretable with respect to a subset of vertices and/or edges.
-	\item \textbf{Finite sample/empirical performance}: at the end of the day, we are concerned with having a classifier that works to solve our applied problems.
-\end{enumerate}
-% In addition to the above theoretical desiderata, we also desire appealing finite sample and empirical performance.
+\end{itemize}
+In addition to the above theoretical desiderata, we also desire appealing finite sample and empirical performance.
 
 
 \subsubsection{Signal-Subgraph Estimators} % (fold)
@@ -440,7 +438,7 @@ Na\"{i}vely, one might consider a search over all possible signal-subgraphs by p
 
 \begin{figure*}[tb!]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/num_of_graphs.pdf}
+		\includegraphics[width=1.0\linewidth]{num_of_graphs.pdf}
 	\caption{Exhaustive searches for the signal-subgraph, even given severe constraints, are computationally intractable even for small graphs.  The three panels illustrate the 
 	the number of unique simple subgraphs as a function of the number of vertices $V$
 	for the three different constraint types considered: unconstrained, edge constrained, and both edge and vertex constrained (coherent).  Note the ordinates are all log scale.   On the left is the unconstrained scenario, that is, all possible subgraphs for a given number of vertices.  In the middle panel, each line shows the number of subgraphs with fixed number of signal-edges, $s$, ranging from 10 to 100, incrementing by 10 with each line.  The right panel shows the number of subgraphs for various fixed $s$ and only a single signal-vertex; that is, all edges are incident to one vertex.  %Bottom panels show a particular example subgraph via its adjacency matrix for each of the three constraint cases; white elements indicate an edge.
@@ -450,7 +448,7 @@ Na\"{i}vely, one might consider a search over all possible signal-subgraphs by p
 
 \begin{figure*}[tb!]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/demo_4x4_homo_V70_s20_p10_q30.pdf}
+		\includegraphics[width=1.0\linewidth]{demo_4x4_homo_V70_s20_p10_q30.pdf}
 	\caption{An example of the coherent signal-subgraph estimate's improved accuracy over the incoherent signal-subgraph estimate, for a particular homogeneous two-class model specified by: $\mc{M}_{70}(1,20;0.5,0.1,0.3)$. Each row shows the same columns but for increasing the number of graph/class samples.  The columns show the: (far left) negative log-significant matrix, computed using Fisher's exact test (lighter means more significant; each panel is scaled independent of the others because only relative significance matters here); (middle left) incoherent estimate of the signal-subgraph; (middle right) coherent estimate of the signal-subgraph; (far right) coherogram.  As the number of training samples increases (lower rows), both the incoherent and coherent estimates converge to the truth (the ordinate labels of the middle panels indicate the number of edges correctly identified).  For these examples, the coherent estimator tends to find more true edges.  The coherogram visually depicts the coherency of the signal; it is also converging to the truth---the signal-subgraph here contains a single signal-vertex.}
 	\label{fig:4x4}
 \end{figure*}
@@ -818,7 +816,7 @@ To better characterize the relative performance of the two signal-subgraph estim
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/fig3_homo_V70_s20_p10_q30_Lhats.pdf}
+		\includegraphics[width=1.0\linewidth]{fig3_homo_V70_s20_p10_q30_Lhats.pdf}
 	\caption{Performance statistics as a function of sample size demonstrate that the coherent signal-subgraph estimator outperforms the incoherent signal-subgraph estimator, in terms of both the signal-subgraph identification and classification, for nearly all $n$, using the same model as in Figure \ref{fig:4x4}: $\mc{M}_{70}(1,20;0.5,0.1,0.3)$.  \tk{Moreover, even the incoherent classifier outperforms the $\ell_1$-penalized logistic regression (lasso) on all our metrics.}	The top panel shows the missed-edge rate for each estimator as a function of the number of training samples, $n$.  The \tk{middle} \comment{bottom} panel shows the corresponding misclassification rate for the estimators, as well as the na\"ive Bayes plugin classifier.  Performance of all estimators improves (nearly) monotonically with $n$ for both criteria. \tk{The bottom panel shows total training and testing time for each classifier.  Clearly, the lasso is about 10 times slower than the others.} Error bars show standard error of the mean here and elsewhere \tk{unless otherwise noted} (averaged over 100 trials; each trial used 100 samples for held-out data). 
 	\tk{Error bars on the lower panel show the inter-quartile range.}
 	Note that for most values of $n$, we have $L_{\mhb{\pi}} > \wh{L}_{nb} > \tk{\wh{L}_{lasso} >} \wh{L}_{inc} > \wh{L}_{coh} > L_*$. Legend: ``inc'': incoherent; ``coh'': coherent; ``nb'': na\"ive Bayes\tk{, ``lasso'': lasso}.}
@@ -834,7 +832,7 @@ Thus, to choose which estimator will likely achieve the best performance, knowle
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.8\linewidth]{../figs/RE_V70_s20_p10_q30.pdf}
+		\includegraphics[width=0.8\linewidth]{RE_V70_s20_p10_q30.pdf}
 	\caption{The relative performance of the coherent and incoherent estimators is a function not just of the model, but also the number of training samples.  Specifically, for the same model, $\mc{M}_{70}(1,20;0.5,0.1,0.3)$, we compute the missed-edge rates for both the incoherent estimator (gray line) and the coherent estimator (black line)\tk{, averaged over 200 trials}.  The top panel shows that for small training sample size the incoherent estimator achieves a better (lower) missed-edge rate than the coherent estimator. However, the incoherent estimator's convergence rate is slower, and the coherent estimator catches up and outperforms the incoherent estimator until both eventually converge at the truth.  The middle and bottom panels show the relative rate and efficiency curves for this model. Note that the curves dip below unity, and then converge to unity, as they must, because both estimators are consistent. }
 	\label{fig:RE}
 \end{figure}
@@ -850,7 +848,7 @@ The best performing pair achieved $\wh{L}_{coh}=0.13$ (which is equal to the Bay
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.8\linewidth]{../figs/coherent_image_V70_s20_p10_q30_nTr200_nTe500.pdf}
+		\includegraphics[width=0.8\linewidth]{coherent_image_V70_s20_p10_q30_nTr200_nTe500.pdf}
 	\caption{When constraints on the number of signal-edges ($s$) or signal-vertices ($m$) are unknown, a search over these hyperparameters can yield estimates $\wh{s}$ and $\wh{m}$.  Both panels depict held-out cross-validation error as a function of varying these parameters for the model 
 	$\mc{M}_{70}(1,20;0.5,0.1,0.3)$
 	(the same as in Figures \ref{fig:4x4} and \ref{fig:homo}), using 200 training samples and 500 test samples, with $m=1$ and $s=20$.  The top panel depicts misclassification rate of the incoherent estimator as a function of the number of estimated signal-edges on a log scale, with the best performing classifier achieving $\wh{L}_{inc}=0.21$. Note that in this simulation,  $s=20< \wh{s}_{inc}=23$.  This ``conservatism'' is typical and appropriate in many model selection situations.  The bottom panel shows $\wh{L}_{coh}$ as a function of both $m'$ and $s'$.  For this simulation, $\wh{m}_{coh}=1$ and $\wh{s}_{coh}=24$, further corroborating the conservative stance on model selection. Note that $L_{\mb{\pi}} > \wh{L}_{nb} > \wh{L}_{inc} > \wh{L}_{coh} \geq L_*$ as one would hope for this coherent simulation.  Incidentally, the coherent classifier achieved Bayes error here, $L_*=0.13$.}
@@ -894,7 +892,7 @@ signal-subgraph 		& \textbf{0.16} & n$\backslash$a \\ \hline
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_Count_Lhats_results.pdf}
+		\includegraphics[width=1.0\linewidth]{BLSA0317_Count_Lhats_results.pdf}
 	\caption{MR connectome sex signal-subgraph estimation and analysis. By cross-validating over hyperparameters and models, we estimate that the ``best'' incoherent signal-subgraph (for this inference task on these data) has $\wh{s}_{inc}=10$ and yields a misclassification rate of $\wh{L}_{inc}=0.27$, whereas the best coherent signal-subgraph has $\wh{m}_{coh}=12$ and $\wh{s}_{coh}=360$, achieving $\wh{L}_{coh}=0.16$.  The top two panels depict the same information as Figure 5.  The middle two depict misclassification rate (left) for different choices of $m'=12$ as a function of $s'$ and (right) a zoomed-in depiction of the top right panel. The bottom left panel shows the estimated signal-subgraph, and the bottom right shows the coherogram.  Together, these bottom panels suggest that the signal-subgraph for these data is at least somewhat coherent.}
 	\label{fig:data}
 \end{figure}
@@ -916,7 +914,7 @@ For the synthetic data analysis, we generated data as follows.  Given the above 
 
 \begin{figure*}[tb!]
 	\centering
-		\includegraphics[width=0.7\linewidth]{../figs/BLSA0317_Count_synthetic_Lhats.pdf}
+		\includegraphics[width=0.7\linewidth]{BLSA0317_Count_synthetic_Lhats.pdf}
 	\caption{Synthetic data analysis provides some intuition for model checking and future improvements.  The top two panels show the incoherent (left) and coherent (right) misclassification rates as a function of the hyper-parameter choices for $n=49$.  These plots look quite similar to those obtained in the real connectome data (Figure \ref{fig:data}), which suggests that the chosen model may be adequate.  The bottom panels show the missed-edge rate (left) and misclassification rate (right) as a function of the number of training samples.  With about 50 training samples, approximately half of the edges identified by each classifier are true edges.  Additionally, slightly more than 50 training samples seems to be sufficient for obtaining nearly perfect classification, suggesting that perhaps only a few more subjects would be sufficient to yield much greater classification performance.}
 	\label{fig:synthetic}
 \end{figure*}
@@ -947,7 +945,7 @@ The assumption of independence between edges is (i) very useful for algorithms a
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=1.0\linewidth]{../figs/BLSA0317_coclustered_corr.pdf}
+		\includegraphics[width=1.0\linewidth]{BLSA0317_coclustered_corr.pdf}
 	\caption{The correlation matrix between all the edges in the coherent signal-subgraph estimate. Edges are organized by co-clustering to highlight any similarities.  Although most edges are uncorrelated, several groups of edges cluster, indicative of the fact that the edges are not independent (p-value of $\approx 0$ using a two-sample Kolmogorov-Smirnov test comparing the real and synthetic correlation matrices). }
 	\label{fig:cov}
 \end{figure}
@@ -970,33 +968,13 @@ The assumption of independence between edges is (i) very useful for algorithms a
 \section{Discussion} % (fold)
 \label{sec:discussion}
 
-\subsection{Summary} % (fold)
-\label{sub:summary}
+This work makes the following contributions. First, it introduces a novel graph/class model that admits rigorous statistical investigation.  Moreover, it presents two approaches for estimating the signal-subgraph: the first using only vertex label information, the second also utilizing graph structure.  The resulting estimators have desirable asymptotic and finite sample properties, including consistency and robustness to various model misspecifications.  Third, simulated data analysis indicate that neither approach dominates the other; rather, the best approach is a function of both the model and the amount of training data. \tk{And while the lasso classifier has similar error properties to our incoherent classifier, lasso's computational time is about an order of magnitude longer.}
+Fourth, these classifiers are applied to \tk{an MR connectome sex classification} \comment{a connectome} data set; the coherent classifier performs significantly better than \comment{both na\"ive Bayes and incoherent classifiers} \tk{a variety of benchmark classifiers}.  Fifth, synthetic data analysis suggests that while we can use the signal-subgraph estimators to improve classification performance, we should not expect that all the edges in the estimated signal-subgraph will be the true signal-edges, even when the model is correct. Moreover, we might expect a drastic improvement in classification performance with only a few additional data samples.  Finally, model checking suggests that the independent edge assumption does not fit the data well.  
 
-% subsection summary (end)
-This work makes the following contributions. First, it introduces a novel graph/class model that admits rigorous statistical investigation.  Moreover, it presents two approaches for estimating the signal-subgraph: the first using only vertex label information, the second also utilizing graph structure.  The resulting estimators satisfy the five above mentioned desiderata (\S \ref{sec:desiderata}): (model) consistency, robust to model misspecifications, quadratic complexity, interpretability in terms of the vertices and edges, and state-of-the-art finite sample/empirical performance.    Third, simulated data analysis indicate that neither approach dominates the other; rather, the best approach is a function of both the model and the amount of training data. \tk{And while the lasso classifier has similar error properties to our incoherent classifier, lasso's computational time is about an order of magnitude longer.}
+\tk{Our signal-subgraph classifiers represent somewhat of a departure from previous work.  Most graph classification algorithms come from the ``structural pattern recognition'' school of thought \cite{Bunke2011}, lacking an explicit statistical model and associated provable properties. On the other hand, most work on ``statistical pattern recognition'' begins by assuming the data to be classified are Euclidean vectors \cite{Devroye1997}.  Our work is a unification of the two.  Moreover, because the sufficient statistics are essentially encoded in a matrix, our work can be related to recent developments in matrix decompositions.  For example, sparse and low-rank matrix decompositions are close in spirit to our coherent signal subgraph estimators \cite{Candes2009b, Ding2011, Chandrasekaran2011}. Note, however, that our coherent estimator is robust to signal-vertices having a subset of its edges highly non-significant; that is, the coherent signal-subgraph estimator can be thought of as a \emph{local} sparse and low-rank decomposition.}
 
-
-Fourth, these classifiers are applied to an MR connectome sex classification data set; the coherent classifier performs significantly better than a variety of benchmark classifiers.  
-More specifically, the coherent classifier outperformed a pair of classifiers that use only vertex labels (the na\"ive Bayes and Lasso classifiers) as well as a classifier that only uses structural information (the invariant-$k$NN classifier).  Only the signal subgraph classifier and graph-$k$NN classifier use \emph{both} vertex labels and graph structure.  Since the graph-$k$NN classifier, however, is universally consistent, it has high variance and therefore takes much longer than the coherent classifier to converge to a good estimate.
-
-
-Fifth, synthetic data analysis suggests that while we can use the signal-subgraph estimators to improve classification performance, we should not expect that all the edges in the estimated signal-subgraph will be the true signal-edges, even when the model is correct. Moreover, we might expect a drastic improvement in classification performance with only a few additional data samples.  Finally, model checking suggests that the independent edge assumption does not fit the data well.  
-
-\subsection{Related Work} % (fold)
-\label{sub:related_work}
-
-% subsection related_work (end)
-
-\tk{Our signal-subgraph classifiers represent somewhat of a departure from previous work.  Most graph classification algorithms come from the ``structural pattern recognition'' school of thought, lacking an explicit statistical model and associated provable properties (see \cite{Bunke2011} \S2.1 and references therein for an excellent review). On the other hand, most work on ``statistical pattern recognition'' begins by assuming the data to be classified are Euclidean vectors \cite{Devroye1996}.  Our work is a unification of the two.  Moreover, because the sufficient statistics are essentially encoded in a matrix, our work can be related to recent developments in matrix decompositions.  For example, sparse and low-rank matrix decompositions are close in spirit to our coherent signal subgraph estimators \cite{Candes2009b, Ding2011, Chandrasekaran2011}. Note, however, that our coherent estimator is robust to signal-vertices having a subset of its edges highly non-significant; that is, the coherent signal-subgraph estimator can be thought of as a sparse and \emph{locally} low-rank decomposition.}
-
-\subsection{Future Work} % (fold)
-\label{sub:future_work}
-
-% subsection future_work (end)
-
-Collectively, the above analyses suggest a number of possible next steps.  First, collect more data.  Second, relax various assumptions, including the (i)  independent edge assumption by considering conditionally independent edges \cite{Hoff02,Sussman2012,Fishkind2012}, (ii) binary edge and 2-class assumptions, and (iii) uniquely labeled and identical vertices in each graph  assumptions. 
-Specifically, extension to situations for which none of the vertices are labeled \cite{VP11_QAP, VP11_unlabeled},  only some subset of vertices are labeled \cite{coppersmith2012vertex,VN,BVN}, or data are otherwise errorfully observed \cite{Bock2011}, are all avenues of future investigation.
+Collectively, the above analyses suggest a number of possible next steps.  First, collect more data.  Second, relax various assumptions, including (i) the independent edge assumption by considering conditionally independent edges \cite{Hoff02,STFP,Fishkind2012}, (ii) binary edge and class assumptions, and (iii) labeled vertices assumption. 
+\tk{Specifically, extension to situations for which none of the vertices are labeled \cite{VP11_QAP, VP11_unlabeled},  only some subset of vertices are labeled \cite{VN,BVN}, or data are otherwise errorfully observed \cite{Bock2011}, are all avenues of future investigation.}
 Third, transform a number of conjectures that have arisen due to these results into theorems.  For instance, perhaps the misclassification rate is a monotonic function of the missed-edge rate.  Fourth, (Bayesian) model-averaging to combine estimated signal-subgraphs instead of picking one might improve performance (perhaps at the cost of computational resources and interpretability).  
 
 We hope the proposed approaches will yield many applications.  To that end, all the data and code used in this work is available from the author's website, \url{http://jovo.me}.  
@@ -1038,40 +1016,29 @@ This work was partially supported by the Research Program in Applied Neuroscienc
 \fi
 
 
-\bibliography{../../../../other/latex/library}
+\bibliography{library}
 \bibliographystyle{IEEEtran}
 
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{../PAMI3/jovo}}]
-{Joshua T. Vogelstein}
-Joshua T. Vogelstein received a B.S degree from the Department of Biomedical Engineering at Washington University in St. Louis, MO in 2002, a M.S. degree from the Department of Applied Mathematics \& Statistics (AMS) at Johns Hopkins University (JHU) in Baltimore, MD in 2009, and a Ph.D. degree from the Department of Neuroscience at Johns Hopkins School of Medicine in Baltimore, MD in 2009.  He was a Postdoctoral Fellow in AMS@JHU from 2009 until 2011, at which time he was appointed
- an Assistant Research Scientist in the Department of Applied Mathematics and Statistics at JHU, with a joint appointment in the Human Language Technology Center of Excellence, and a member of the Institute for Data Intensive Science and Engineering.  He is currently a Visiting Assistant Research Professor at Duke university jointly in the departments of Mathematics and Statistics.  His research interests primarily include computational statistics, focusing on ultrahigh-dimensional and non-Euclidean neuroscience data.  His research has been featured in a number of prominent scientific and engineering journals including Annals of Applied Statistics, IEEE Transactions on Neural Systems and Rehabilitation Engineering, Nature Neuroscience, SIAM Journal of Matrix Analysis and Applications, and Science Translational Medicine.
-\end{IEEEbiography}
+\begin{IEEEbiographynophoto}{Joshua T. Vogelstein}
+Joshua T. Vogelstein received a B.S degree from the Department of Biomedical Engineering at Washington University in St. Louis, MO in 2002, a M.S. degree from the Department of Applied Mathematics \& Statistics at Johns Hopkins University (JHU) in Baltimore, MD in 2009, and a Ph.D. degree from the Department of Neuroscience at Johns Hopkins School of Medicine in Baltimore, MD in 2009.  He is currently an Assistant Research Scientist in the Department of Applied Mathematics and Statistics at JHU, with a joint appointment in the Human Language Technology Center of Excellence.  His research interests primarily include statistical connectomics, including theory and applications for high-dimensional graph-valued data. His research has been featured in a number of prominent scientific and engineering journals including Annals of Applied Statistics, IEEE Transactions on Neural Systems and Rehabilitation Engineering, Nature Neuroscience, and Science Translational Medicine.
+\end{IEEEbiographynophoto}
 
 % if you will not have a photo at all:
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{../PAMI3/wrgray_photo.jpeg}}]
-{William R. Gray}
+\begin{IEEEbiographynophoto}{William R. Gray}
 William R. Gray graduated from Vanderbilt University in 2003 with a Bachelor’s degree in electrical engineering, and received his MS in electrical engineering in 2005 from the University of Southern California.  Currently, Will is a PhD student in electrical engineering at Johns Hopkins University, where he is conducting research in the areas of connectivity, signal and image processing, and machine learning.  He is also a member of the technical staff at the Johns Hopkins University Applied Physics Laboratory, where he manages projects in the Biomedicine and Undersea Warfare business areas.  Will is a member of IEEE, Eta Kappa Nu, and Tau Beta Pi
-\end{IEEEbiography}
+\end{IEEEbiographynophoto}
 
 % insert where needed to balance the two columns on the last page with
 % biographies
 %\newpage
 
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{../PAMI3/brother.jpeg}}]
-{R. Jacob Vogelstein}
-R. Jacob Vogelstein received a Sc.B. degree in neuroengineering from Brown University, Providence, RI, and a Ph.D. degree in biomedical engineering from the Johns Hopkins University School of Medicine, Baltimore, MD.  He currently serves as the Program Manager for Applied Neuroscience at the Johns Hopkins University Applied Physics Laboratory and has an appointment as an Assistant Research Professor at the JHU Whiting School of Engineering’s Department of Electrical and Computer Engineering. He has worked on neuroscience technologies for over a decade, focusing primarily on neuromorphic systems and closed-loop brain–machine interfaces. His research has been featured in a number of prominent scientific and engineering journals including the IEEE Transactions on Neural Systems and Rehabilitation Engineering, the IEEE Transactions on Biomedical Circuits and Systems, and the IEEE Transactions on Neural Networks.  
-\end{IEEEbiography}
+\begin{IEEEbiographynophoto}{R. Jacob Vogelstein}
+R. Jacob Vogelstein received the Sc.B. degree in neuroengineering from Brown University, Providence, RI, and the Ph.D. degree in biomedical engineering from the Johns Hopkins University School of Medicine, Baltimore, MD.  He currently oversees the Applied Neuroscience programs at the Johns Hopkins University Applied Physics Laboratory as an Assistant Program Manager, and has an appointment as an Assistant Research Professor at the JHU Whiting School of Engineering’s Department of Electrical and Computer Engineering. He has worked on neuroscience technology for over a decade, focusing primarily on neuromorphic systems and closed-loop brain–machine interfaces. His research has been featured in a number of prominent scientific and engineering journals including the IEEE Transactions on Neural Systems and Rehabilitation Engineering, the IEEE Transactions on Biomedical Circuits and Systems, and the IEEE Transactions on Neural Networks.  
+\end{IEEEbiographynophoto}
 
-
-\begin{IEEEbiography}
-[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{../PAMI3/cepnsseff.jpeg}}]
-{Carey E. Priebe}
+\begin{IEEEbiographynophoto}{Carey E. Priebe}
 Carey E. Priebe received the B.S. degree in mathematics from Purdue University in 1984, the M.S. degree in computer science from San Diego State University in 1988, and the Ph.D. degree in information technology (computational statistics) from George Mason University in 1993. From 1985 to 1994 he worked as a mathematician and scientist in the US Navy research and development laboratory system. Since 1994 he has been a professor in the Department of Applied Mathematics and Statistics, Whiting School of Engineering, Johns Hopkins University, Baltimore, Maryland. At Johns Hopkins, he holds joint appointments in the Department of Computer Science, the Department of Electrical and Computer Engineering, the Center for Imaging Science, the Human Language Technology Center of Excellence, and the Whitaker Biomedical Engineering Institute. He is a past President of the Interface Foundation of North America - Computing Science \& Statistics, a past Chair of the American Statistical Association Section on Statistical Computing, a past Vice President of the International Association for Statistical Computing, and on the editorial boards of Journal of Computational and Graphical Statistics, Computational Statistics and Data Analysis, and Computational Statistics. His research interests include computational statistics, kernel and mixture estimates, statistical pattern recognition, statistical image analysis, dimensionality reduction, model selection, and statistical inference for high-dimensional and graph data. He is a Senior Member of the IEEE, a Lifetime Member of the Institute of Mathematical Statistics, an Elected Member of the International Statistical Institute, and a Fellow of the American Statistical Association.
-\end{IEEEbiography}
-
+\end{IEEEbiographynophoto}
 
 % Can be used to pull up biographies so that the bottom of the last one
 % is flush with the other column.

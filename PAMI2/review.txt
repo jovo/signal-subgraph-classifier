@@ -1,0 +1,15 @@
+Comments:
+The manuscript improved significantly in terms of readability and experimental validation. The authors, for example, added pseudo code to illustrate the signal-subgraph estimation and compared their method to graph classification based on Lasso, which demonstrates the usefulness of the signal-subgraph estimation even over sparse L1 regularized classification. While this improvement is significant enough to justify publication, the paper could still be improved in terms of readability and evaluation.
+
+- related work: While references were added to the text, there is no related work section that provides a brief discussion of this work. E.g., which classifiers were used, or which performance was achieved in previous work.
+
+- readability: While math can provide an elegant and efficient framework to describe a model, it just seems unnecessary to define over  symbols to arrive at the model in Eq (2).
+
+- evaluation: Especially comparison to Lasso strengthened the paper, however, it would be desirable to also compare the results against state-of-the art methods developed for graph classification. For example, one that depends on unique vertex labels and one that depends on graph structure, to demonstrate the improvement gained by combining both aspects.
+
+- p1, l37, left: The requirement for unique vertex labels and an equal number of vertices in each graph sounds at this place more severe than it is. It would be beneficial to add a comment on how severe the limitation is and if it could be overcome.
+
+- p1, l38, right: It would be informative to the reader to provide a short discussion of the related methods. At the moment the text does not even state that one of the references contains a comparison of different graph classification methods.
+
+2.4.1 Desiderata: It is great to have the desiderata explicitly listed. Even better would be to explicitly address this list at the end of the article in a summary, to show to what extend the points are addressed.
+
